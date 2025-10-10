@@ -15,6 +15,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         :root {
             --primary: #667eea;
             --primary-dark: #5568d3;
@@ -35,7 +39,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
             min-height: 100vh;
             color: var(--text-dark);
         }
@@ -94,6 +98,13 @@
             font-size: 2rem;
             background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
+        /* Ensure cover images fill the card nicely */
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
             -webkit-text-fill-color: transparent;
             filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5));
         }
@@ -107,6 +118,14 @@
             -webkit-text-fill-color: transparent;
         }
 
+
+        .loan-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            display: block;
+        }
         .sidebar-subtitle {
             font-size: 0.875rem;
             color: #94a3b8;
@@ -265,6 +284,7 @@
             flex: 1;
             margin-left: var(--sidebar-width);
             transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-x: hidden;
         }
 
         .main-content.expanded {
@@ -383,29 +403,568 @@
         .content-area {
             padding: 2rem;
             max-width: 1400px;
+            position: relative;
+            z-index: 5;
+            background: rgba(207, 232, 240, 0.13);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            margin: 2rem auto;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .content-area::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(181, 228, 255, 0.438), rgba(187, 188, 189, 0.26)), url('<?php echo e(asset('Gambar/background.jpg')); ?>');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            /* Use flexible height so inner content never overflows into next section */
+            min-height: 420px;
+            padding: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+            margin: 0;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+            z-index: 1;
+        }
+
+        /* Ensure no residual transforms push the hero into header/content */
+        .hero-section { transform: translate3d(0, 0, 0); will-change: auto; }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) skewX(-15deg); }
+            100% { transform: translateX(200%) skewX(-15deg); }
+        }
+
+        .hero-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { width: 4px; height: 4px; left: 10%; animation-delay: -0.5s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; left: 20%; animation-delay: -1s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; left: 30%; animation-delay: -1.5s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; left: 40%; animation-delay: -2s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; left: 50%; animation-delay: -2.5s; }
+        .particle:nth-child(6) { width: 6px; height: 6px; left: 60%; animation-delay: -3s; }
+        .particle:nth-child(7) { width: 3px; height: 3px; left: 70%; animation-delay: -3.5s; }
+        .particle:nth-child(8) { width: 5px; height: 5px; left: 80%; animation-delay: -4s; }
+        .particle:nth-child(9) { width: 4px; height: 4px; left: 90%; animation-delay: -4.5s; }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(100%) rotate(0deg); 
+                opacity: 0; 
+            }
+            10%, 90% { 
+                opacity: 1; 
+            }
+            50% { 
+                transform: translateY(-20px) rotate(180deg); 
+                opacity: 1; 
+            }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            padding: 1rem 2rem 2.5rem; /* add bottom padding so content doesn't visually collide */
+            z-index: 10;
+            position: relative;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+            text-shadow: 0 2px 12px rgba(255, 255, 255, 0.9);
+            animation: heroTitle 1.5s ease-out;
+            position: relative;
+            font-family: 'Poppins', sans-serif;
+            --cursor-display: none;
+        }
+
+        .hero-title::after {
+            content: '|';
+            color: #0f172a;
+            animation: blink 1s infinite;
+            font-weight: 100;
+            display: var(--cursor-display, none);
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+
+        @keyframes underlineExpand {
+            from { width: 0; }
+            to { width: 100px; }
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            font-weight: 400;
+            margin-bottom: 2.5rem;
+            color: rgb(0, 0, 0);
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+            opacity: 0.95;
+            animation: heroSubtitle 1.5s ease-out 0.3s both;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            animation: heroStats 1.5s ease-out 0.6s both;
+        }
+
+        .hero-stat {
+            text-align: center;
+            background: rgb(143, 179, 255);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero-stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            gap: 1.5rem;
+            animation: heroCta 1.5s ease-out 0.9s both;
+        }
+
+        .hero-btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.1rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .hero-btn:hover::before {
+            left: 100%;
+        }
+
+        .hero-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .hero-btn.primary:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+        }
+
+        .hero-btn.secondary {
+            background: rgba(255, 255, 255, 0.897);
+            color: rgb(0, 0, 0);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(15px);
+        }
+
+        .hero-btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes heroTitle {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes heroSubtitle {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 0.95;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heroStats {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heroCta {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .welcome-section {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
-            padding: 2rem;
+            padding: 2.5rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+            animation: slideInFromTop 0.8s ease-out;
         }
 
-        .welcome-section h1 {
-            font-size: 2rem;
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+        }
+
+        .welcome-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .welcome-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .welcome-text h1 {
+            font-size: 2.5rem;
             font-family: 'Poppins', sans-serif;
             font-weight: 800;
-            color: white;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
         }
 
-        .welcome-section p {
-            color: rgba(255, 255, 255, 0.9);
+        .welcome-text p {
+            color: #64748b;
             font-size: 1.1rem;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+
+        .widgets-container {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .widget {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            min-width: 180px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .clock-widget {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+
+        .clock-time {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .clock-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .weather-widget {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+        }
+
+        .weather-temp {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .weather-desc {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .progress-widget {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+            border: none;
+        }
+
+        .progress-title {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 2s ease;
+            animation: progressFill 2s ease-out;
+        }
+
+        @keyframes progressFill {
+            from { width: 0%; }
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .widgets-container {
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .widget {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 15px;
+            padding: 1.5rem;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            min-width: 180px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .clock-widget {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+
+        .clock-time {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .clock-date {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .weather-widget {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            border: none;
+        }
+
+        .weather-temp {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .weather-desc {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .progress-widget {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            color: white;
+            border: none;
+        }
+
+        .progress-title {
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 2s ease;
+            animation: progressFill 2s ease-out;
+        }
+
+        @keyframes progressFill {
+            from { width: 0%; }
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            opacity: 0.9;
         }
 
         /* ===== STATS CARDS ===== */
@@ -417,26 +976,30 @@
         }
 
         .stat-card {
-            background: white;
-            border-radius: 16px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            text-align: center;
             position: relative;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             overflow: hidden;
-            animation: slideUp 0.5s ease forwards;
-            opacity: 0;
+            animation: slideUp 0.6s ease-out both;
         }
 
         @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
-        }
-
-        .stat-card {
-            transform: translateY(20px);
         }
 
         .stat-card:nth-child(1) { animation-delay: 0.1s; }
@@ -449,35 +1012,109 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
+            right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--card-color), var(--card-color-light));
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, var(--card-color-light) 0%, transparent 70%);
+            opacity: 0.1;
+            border-radius: 50%;
+            transition: all 0.3s ease;
         }
 
         .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.2);
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.12),
+                0 0 30px rgba(102, 126, 234, 0.15);
+        }
+
+        .stat-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .stat-card:hover::after {
+            opacity: 0.2;
+            transform: scale(1.2);
+        }
         }
 
         .stat-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 14px;
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 1.5rem;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.4s ease;
+        }
+
+        .stat-card:hover .stat-icon::before {
+            width: 100px;
+            height: 100px;
+        }
+
+        .stat-card.primary {
+            --card-color: #667eea;
+            --card-color-light: #764ba2;
         }
 
         .stat-card.primary .stat-icon {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.2));
-            color: var(--primary);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .stat-card.success {
+            --card-color: #10b981;
+            --card-color-light: #34d399;
         }
 
         .stat-card.success .stat-icon {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(16, 185, 129, 0.2));
-            color: var(--success);
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .stat-card.warning {
+            --card-color: #f59e0b;
+            --card-color-light: #fbbf24;
+        }
+
+        .stat-card.warning .stat-icon {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .stat-card.info {
+            --card-color: #3b82f6;
+            --card-color-light: #60a5fa;
+        }
+
+        .stat-card.info .stat-icon {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
         }
 
         .stat-card.warning .stat-icon {
@@ -510,32 +1147,44 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 1.5rem;
+            padding: 1rem 0;
         }
 
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: white;
             font-family: 'Poppins', sans-serif;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
         }
 
         .view-all-btn {
             padding: 0.75rem 1.5rem;
-            background: rgba(255, 255, 255, 0.15);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
+            border: none;
+            border-radius: 12px;
             text-decoration: none;
             font-weight: 600;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .view-all-btn:hover {
-            background: white;
-            color: var(--primary);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+            text-decoration: none;
         }
 
         /* ===== ACTIVE LOANS ===== */
@@ -550,18 +1199,41 @@
         }
 
         .loan-card {
-            background: white;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
             padding: 1.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             gap: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            transition: all 0.3s ease;
         }
 
         .loan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                0 0 30px rgba(102, 126, 234, 0.1);
+        }
+
+        .loan-card:hover::before {
+            width: 6px;
         }
 
         .loan-book-cover {
@@ -641,27 +1313,49 @@
         .empty-state {
             text-align: center;
             padding: 3rem 2rem;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .empty-state::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
         }
 
         .empty-state i {
             font-size: 4rem;
-            color: var(--border);
-            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
         }
 
         .empty-state h3 {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+            font-family: 'Poppins', sans-serif;
         }
 
         .empty-state p {
-            color: var(--text-light);
-            margin-bottom: 1.5rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+            line-height: 1.6;
         }
 
         /* ===== FEATURED BOOKS ===== */
@@ -676,17 +1370,41 @@
         }
 
         .book-card {
-            background: white;
-            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
+            position: relative;
+        }
+
+        .book-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1;
         }
 
         .book-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.2);
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 40px rgba(102, 126, 234, 0.15);
+        }
+
+        .book-card:hover::before {
+            opacity: 1;
         }
 
         .book-cover {
@@ -804,41 +1522,74 @@
         }
 
         .action-card {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             text-decoration: none;
             color: inherit;
             display: block;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
         }
 
         .action-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.15);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                0 0 30px rgba(102, 126, 234, 0.1);
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-card:hover::before {
+            left: 100%;
         }
 
         .action-card i {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 8px rgba(102, 126, 234, 0.3));
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover i {
+            transform: scale(1.1);
         }
 
         .action-card h3 {
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
-            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            color: #1e293b;
+            font-family: 'Poppins', sans-serif;
         }
 
         .action-card p {
-            color: var(--text-light);
-            font-size: 0.9rem;
+            color: #64748b;
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -864,6 +1615,37 @@
             .search-box input {
                 width: 200px;
             }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .hero-section {
+                min-height: 360px;
+                padding: 1.5rem 0;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-stat {
+                padding: 0.8rem 1.2rem;
+            }
+
+            .widgets-container {
+                justify-content: center;
+            }
+
+            .welcome-header {
+                flex-direction: column;
+                text-align: center;
+            }
         }
 
         @media (max-width: 768px) {
@@ -880,7 +1662,7 @@
             }
 
             .content-area {
-                padding: 1rem;
+                padding: 1.5rem 1rem 1rem;
             }
 
             .welcome-section h1 {
@@ -889,6 +1671,7 @@
 
             .stats-grid {
                 grid-template-columns: 1fr;
+                gap: 1rem;
             }
 
             .loans-grid {
@@ -899,6 +1682,155 @@
                 grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
                 gap: 1rem;
             }
+
+            .hero-section {
+                min-height: 320px;
+                padding: 1.25rem 0;
+                background-attachment: scroll;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-stats {
+                flex-direction: column;
+                gap: 0.8rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .hero-stat {
+                padding: 0.8rem 1rem;
+                min-width: auto;
+            }
+
+            .hero-stat-number {
+                font-size: 1.5rem;
+            }
+
+            .hero-stat-label {
+                font-size: 0.8rem;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+                gap: 0.8rem;
+            }
+
+            .hero-btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+                min-width: 200px;
+                justify-content: center;
+            }
+
+            .widgets-container {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+
+            .widget {
+                min-width: auto;
+                width: 100%;
+            }
+
+            .clock-time {
+                font-size: 1.5rem;
+            }
+
+            .weather-temp {
+                font-size: 1.3rem;
+            }
+
+            .welcome-section {
+                padding: 1.5rem;
+            }
+
+            .stat-card {
+                padding: 1.5rem 1rem;
+            }
+
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-section {
+                min-height: 300px;
+                padding: 1rem 0 1.25rem;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .hero-subtitle {
+                font-size: 0.9rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-stats {
+                gap: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-stat {
+                padding: 0.6rem 0.8rem;
+            }
+
+            .hero-stat-number {
+                font-size: 1.2rem;
+            }
+
+            .hero-btn {
+                padding: 0.7rem 1.2rem;
+                font-size: 0.85rem;
+                min-width: 180px;
+            }
+
+            .welcome-section {
+                padding: 1rem;
+            }
+
+            .content-area {
+                padding: 1.5rem 1rem 1rem;
+            }
+
+            .widget {
+                padding: 1rem;
+            }
+
+            .clock-time {
+                font-size: 1.3rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            }
+
+            .stat-card {
+                padding: 1rem 0.8rem;
+            }
+
+            .stat-value {
+                font-size: 1.8rem;
+            }
+        }
         }
 
         /* ===== ANIMATIONS ===== */
@@ -946,12 +1878,80 @@
                 </div>
             </header>
 
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-particles">
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                    <div class="particle"></div>
+                </div>
+                <div class="hero-content">
+                    <h1 class="hero-title" id="typing-title">Sistem Perpustakaan Digital</h1>
+                    <p class="hero-subtitle">Jelajahi dunia pengetahuan dengan koleksi buku terlengkap dan pengalaman membaca yang tak terlupakan</p>
+                    
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <span class="hero-stat-number"><?php echo e($featured_books->count()); ?></span>
+                            <span class="hero-stat-label">Buku Tersedia</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-number"><?php echo e($active_loans->count()); ?></span>
+                            <span class="hero-stat-label">Sedang Dipinjam</span>
+                        </div>
+                        <div class="hero-stat">
+                            <span class="hero-stat-number"><?php echo e(auth()->user()->created_at->diffForHumans()); ?></span>
+                            <span class="hero-stat-label">Member Sejak</span>
+                        </div>
+                    </div>
+
+                    <div class="hero-cta">
+                        <a href="<?php echo e(route('books.browse')); ?>" class="hero-btn primary">
+                            <i class="fas fa-compass"></i>
+                            Jelajahi Buku
+                        </a>
+                        <a href="#featured-books" class="hero-btn secondary">
+                            <i class="fas fa-star"></i>
+                            Buku Populer
+                        </a>
+                    </div>
+                </div>
+            </div>
+
             <!-- Content Area -->
             <div class="content-area">
                 <!-- Welcome Section -->
                 <div class="welcome-section fade-in">
-                    <h1>👋 Selamat Datang, <?php echo e(auth()->user()->name); ?>!</h1>
-                    <p>Temukan buku favorit Anda dan nikmati pengalaman membaca yang menyenangkan</p>
+                    <div class="welcome-header">
+                        <div class="welcome-text">
+                            <h1>👋 Selamat Datang, <?php echo e(auth()->user()->name); ?>!</h1>
+                            <p>Temukan buku favorit Anda dan nikmati pengalaman membaca yang menyenangkan</p>
+                        </div>
+                        <div class="widgets-container">
+                            <div class="widget clock-widget">
+                                <div class="clock-time" id="current-time">00:00:00</div>
+                                <div class="clock-date" id="current-date">Loading...</div>
+                            </div>
+                            <div class="widget weather-widget">
+                                <div class="weather-temp">
+                                    <i class="fas fa-sun"></i> 28°C
+                                </div>
+                                <div class="weather-desc">Cerah Berawan</div>
+                            </div>
+                            <div class="widget progress-widget">
+                                <div class="progress-title">Target Baca Bulan Ini</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                                <div class="progress-text">13 dari 20 buku</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Statistics Cards -->
@@ -1026,7 +2026,17 @@
                         <?php $__currentLoopData = $active_loans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="loan-card fade-in">
                             <div class="loan-book-cover">
-                                <i class="fas fa-book"></i>
+                                <?php
+                                    $cover = $loan->book->cover_image ?? null;
+                                    // Determine if it's a full URL or a storage path
+                                    $isUrl = $cover && (\Illuminate\Support\Str::startsWith($cover, ['http://', 'https://']));
+                                    $src = $cover ? ($isUrl ? $cover : asset('storage/'.$cover)) : null;
+                                ?>
+                                <?php if($src): ?>
+                                    <img src="<?php echo e($src); ?>" alt="<?php echo e($loan->book->title); ?> cover" onerror="this.style.display='none'">
+                                <?php else: ?>
+                                    <i class="fas fa-book"></i>
+                                <?php endif; ?>
                             </div>
                             <div class="loan-details">
                                 <h3 class="loan-book-title"><?php echo e($loan->book->title); ?></h3>
@@ -1070,7 +2080,7 @@
                 <?php endif; ?>
 
                 <!-- Featured Books Section -->
-                <div class="books-section">
+                <div class="books-section" id="featured-books">
                     <div class="section-header">
                         <h2 class="section-title">✨ Buku Terbaru & Populer</h2>
                         <a href="<?php echo e(route('books.browse')); ?>" class="view-all-btn">
@@ -1081,7 +2091,16 @@
                         <?php $__currentLoopData = $featured_books; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $book): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="book-card fade-in" onclick="window.location.href='<?php echo e(route('books.show', $book->id)); ?>'">
                             <div class="book-cover">
-                                <i class="fas fa-book"></i>
+                                <?php
+                                    $cover = $book->cover_image ?? null;
+                                    $isUrl = $cover && (\Illuminate\Support\Str::startsWith($cover, ['http://', 'https://']));
+                                    $src = $cover ? ($isUrl ? $cover : asset('storage/'.$cover)) : null;
+                                ?>
+                                <?php if($src): ?>
+                                    <img src="<?php echo e($src); ?>" alt="<?php echo e($book->title); ?> cover" onerror="this.style.display='none'">
+                                <?php else: ?>
+                                    <i class="fas fa-book"></i>
+                                <?php endif; ?>
                                 <span class="book-availability <?php echo e($book->available > 0 ? 'available' : 'unavailable'); ?>">
                                     <?php echo e($book->available > 0 ? 'Tersedia' : 'Dipinjam'); ?>
 
@@ -1127,9 +2146,133 @@
             }
         });
 
+        // Clock Widget
+        function updateClock() {
+            const now = new Date();
+            const timeElement = document.getElementById('current-time');
+            const dateElement = document.getElementById('current-date');
+            
+            if (timeElement && dateElement) {
+                const timeString = now.toLocaleTimeString('id-ID', { 
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+                
+                const dateString = now.toLocaleDateString('id-ID', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                timeElement.textContent = timeString;
+                dateElement.textContent = dateString;
+            }
+        }
+
+        // Update clock every second
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // Typing effect for hero title
+        function typeWriter(element, text, speed = 100) {
+            if (!element) return;
+            
+            // Remove the ::after cursor temporarily
+            element.style.setProperty('--cursor-display', 'none');
+            element.innerHTML = '';
+            let i = 0;
+            
+            const timer = setInterval(() => {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                    // Show cursor after typing is complete
+                    setTimeout(() => {
+                        element.style.setProperty('--cursor-display', 'inline');
+                    }, 500);
+                }
+            }, speed);
+        }
+
+        // Initialize typing effect when page loads
+        window.addEventListener('load', () => {
+            const titleElement = document.getElementById('typing-title');
+            if (titleElement) {
+                setTimeout(() => {
+                    typeWriter(titleElement, 'Sistem Perpustakaan Digital', 60);
+                }, 500);
+            }
+        });
+
+        // Parallax effect for hero section - DISABLED to fix collision issue
+        // let ticking = false;
+        // function updateParallax() {
+        //     const scrolled = window.pageYOffset;
+        //     const heroSection = document.querySelector('.hero-section');
+        //     
+        //     if (heroSection && window.innerWidth > 768) {
+        //         const rate = scrolled * -0.2;
+        //         heroSection.style.transform = `translate3d(0, ${rate}px, 0)`;
+        //     }
+        //     ticking = false;
+        // }
+
+        // window.addEventListener('scroll', () => {
+        //     if (!ticking) {
+        //         requestAnimationFrame(updateParallax);
+        //         ticking = true;
+        //     }
+        // });
+
+        // Enhanced card hover effects
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+                this.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Animated counter for stats
+        function animateCounter(element, target, duration = 2000) {
+            if (!element) return;
+            
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(current);
+            }, 16);
+        }
+
         // Search functionality
         const searchInput = document.getElementById('headerSearch');
         if (searchInput) {
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    const searchTerm = this.value.toLowerCase();
+                    if (searchTerm.length > 2) {
+                        console.log('Searching for:', searchTerm);
+                    }
+                }, 300);
+            });
+
             searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     const searchTerm = this.value.trim();
@@ -1140,10 +2283,10 @@
             });
         }
 
-        // Add fade-in animation to elements
+        // Initialize counters and animations when in view
         const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px'
+            threshold: 0.3,
+            rootMargin: '0px'
         };
 
         const observer = new IntersectionObserver(function(entries) {
@@ -1151,13 +2294,249 @@
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0)';
+                    
+                    // Animate stat counters
+                    const statValue = entry.target.querySelector('.stat-value');
+                    if (statValue && !statValue.classList.contains('animated')) {
+                        const target = parseInt(statValue.textContent);
+                        if (!isNaN(target)) {
+                            statValue.classList.add('animated');
+                            animateCounter(statValue, target);
+                        }
+                    }
+                    
+                    // Animate progress bars
+                    const progressBars = entry.target.querySelectorAll('.progress-fill');
+                    progressBars.forEach(bar => {
+                        if (!bar.classList.contains('animated')) {
+                            bar.classList.add('animated');
+                            const width = bar.style.width;
+                            bar.style.width = '0%';
+                            setTimeout(() => {
+                                bar.style.width = width;
+                            }, 500);
+                        }
+                    });
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach(el => {
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in, .stat-card, .action-card').forEach(el => {
             observer.observe(el);
         });
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add ripple effect to buttons
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+            circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+            circle.classList.add('ripple');
+
+            const ripple = button.getElementsByClassName('ripple')[0];
+            if (ripple) {
+                ripple.remove();
+            }
+
+            button.appendChild(circle);
+        }
+
+        // Add ripple effect CSS
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+            .ripple {
+                position: absolute;
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 600ms linear;
+                background-color: rgba(255, 255, 255, 0.7);
+                pointer-events: none;
+            }
+            
+            @keyframes ripple {
+                to {
+                    transform: scale(4);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(rippleStyle);
+
+        // Apply ripple effect to buttons
+        document.querySelectorAll('.hero-btn, .btn').forEach(button => {
+            button.style.position = 'relative';
+            button.style.overflow = 'hidden';
+            button.addEventListener('click', createRipple);
+        });
+
+        // Enhanced page load animations with staggered entrance
+        window.addEventListener('load', () => {
+            // Smooth page entrance
+            document.body.style.opacity = '1';
+            
+            // Staggered content animation
+            const contentSections = document.querySelectorAll('.content-area > *');
+            contentSections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100 + (index * 150));
+            });
+        });
+
+        // Enhanced hover effects for interactive elements
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add magnetic effect to buttons
+            const buttons = document.querySelectorAll('.btn, .view-all-btn, .action-card');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function(e) {
+                    this.style.transform = 'translateY(-2px) scale(1.02)';
+                });
+                
+                button.addEventListener('mouseleave', function(e) {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+                
+                // Add ripple effect
+                button.addEventListener('click', function(e) {
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.width = ripple.style.height = size + 'px';
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    ripple.classList.add('ripple-effect');
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Add parallax effect to cards
+            const cards = document.querySelectorAll('.stat-card, .book-card, .loan-card');
+            cards.forEach(card => {
+                card.addEventListener('mousemove', function(e) {
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const centerX = rect.width / 2;
+                    const centerY = rect.height / 2;
+                    const rotateX = (y - centerY) / 10;
+                    const rotateY = (centerX - x) / 10;
+                    
+                    this.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+                });
+            });
+        });
+
+        // Add CSS for enhanced animations
+        const enhancedAnimationStyle = document.createElement('style');
+        enhancedAnimationStyle.textContent = `
+            body {
+                opacity: 0;
+                transition: opacity 0.5s ease-in-out;
+            }
+            
+            .ripple-effect {
+                position: absolute;
+                border-radius: 50%;
+                background: rgba(255, 255, 255, 0.3);
+                transform: scale(0);
+                animation: ripple-animation 0.6s linear;
+                pointer-events: none;
+            }
+            
+            @keyframes ripple-animation {
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+            
+            .content-area {
+                animation: contentFadeIn 0.8s ease-out;
+            }
+            
+            @keyframes contentFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .stat-card, .action-card, .book-card, .loan-card {
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                will-change: transform;
+            }
+            
+            .widget {
+                animation: slideIn 0.6s ease-out backwards;
+            }
+            
+            .widget:nth-child(1) { animation-delay: 0.1s; }
+            .widget:nth-child(2) { animation-delay: 0.2s; }
+            .widget:nth-child(3) { animation-delay: 0.3s; }
+            
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            
+            .fade-in {
+                opacity: 0;
+                transform: translateY(20px);
+                transition: all 0.6s ease;
+            }
+            
+            .fade-in.visible {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        `;
+        document.head.appendChild(enhancedAnimationStyle);
     </script>
 </body>
 </html>

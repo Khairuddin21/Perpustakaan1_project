@@ -36,7 +36,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f1f5f9 100%);
             min-height: 100vh;
             color: var(--text-dark);
         }
@@ -386,38 +386,95 @@
         .content-area {
             padding: 2rem;
             max-width: 1400px;
+            margin: 2rem auto;
+            position: relative;
+            z-index: 5;
+            background: rgba(207, 232, 240, 0.13);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .content-area::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            border-radius: 2px;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
         }
 
         .welcome-section {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
             border-radius: 20px;
             padding: 2rem;
             margin-bottom: 2rem;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 0%; }
+            50% { background-position: 100% 0%; }
+        }
+
+        .welcome-section::after {
+            display: none;
         }
 
         .welcome-section h1 {
             font-size: 2rem;
             font-family: 'Poppins', sans-serif;
             font-weight: 800;
-            color: white;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            position: relative;
+            z-index: 2;
         }
 
         .welcome-section p {
-            color: rgba(255, 255, 255, 0.9);
+            color: var(--text-light);
             font-size: 1.1rem;
+            font-weight: 400;
+            line-height: 1.6;
+            position: relative;
+            z-index: 2;
         }
 
         /* ===== FILTERS & SEARCH ===== */
         .filters-section {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
             padding: 2rem;
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
             margin-bottom: 2rem;
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
@@ -430,8 +487,8 @@
             left: 0;
             top: 0;
             height: 100%;
-            width: 6px;
-            background: linear-gradient(180deg, var(--accent), var(--primary));
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
         }
 
         .search-container {
@@ -442,107 +499,149 @@
         .search-input {
             width: 100%;
             padding: 1rem 1rem 1rem 3rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            border-radius: 15px;
+            border: 2px solid rgba(102, 126, 234, 0.15);
+            border-radius: 12px;
             font-size: 1rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             background: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
+            font-weight: 400;
+            color: var(--text-dark);
         }
 
         .search-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
             background: white;
+            transform: translateY(-1px);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-light);
         }
 
         .search-icon {
             position: absolute;
-            left: 1rem;
+            left: 1.2rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--primary);
             font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-container:focus-within .search-icon {
+            color: var(--primary-dark);
+            transform: translateY(-50%) scale(1.1);
         }
 
         .filters-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
             align-items: end;
         }
 
         .filter-group {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .filter-label {
             font-weight: 600;
             color: var(--text-dark);
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            letter-spacing: 0.025em;
         }
 
         .filter-select {
-            padding: 0.75rem 1rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            padding: 0.875rem 1rem;
+            border: 2px solid rgba(102, 126, 234, 0.15);
             border-radius: 10px;
             background: rgba(255, 255, 255, 0.8);
             font-size: 0.9rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-dark);
+            font-weight: 400;
+            cursor: pointer;
         }
 
         .filter-select:focus {
             outline: none;
             border-color: var(--primary);
             background: white;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+            transform: translateY(-1px);
         }
 
         .filter-buttons {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.75rem;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 0.75rem 1.5rem;
+            padding: 0.75rem 1.25rem;
             border: none;
-            border-radius: 10px;
-            font-size: 0.9rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             justify-content: center;
+            letter-spacing: 0.025em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .btn-secondary {
-            background: rgba(102, 126, 234, 0.1);
+            background: #f8fafc;
             color: var(--primary);
-            border: 2px solid rgba(102, 126, 234, 0.2);
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
         .btn-secondary:hover {
-            background: rgba(102, 126, 234, 0.15);
+            background: #f1f5f9;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
         }
 
         /* ===== BOOKS GRID ===== */
         .books-section {
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .books-header {
@@ -550,13 +649,16 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 1.5rem;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
-            padding: 1.5rem;
-            border-radius: 15px;
+            padding: 2rem;
+            border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .books-header::before {
@@ -565,42 +667,53 @@
             left: 0;
             top: 0;
             height: 100%;
-            width: 6px;
-            background: linear-gradient(180deg, var(--accent), var(--primary));
+            width: 4px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
         }
 
         .books-header h2 {
             font-size: 1.5rem;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text-dark);
             margin: 0;
+            font-family: 'Poppins', sans-serif;
         }
 
         .books-meta {
             color: var(--text-light);
-            font-size: 0.9rem;
-            margin: 0;
+            font-size: 0.875rem;
+            margin: 0.25rem 0 0 0;
+            font-weight: 400;
         }
 
         .view-toggle {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.375rem;
             align-items: center;
+            background: #f8fafc;
+            padding: 0.375rem;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
         }
 
         .view-btn {
             padding: 0.5rem;
-            border: 2px solid rgba(102, 126, 234, 0.2);
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 8px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
         }
 
         .view-btn.active {
             background: var(--primary);
             color: white;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
         }
 
         .view-btn:hover {
@@ -610,8 +723,9 @@
 
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.25rem;
+            align-items: start;
         }
 
         .book-card {
@@ -619,8 +733,10 @@
             backdrop-filter: blur(20px);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
             border: 1px solid rgba(255, 255, 255, 0.2);
@@ -628,19 +744,42 @@
 
         .book-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 16px 40px rgba(102, 126, 234, 0.2);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.12),
+                0 8px 16px rgba(102, 126, 234, 0.1);
         }
 
         .book-image {
             width: 100%;
-            height: 300px;
+            height: 200px;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 3rem;
+            font-size: 2rem;
             position: relative;
+            overflow: hidden;
+        }
+
+        .book-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 40px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8));
+            z-index: 2;
+        }
+
+        .book-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            position: relative;
+            z-index: 1;
         }
 
         .book-status {
@@ -657,37 +796,65 @@
         }
 
         .book-status.available {
-            background: rgba(16, 185, 129, 0.2);
+            background: rgba(16, 185, 129, 0.726);
             color: #065f46;
             border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         .book-status.unavailable {
-            background: rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.63);
             color: #991b1b;
             border: 1px solid rgba(239, 68, 68, 0.3);
         }
 
-        .book-content {
-            padding: 1.5rem;
+        .book-content { 
+            padding: 1rem;
+            position: relative;
+            background: linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.7) 0%,
+                rgba(255, 255, 255, 0.9) 30%,
+                rgba(255, 255, 255, 0.95) 100%
+            );
+            backdrop-filter: blur(10px);
+            margin-top: -20px;
+            border-radius: 15px 15px 0 0;
+            z-index: 3;
+            overflow: hidden;
+        }
+
+        .book-content::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: var(--book-cover);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0.06;
+            z-index: -1;
+            filter: blur(1px);
         }
 
         .book-category {
             color: var(--primary);
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.375rem;
             display: block;
         }
 
         .book-title {
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-size: 0.95rem;
+            font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 0.5rem;
-            line-height: 1.4;
+            margin-bottom: 0.375rem;
+            line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -696,15 +863,15 @@
 
         .book-author {
             color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+            font-size: 0.8rem;
+            margin-bottom: 0.75rem;
         }
 
         .book-meta {
             display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            font-size: 0.8rem;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-light);
         }
 
@@ -716,20 +883,21 @@
 
         .book-actions {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.375rem;
         }
 
         .book-btn {
-            padding: 0.5rem 1rem;
-            font-size: 0.8rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.75rem;
             border: none;
-            border-radius: 10px;
+            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.375rem;
             text-decoration: none;
+            font-weight: 500;
         }
 
         .book-btn-primary {
@@ -762,11 +930,13 @@
 
         .no-results {
             text-align: center;
-            padding: 4rem 2rem;
-            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 2rem;
+            background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             overflow: hidden;
@@ -776,10 +946,12 @@
             content: '';
             position: absolute;
             left: 0;
-            top: 0;
-            height: 100%;
-            width: 6px;
-            background: linear-gradient(180deg, var(--accent), var(--primary));
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
         }
 
         .no-results i {
@@ -797,6 +969,88 @@
         .no-results p {
             color: var(--text-light);
             margin-bottom: 2rem;
+        }
+
+        /* ===== PAGINATION ===== */
+        .pagination-section {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .pagination .page-item {
+            margin: 0;
+        }
+
+        .pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+            padding: 0.5rem 0.75rem;
+            text-decoration: none;
+            border: 1px solid rgba(102, 126, 234, 0.15);
+            border-radius: 10px;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .pagination .page-link:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination .page-item.active .page-link {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .pagination .page-item.disabled .page-link {
+            color: #cbd5e1;
+            border-color: #f1f5f9;
+            background: #f8fafc;
+            cursor: not-allowed;
+        }
+
+        .pagination .page-item.disabled .page-link:hover {
+            transform: none;
+            box-shadow: none;
+            background: #f8fafc;
+            color: #cbd5e1;
+        }
+
+        .pagination-info {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-left: 2rem;
         }
 
         /* ===== RESPONSIVE ===== */
@@ -829,12 +1083,17 @@
 
             .books-header {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1.5rem;
                 text-align: center;
             }
 
             .books-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+                gap: 1.5rem;
+            }
+
+            .content-area {
+                padding: 1.5rem;
             }
         }
 
@@ -855,16 +1114,30 @@
                 padding: 1rem;
             }
 
+            .welcome-section {
+                padding: 2rem 1.5rem;
+            }
+
             .welcome-section h1 {
-                font-size: 1.5rem;
+                font-size: 2rem;
             }
 
             .filters-section {
                 padding: 1.5rem;
             }
 
+            .filters-grid {
+                gap: 1rem;
+            }
+
+            .filter-buttons {
+                grid-column: 1 / -1;
+                justify-content: center;
+            }
+
             .books-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
             }
 
             .book-meta {
@@ -889,8 +1162,101 @@
             }
         }
 
+        @keyframes slideInFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
         .fade-in {
             animation: fadeIn 0.6s ease forwards;
+        }
+
+        .slide-in {
+            animation: slideInFromLeft 0.5s ease forwards;
+        }
+
+        .scale-in {
+            animation: scaleIn 0.4s ease forwards;
+        }
+
+        /* Staggered animation for book cards */
+        .book-card {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .book-card:nth-child(1) { animation-delay: 0.1s; }
+        .book-card:nth-child(2) { animation-delay: 0.2s; }
+        .book-card:nth-child(3) { animation-delay: 0.3s; }
+        .book-card:nth-child(4) { animation-delay: 0.4s; }
+        .book-card:nth-child(5) { animation-delay: 0.5s; }
+        .book-card:nth-child(6) { animation-delay: 0.6s; }
+        .book-card:nth-child(n+7) { animation-delay: 0.7s; }
+
+        /* Hover effects */
+        .filter-select:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        .search-input:hover {
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* Loading state */
+        .loading {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        /* Smooth transitions for all interactive elements */
+        * {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom scrollbar for the page */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
         }
 
     </style>
@@ -1016,7 +1382,16 @@
                         <?php $__currentLoopData = $books; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $book): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="book-card fade-in">
                             <div class="book-image">
-                                <i class="fas fa-book"></i>
+                                <?php
+                                    $cover = $book->cover_image ?? null;
+                                    $isUrl = $cover && (\Illuminate\Support\Str::startsWith($cover, ['http://', 'https://']));
+                                    $src = $cover ? ($isUrl ? $cover : asset('storage/'.$cover)) : null;
+                                ?>
+                                <?php if($src): ?>
+                                    <img src="<?php echo e($src); ?>" alt="<?php echo e($book->title); ?> cover" onerror="this.style.display='none'">
+                                <?php else: ?>
+                                    <i class="fas fa-book"></i>
+                                <?php endif; ?>
                                 <span class="book-status <?php echo e($book->available > 0 ? 'available' : 'unavailable'); ?>">
                                     <?php echo e($book->available > 0 ? 'Tersedia' : 'Tidak Tersedia'); ?>
 
@@ -1064,72 +1439,174 @@
                         </button>
                     </div>
                     <?php endif; ?>
+
+                    <?php if(isset($books) && $books instanceof \Illuminate\Pagination\LengthAwarePaginator && $books->hasPages()): ?>
+                    <!-- Pagination Section -->
+                    <div class="pagination-section">
+                        <div class="pagination-wrapper">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination">
+                                    
+                                    <?php if($books->onFirstPage()): ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </span>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="<?php echo e($books->previousPageUrl()); ?>" rel="prev">
+                                                <i class="fas fa-chevron-left"></i>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    
+                                    <?php $__currentLoopData = $books->getUrlRange(1, min(10, $books->lastPage())); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if($page == $books->currentPage()): ?>
+                                            <li class="page-item active">
+                                                <span class="page-link"><?php echo e($page); ?></span>
+                                            </li>
+                                        <?php else: ?>
+                                            <li class="page-item">
+                                                <a class="page-link" href="<?php echo e($url); ?>"><?php echo e($page); ?></a>
+                                            </li>
+                                        <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                                    
+                                    <?php if($books->lastPage() > 10): ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">...</span>
+                                        </li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="<?php echo e($books->url($books->lastPage())); ?>"><?php echo e($books->lastPage()); ?></a>
+                                        </li>
+                                    <?php endif; ?>
+
+                                    
+                                    <?php if($books->hasMorePages()): ?>
+                                        <li class="page-item">
+                                            <a class="page-link" href="<?php echo e($books->nextPageUrl()); ?>" rel="next">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </a>
+                                        </li>
+                                    <?php else: ?>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">
+                                                <i class="fas fa-chevron-right"></i>
+                                            </span>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
+                            
+                            <?php if(isset($books) && $books->total() > 0): ?>
+                            <div class="pagination-info">
+                                Halaman <?php echo e($books->currentPage()); ?> dari <?php echo e($books->lastPage()); ?> 
+                                (<?php echo e($books->total()); ?> total buku)
+                            </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Toggle sidebar
+        // Enhanced toggle sidebar with smooth animations
         document.getElementById('menuToggle')?.addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
             const mainContent = document.getElementById('mainContent');
+            
+            // Add smooth transition
+            sidebar.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
             sidebar.classList.toggle('active');
             
             if (window.innerWidth >= 1024) {
+                mainContent.style.transition = 'margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                 mainContent.classList.toggle('expanded');
             }
         });
 
-        // Close sidebar when clicking outside on mobile
+        // Enhanced close sidebar when clicking outside
         document.addEventListener('click', function(event) {
             const sidebar = document.getElementById('sidebar');
             const menuToggle = document.getElementById('menuToggle');
             
             if (window.innerWidth <= 1024) {
                 if (!sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+                    sidebar.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
                     sidebar.classList.remove('active');
                 }
             }
         });
 
-        // Search functionality
+        // Enhanced search functionality with loading states
         let searchTimeout;
         document.getElementById('searchInput')?.addEventListener('input', function() {
             clearTimeout(searchTimeout);
+            const searchInput = this;
+            
+            // Add loading visual feedback
+            searchInput.style.backgroundImage = 'linear-gradient(90deg, transparent 0%, rgba(102, 126, 234, 0.1) 50%, transparent 100%)';
+            searchInput.style.backgroundSize = '200% 100%';
+            searchInput.style.animation = 'shimmer 1.5s infinite';
+            
             searchTimeout = setTimeout(() => {
+                searchInput.style.animation = '';
+                searchInput.style.backgroundImage = '';
                 applyFilters();
-            }, 500);
+            }, 800);
         });
 
-        // Header search
+        // Enhanced header search with smooth sync
         document.getElementById('headerSearch')?.addEventListener('input', function() {
-            document.getElementById('searchInput').value = this.value;
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                applyFilters();
-            }, 500);
+            const mainSearchInput = document.getElementById('searchInput');
+            if (mainSearchInput) {
+                mainSearchInput.value = this.value;
+                
+                // Trigger the main search input event
+                mainSearchInput.dispatchEvent(new Event('input'));
+            }
         });
 
-        // Legacy search functionality for backward compatibility
+        // Enhanced enter key handling
         const searchInput = document.getElementById('headerSearch');
         if (searchInput) {
             searchInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
+                    e.preventDefault();
                     const searchTerm = this.value.trim();
-                    if (searchTerm) {
-                        window.location.href = '<?php echo e(route("books.browse")); ?>?search=' + encodeURIComponent(searchTerm);
-                    }
+                    
+                    // Add quick loading feedback
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                        if (searchTerm) {
+                            window.location.href = '<?php echo e(route("books.browse")); ?>?search=' + encodeURIComponent(searchTerm);
+                        }
+                    }, 150);
                 }
             });
         }
 
-        // Apply filters
+        // Enhanced apply filters with better UX
         function applyFilters() {
             const search = document.getElementById('searchInput')?.value || '';
             const category = document.getElementById('categoryFilter')?.value || '';
             const status = document.getElementById('statusFilter')?.value || '';
             const sort = document.getElementById('sortFilter')?.value || '';
+            
+            // Add loading state to the entire books section
+            const booksSection = document.querySelector('.books-section');
+            if (booksSection) {
+                booksSection.style.opacity = '0.7';
+                booksSection.style.transform = 'scale(0.98)';
+                booksSection.style.transition = 'all 0.3s ease';
+            }
             
             const params = new URLSearchParams();
             if (search) params.append('search', search);
@@ -1138,59 +1615,219 @@
             if (sort) params.append('sort', sort);
             
             const url = `<?php echo e(route('books.browse')); ?>${params.toString() ? '?' + params.toString() : ''}`;
-            window.location.href = url;
+            
+            // Smooth navigation with delay
+            setTimeout(() => {
+                window.location.href = url;
+            }, 300);
         }
 
-        // Clear filters
+        // Enhanced clear filters with animation
         function clearFilters() {
-            window.location.href = '<?php echo e(route('books.browse')); ?>';
+            // Animate all filter inputs
+            const filterElements = [
+                document.getElementById('searchInput'),
+                document.getElementById('categoryFilter'),
+                document.getElementById('statusFilter'),
+                document.getElementById('sortFilter')
+            ];
+            
+            filterElements.forEach((element, index) => {
+                if (element) {
+                    setTimeout(() => {
+                        element.style.transform = 'scale(0.95)';
+                        element.style.opacity = '0.7';
+                        
+                        setTimeout(() => {
+                            element.value = '';
+                            element.style.transform = 'scale(1)';
+                            element.style.opacity = '1';
+                        }, 100);
+                    }, index * 50);
+                }
+            });
+            
+            // Navigate after animation
+            setTimeout(() => {
+                window.location.href = '<?php echo e(route('books.browse')); ?>';
+            }, 400);
         }
 
-        // Toggle view
+        // Enhanced toggle view with smooth transitions
         function toggleView(view) {
             const grid = document.getElementById('booksGrid');
             const gridBtn = document.getElementById('gridView');
             const listBtn = document.getElementById('listView');
             
+            // Add transition for smooth layout change
+            grid.style.transition = 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+            
             if (view === 'list') {
                 grid.style.gridTemplateColumns = '1fr';
-                document.querySelectorAll('.book-card').forEach(card => {
-                    card.style.display = 'flex';
-                    card.style.alignItems = 'center';
+                grid.style.gap = '1rem';
+                
+                // Animate each book card
+                document.querySelectorAll('.book-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.3s ease';
+                        card.style.display = 'flex';
+                        card.style.alignItems = 'center';
+                        card.style.minHeight = '200px';
+                    }, index * 50);
                 });
+                
                 gridBtn.classList.remove('active');
                 listBtn.classList.add('active');
             } else {
-                grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(280px, 1fr))';
-                document.querySelectorAll('.book-card').forEach(card => {
-                    card.style.display = 'block';
-                    card.style.alignItems = 'initial';
+                grid.style.gridTemplateColumns = 'repeat(auto-fill, minmax(320px, 1fr))';
+                grid.style.gap = '2rem';
+                
+                // Animate each book card back
+                document.querySelectorAll('.book-card').forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.transition = 'all 0.3s ease';
+                        card.style.display = 'block';
+                        card.style.alignItems = 'initial';
+                        card.style.minHeight = 'auto';
+                    }, index * 30);
                 });
+                
                 listBtn.classList.remove('active');
                 gridBtn.classList.add('active');
             }
+            
+            // Add ripple effect to clicked button
+            const activeBtn = view === 'list' ? listBtn : gridBtn;
+            activeBtn.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                activeBtn.style.transform = 'scale(1)';
+            }, 150);
         }
 
-        // Borrow book
+        // Enhanced borrow book with better feedback
         function borrowBook(bookId) {
-            if (confirm('Apakah Anda yakin ingin meminjam buku ini?')) {
-                alert('Fitur peminjaman akan segera tersedia!');
-            }
+            const button = event.target.closest('.book-btn-primary');
+            if (!button) return;
+            
+            // Disable button and show loading
+            const originalContent = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Meminjam...';
+            button.disabled = true;
+            button.style.cursor = 'not-allowed';
+            
+            // Simulate API call (replace with actual implementation)
+            setTimeout(() => {
+                if (confirm('Apakah Anda yakin ingin meminjam buku ini?')) {
+                    // Show success state
+                    button.innerHTML = '<i class="fas fa-check"></i> Dipinjam!';
+                    button.style.background = 'var(--success)';
+                    
+                    // Show notification
+                    showNotification('Buku berhasil dipinjam!', 'success');
+                    
+                    // Reset after delay
+                    setTimeout(() => {
+                        button.innerHTML = originalContent;
+                        button.disabled = false;
+                        button.style.cursor = 'pointer';
+                        button.style.background = '';
+                    }, 2000);
+                } else {
+                    // Reset if cancelled
+                    button.innerHTML = originalContent;
+                    button.disabled = false;
+                    button.style.cursor = 'pointer';
+                }
+            }, 1000);
         }
 
-        // View book details
+        // Enhanced view details with loading state
         function viewDetails(bookId) {
             if (!bookId || bookId === null || bookId === undefined) {
                 console.error('Book ID tidak valid:', bookId);
-                alert('Terjadi kesalahan: ID buku tidak valid');
+                showNotification('Terjadi kesalahan: ID buku tidak valid', 'error');
                 return;
             }
             
-            const baseUrl = '<?php echo e(url("/books")); ?>';
-            window.location.href = `${baseUrl}/${bookId}`;
+            const button = event.target.closest('.book-btn-secondary');
+            if (button) {
+                // Add loading animation
+                const originalContent = button.innerHTML;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                button.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    const baseUrl = '<?php echo e(url("/books")); ?>';
+                    window.location.href = `${baseUrl}/${bookId}`;
+                }, 500);
+            }
         }
 
-        // Add fade-in animation to elements
+        // Enhanced notification system
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            
+            const icon = type === 'success' ? 'check-circle' : 
+                        type === 'error' ? 'exclamation-circle' : 'info-circle';
+            
+            notification.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span>${message}</span>
+                <button onclick="this.parentNode.remove()" style="background: none; border: none; color: inherit; margin-left: auto; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Enhanced notification styles
+            const colors = {
+                success: '#10b981',
+                error: '#ef4444',
+                info: '#3b82f6'
+            };
+            
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${colors[type]};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 12px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+                z-index: 10000;
+                transform: translateX(100%);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                max-width: 400px;
+                font-weight: 500;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            requestAnimationFrame(() => {
+                notification.style.transform = 'translateX(0)';
+            });
+            
+            // Auto remove
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 4000);
+        }
+
+        // Enhanced intersection observer with staggered animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1199,15 +1836,132 @@
         const observer = new IntersectionObserver(function(entries) {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    // Add visible class for CSS animations
+                    entry.target.classList.add('visible');
+                    
+                    // Staggered animation for book cards
+                    if (entry.target.classList.contains('book-card')) {
+                        const index = Array.from(entry.target.parentNode.children).indexOf(entry.target);
+                        entry.target.style.animationDelay = `${index * 100}ms`;
+                    }
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.fade-in').forEach(el => {
-            observer.observe(el);
+        // Enhanced page initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply image overlay effect
+            applyImageOverlayEffect();
+            
+            // Observe all animatable elements
+            document.querySelectorAll('.fade-in, .book-card').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Add entrance animations with stagger
+            const sectionsToAnimate = [
+                '.welcome-section',
+                '.filters-section', 
+                '.books-header'
+            ];
+            
+            sectionsToAnimate.forEach((selector, index) => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    element.style.opacity = '0';
+                    element.style.transform = 'translateY(30px)';
+                    
+                    setTimeout(() => {
+                        element.style.transition = 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+                        element.style.opacity = '1';
+                        element.style.transform = 'translateY(0)';
+                    }, index * 200 + 300);
+                }
+            });
         });
+
+        // Function to apply image overlay effect to book cards
+        function applyImageOverlayEffect() {
+            const bookCards = document.querySelectorAll('.book-card');
+            
+            bookCards.forEach(card => {
+                const image = card.querySelector('.book-image img');
+                const content = card.querySelector('.book-content');
+                
+                if (image && content) {
+                    // Get image source
+                    const imageSrc = image.src;
+                    
+                    // Apply the image as CSS custom property
+                    content.style.setProperty('--book-cover', `url('${imageSrc}')`);
+                    
+                    // Add class for styling
+                    content.classList.add('has-cover-overlay');
+                }
+            });
+        }
+
+        // Add dynamic CSS for enhanced animations
+        const dynamicStyles = document.createElement('style');
+        dynamicStyles.textContent = `
+            @keyframes shimmer {
+                0% { background-position: -200% 0; }
+                100% { background-position: 200% 0; }
+            }
+            
+            .visible {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
+            }
+            
+            .notification {
+                animation: slideInRight 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            .book-card:hover .book-image {
+                transform: scale(1.02);
+                transition: transform 0.3s ease;
+            }
+            
+            .filter-select:focus,
+            .search-input:focus {
+                box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.12);
+            }
+            
+            .book-content.has-cover-overlay::before {
+                opacity: 0.08;
+                filter: blur(2px) saturate(0.7);
+            }
+            
+            .book-content.has-cover-overlay {
+                background: linear-gradient(
+                    to bottom,
+                    rgba(255, 255, 255, 0.85) 0%,
+                    rgba(255, 255, 255, 0.92) 30%,
+                    rgba(255, 255, 255, 0.97) 100%
+                );
+            }
+            
+            .book-content.has-cover-overlay .book-title,
+            .book-content.has-cover-overlay .book-author,
+            .book-content.has-cover-overlay .book-category {
+                text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
+                position: relative;
+                z-index: 2;
+            }
+        `;
+        document.head.appendChild(dynamicStyles);
     </script>
 </body>
 </html><?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/dashboard/browse.blade.php ENDPATH**/ ?>
