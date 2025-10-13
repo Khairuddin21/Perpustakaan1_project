@@ -8,6 +8,7 @@
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
     
     <style>
         * {
@@ -740,6 +741,9 @@
             cursor: pointer;
             position: relative;
             border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 460px;
+            display: flex;
+            flex-direction: column;
         }
 
         .book-card:hover {
@@ -760,6 +764,7 @@
             font-size: 2rem;
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
 
         .book-image::after {
@@ -821,6 +826,10 @@
             border-radius: 15px 15px 0 0;
             z-index: 3;
             overflow: hidden;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .book-content::before {
@@ -850,27 +859,32 @@
         }
 
         .book-title {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 0.375rem;
-            line-height: 1.3;
+            margin-bottom: 0.25rem;
+            line-height: 1.2;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            height: 2.4rem;
         }
 
         .book-author {
             color: var(--text-light);
-            font-size: 0.8rem;
-            margin-bottom: 0.75rem;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .book-meta {
             display: flex;
-            gap: 0.75rem;
-            margin-bottom: 0.75rem;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 0.5rem;
             font-size: 0.7rem;
             color: var(--text-light);
         }
@@ -881,9 +895,22 @@
             gap: 0.3rem;
         }
 
+        .book-content-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .book-content-footer {
+            margin-top: auto;
+            padding-top: 0.5rem;
+        }
+
         .book-actions {
             display: flex;
             gap: 0.375rem;
+            margin-top: 0.75rem;
         }
 
         .book-btn {
@@ -1015,7 +1042,7 @@
             font-size: 0.875rem;
             transition: all 0.3s ease;
             background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);    
         }
 
         .pagination .page-link:hover {
@@ -1051,6 +1078,402 @@
             font-size: 0.875rem;
             color: var(--text-light);
             margin-left: 2rem;
+        }
+
+        /* ===== BORROWED BOOKS MODAL ===== */
+        .borrowed-books-container {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .borrowed-book-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .borrowed-book-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1);
+        }
+
+        .borrowed-book-cover {
+            width: 60px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .borrowed-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .borrowed-book-cover i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .borrowed-book-info {
+            flex: 1;
+        }
+
+        .borrowed-book-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .borrowed-book-author {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .borrowed-book-dates {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .borrowed-book-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .borrowed-book-date i {
+            color: var(--primary);
+        }
+
+        .borrowed-book-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .extend-btn {
+            background: var(--warning);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .extend-btn:hover {
+            background: #e08900;
+            transform: translateY(-1px);
+        }
+
+        /* ===== LOAN HISTORY MODAL ===== */
+        .history-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .filter-group,
+        .search-group {
+            flex: 1;
+            position: relative;
+        }
+
+        .history-controls select,
+        .history-controls input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .history-controls select:focus,
+        .history-controls input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-group i {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .loan-history-container {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1);
+        }
+
+        .history-book-cover {
+            width: 60px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .history-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .history-book-cover i {
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .history-book-info {
+            flex: 1;
+        }
+
+        .history-book-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .history-book-author {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 0.75rem;
+        }
+
+        .history-dates {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .history-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .history-date i {
+            color: var(--primary);
+        }
+
+        .history-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .empty-state-modal {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-modal i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .empty-state-modal h3 {
+            font-size: 1.25rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.pending {
+            background: rgba(251, 191, 36, 0.1);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 191, 36, 0.2);
+        }
+
+        .status-badge.borrowed {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .status-badge.returned {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .status-badge.overdue {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .status-badge.rejected {
+            background: rgba(107, 114, 128, 0.1);
+            color: #6b7280;
+            border: 1px solid rgba(107, 114, 128, 0.2);
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--text-light);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== NOTIFICATION SYSTEM ===== */
+        .notification {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 10000;
+            animation: slideInNotification 0.3s ease-out;
+            max-width: 400px;
+            border-left: 4px solid var(--info);
+        }
+
+        .notification-success {
+            border-left-color: var(--success);
+        }
+
+        .notification-error {
+            border-left-color: var(--danger);
+        }
+
+        .notification-warning {
+            border-left-color: var(--warning);
+        }
+
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+        }
+
+        .notification-content i {
+            font-size: 1.25rem;
+        }
+
+        .notification-success .notification-content i {
+            color: var(--success);
+        }
+
+        .notification-error .notification-content i {
+            color: var(--danger);
+        }
+
+        .notification-warning .notification-content i {
+            color: var(--warning);
+        }
+
+        .notification-info .notification-content i {
+            color: var(--info);
+        }
+
+        .notification-content span {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        .notification button {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .notification button:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-dark);
+        }
+
+        @keyframes slideInNotification {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         /* ===== RESPONSIVE ===== */
@@ -1259,6 +1682,523 @@
             background: linear-gradient(135deg, var(--primary-dark), var(--secondary));
         }
 
+        /* ===== MODAL STYLES ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 20px;
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 600px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            transform: translateY(-50px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            padding: 2rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .request-form {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .book-preview {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .preview-cover {
+            width: 100px;
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .preview-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-info {
+            flex: 1;
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .preview-author {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .preview-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .preview-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* ===== ENHANCED LOAN MODAL ===== */
+        .loan-modal-container {
+            max-width: 800px;
+            width: 95vw;
+        }
+
+        /* ===== TAB NAVIGATION ===== */
+        .tab-navigation {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--light);
+            border-radius: 12px 12px 0 0;
+            overflow: hidden;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: 1;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: white;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== SECTION HEADERS ===== */
+        .camera-section h4,
+        .identity-section h4,
+        .photo-section h4,
+        .loan-details h4 {
+            margin: 0 0 1rem 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ===== CAMERA SECTION ===== */
+        .camera-container {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #qrVideo {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            text-align: center;
+        }
+
+        .scan-frame {
+            width: 200px;
+            height: 200px;
+            border: 2px solid #fff;
+            border-radius: 12px;
+            position: relative;
+            margin-bottom: 1rem;
+            animation: scanPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scanPulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.02); }
+        }
+
+        .scan-frame::before,
+        .scan-frame::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--primary);
+        }
+
+        .scan-frame::before {
+            top: -3px;
+            left: -3px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .scan-frame::after {
+            bottom: -3px;
+            right: -3px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .scan-result {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .result-item label {
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        #qrData {
+            width: 100%;
+            min-height: 60px;
+            resize: vertical;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.5rem;
+            font-family: monospace;
+        }
+
+        /* ===== FORM LAYOUTS ===== */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== PHOTO SECTION ===== */
+        .photo-capture {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .photo-preview {
+            width: 120px;
+            height: 120px;
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--light);
+            color: var(--text-light);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        .photo-preview i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-preview p {
+            font-size: 0.8rem;
+            margin: 0;
+        }
+
+        .photo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .photo-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        /* ===== PHOTO MODAL ===== */
+        .photo-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90vw;
+        }
+
+        .photo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .photo-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .photo-header button {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .photo-header button:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .photo-camera {
+            position: relative;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+
+        #photoVideo {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+
+        .photo-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .modal-container {
+                width: 95vw;
+                max-height: 95vh;
+            }
+
+            .modal-header {
+                padding: 1.5rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .book-preview {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .preview-cover {
+                align-self: center;
+            }
+
+            .preview-details {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -1398,30 +2338,34 @@
                                 </span>
                             </div>
                             <div class="book-content">
-                                <span class="book-category"><?php echo e($book->category->name ?? 'Umum'); ?></span>
-                                <h3 class="book-title"><?php echo e($book->title); ?></h3>
-                                <p class="book-author"><?php echo e($book->author); ?></p>
-                                <div class="book-meta">
-                                    <span><i class="fas fa-calendar"></i> <?php echo e($book->publication_year ?? 'N/A'); ?></span>
-                                    <span><i class="fas fa-copy"></i> <?php echo e($book->stock); ?> eksemplar</span>
-                                    <span><i class="fas fa-check-circle"></i> <?php echo e($book->available); ?> tersedia</span>
+                                <div class="book-content-main">
+                                    <span class="book-category"><?php echo e($book->category->name ?? 'Umum'); ?></span>
+                                    <h3 class="book-title"><?php echo e($book->title); ?></h3>
+                                    <p class="book-author"><?php echo e($book->author); ?></p>
+                                    <div class="book-meta">
+                                        <span><i class="fas fa-calendar"></i> <?php echo e($book->publication_year ?? 'N/A'); ?></span>
+                                        <span><i class="fas fa-copy"></i> <?php echo e($book->stock); ?> eksemplar</span>
+                                        <span><i class="fas fa-check-circle"></i> <?php echo e($book->available); ?> tersedia</span>
+                                    </div>
                                 </div>
-                                <div class="book-actions">
-                                    <?php if($book->available > 0): ?>
-                                    <button class="book-btn book-btn-primary" onclick="borrowBook(<?php echo e($book->id); ?>)">
-                                        <i class="fas fa-hand-holding"></i>
-                                        Pinjam
-                                    </button>
-                                    <?php else: ?>
-                                    <button class="book-btn book-btn-disabled" disabled>
-                                        <i class="fas fa-clock"></i>
-                                        Tidak Tersedia
-                                    </button>
-                                    <?php endif; ?>
-                                    <button class="book-btn book-btn-secondary" onclick="viewDetails(<?php echo e($book->id); ?>)">
-                                        <i class="fas fa-info-circle"></i>
-                                        Detail
-                                    </button>
+                                <div class="book-content-footer">
+                                    <div class="book-actions">
+                                        <?php if($book->available > 0): ?>
+                                        <button class="book-btn book-btn-primary" onclick="borrowBook(<?php echo e($book->id); ?>)">
+                                            <i class="fas fa-hand-holding"></i>
+                                            Pinjam
+                                        </button>
+                                        <?php else: ?>
+                                        <button class="book-btn book-btn-disabled" disabled>
+                                            <i class="fas fa-clock"></i>
+                                            Tidak Tersedia
+                                        </button>
+                                        <?php endif; ?>
+                                        <button class="book-btn book-btn-secondary" onclick="viewDetails(<?php echo e($book->id); ?>)">
+                                            <i class="fas fa-info-circle"></i>
+                                            Detail
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1515,7 +2459,412 @@
         </div>
     </div>
 
+    <!-- Request Loan Modal -->
+    <div class="modal-overlay" id="requestLoanModal">
+        <div class="modal-container loan-modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-hand-holding"></i> Ajukan Peminjaman Buku</h2>
+                <button class="modal-close" onclick="closeRequestLoanModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="request-form">
+                    <div class="book-preview" id="bookPreview">
+                        <!-- Book details will be loaded here -->
+                    </div>
+                    
+                    <!-- Tab Navigation -->
+                    <div class="tab-navigation">
+                        <button class="tab-btn active" onclick="switchTab('qr-scan')" id="qr-tab-btn">
+                            <i class="fas fa-qrcode"></i>
+                            Scan QR Code
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('manual-input')" id="manual-tab-btn">
+                            <i class="fas fa-edit"></i>
+                            Input Manual
+                        </button>
+                    </div>
+
+                    <form id="loanRequestForm">
+                        <!-- QR Scan Tab -->
+                        <div id="qr-scan-tab" class="tab-content active">
+                            <div class="camera-section">
+                                <h4><i class="fas fa-camera"></i> Scan QR Code Identitas</h4>
+                                <div class="camera-container">
+                                    <video id="qrVideo" autoplay playsinline></video>
+                                    <canvas id="qrCanvas" style="display: none;"></canvas>
+                                    <div class="camera-overlay">
+                                        <div class="scan-frame"></div>
+                                        <p>Arahkan kamera ke QR Code pada kartu identitas</p>
+                                    </div>
+                                </div>
+                                <div class="camera-controls">
+                                    <button type="button" class="btn btn-primary" onclick="startQRScanner()">
+                                        <i class="fas fa-camera"></i> Mulai Scan
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="stopQRScanner()">
+                                        <i class="fas fa-stop"></i> Stop
+                                    </button>
+                                </div>
+                                <div id="qrResult" class="scan-result" style="display: none;">
+                                    <div class="result-item">
+                                        <label>Data yang terdeteksi:</label>
+                                        <textarea id="qrData" readonly></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Manual Input Tab -->
+                        <div id="manual-input-tab" class="tab-content">
+                            <div class="identity-section">
+                                <h4><i class="fas fa-id-card"></i> Data Identitas</h4>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="nisn">NISN (Nomor Induk Siswa Nasional)</label>
+                                        <input type="text" id="nisn" name="nisn" placeholder="Masukkan NISN" maxlength="20">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nis">NIS (Nomor Induk Siswa)</label>
+                                        <input type="text" id="nis" name="nis" placeholder="Masukkan NIS" maxlength="20">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Photo Capture Section (Common for both tabs) -->
+                        <div class="photo-section">
+                            <h4><i class="fas fa-camera-retro"></i> Foto Peminjam</h4>
+                            <div class="photo-capture">
+                                <div class="photo-preview" id="photoPreview">
+                                    <i class="fas fa-user-circle"></i>
+                                    <p>Belum ada foto</p>
+                                </div>
+                                <div class="photo-controls">
+                                    <button type="button" class="btn btn-primary" onclick="startPhotoCapture()">
+                                        <i class="fas fa-camera"></i> Ambil Foto
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="retakePhoto()" id="retakeBtn" style="display: none;">
+                                        <i class="fas fa-redo"></i> Foto Ulang
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Camera Modal for Photo -->
+                        <div id="photoModal" class="photo-modal" style="display: none;">
+                            <div class="photo-modal-content">
+                                <div class="photo-header">
+                                    <h3>Ambil Foto Peminjam</h3>
+                                    <button type="button" onclick="closePhotoModal()">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                                <div class="photo-camera">
+                                    <video id="photoVideo" autoplay playsinline></video>
+                                    <canvas id="photoCanvas" style="display: none;"></canvas>
+                                </div>
+                                <div class="photo-actions">
+                                    <button type="button" class="btn btn-primary" onclick="capturePhoto()">
+                                        <i class="fas fa-camera"></i> Ambil Foto
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" onclick="closePhotoModal()">
+                                        Batal
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Loan Details -->
+                        <div class="loan-details">
+                            <h4><i class="fas fa-calendar-alt"></i> Detail Peminjaman</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="loanDuration">Durasi Peminjaman</label>
+                                    <select id="loanDuration" name="loan_duration" required>
+                                        <option value="7">7 Hari</option>
+                                        <option value="14" selected>14 Hari</option>
+                                        <option value="21">21 Hari</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="loanNotes">Catatan (Opsional)</label>
+                                <textarea id="loanNotes" name="notes" placeholder="Tambahkan catatan jika diperlukan..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeRequestLoanModal()">Batal</button>
+                            <button type="submit" class="btn btn-primary" id="submitLoanBtn">
+                                <i class="fas fa-paper-plane"></i>
+                                Ajukan Peminjaman
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Borrowed Books Modal -->
+    <div class="modal-overlay" id="borrowedBooksModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-book-reader"></i> Buku yang Sedang Dipinjam</h2>
+                <button class="modal-close" onclick="closeBorrowedBooksModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="borrowed-books-container">
+                    <div id="borrowedBooksList">
+                        <!-- Borrowed books will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loan History Modal -->
+    <div class="modal-overlay" id="loanHistoryModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-history"></i> Riwayat Peminjaman</h2>
+                <button class="modal-close" onclick="closeLoanHistoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="history-controls">
+                    <div class="filter-group">
+                        <select id="historyFilter" onchange="filterHistory()">
+                            <option value="all">Semua Status</option>
+                            <option value="pending">Menunggu Persetujuan</option>
+                            <option value="borrowed">Sedang Dipinjam</option>
+                            <option value="returned">Dikembalikan</option>
+                            <option value="overdue">Terlambat</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <input type="text" id="historySearch" placeholder="Cari buku..." onkeyup="searchHistory()">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="loan-history-container">
+                    <div id="loanHistoryList">
+                        <!-- Loan history will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ===== CAMERA AND QR SCANNER FUNCTIONALITY =====
+        let qrCodeReader = null;
+    let qrVideoStream = null;
+    let qrDecodeControls = null; // ZXing decode controls to stop decoding
+        let photoVideoStream = null;
+        let currentCapturedPhoto = null;
+
+        // Initialize QR Code Reader
+        function initializeQRReader() {
+            if (typeof ZXing !== 'undefined') {
+                qrCodeReader = new ZXing.BrowserQRCodeReader();
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            // Remove active class from all tabs and contents
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            // Resolve the correct button ID (handle legacy IDs)
+            let btnId = null;
+            if (tabName === 'qr-scan') btnId = 'qr-tab-btn';
+            if (tabName === 'manual-input') btnId = 'manual-tab-btn';
+
+            // Prefer mapped ID; fallback to pattern-based ID if exists
+            const btnEl = document.getElementById(btnId) || document.getElementById(tabName + '-tab-btn');
+            const contentEl = document.getElementById(tabName + '-tab');
+
+            if (btnEl) btnEl.classList.add('active');
+            if (contentEl) contentEl.classList.add('active');
+
+            // Stop any running cameras when switching tabs
+            stopQRScanner();
+        }
+
+        // Start QR Scanner
+    async function startQRScanner() {
+            try {
+        // Ensure any previous session is fully stopped
+        stopQRScanner();
+                const video = document.getElementById('qrVideo');
+                
+                if (!qrCodeReader) {
+                    initializeQRReader();
+                }
+
+                if (!qrCodeReader) {
+                    throw new Error('QR Code reader tidak tersedia');
+                }
+
+                // Request camera permission
+                const constraints = {
+                    video: {
+                        facingMode: 'environment', // Use back camera if available
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                };
+
+                qrVideoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = qrVideoStream;
+
+                // Start decoding and keep controls to stop later
+                qrDecodeControls = qrCodeReader.decodeFromVideoDevice(undefined, video, (result, error) => {
+                    if (result) {
+                        handleQRScanResult(result.text);
+                    }
+                    if (error && !(error instanceof ZXing.NotFoundException)) {
+                        console.error('QR Scan Error:', error);
+                    }
+                });
+
+                showNotification('Kamera berhasil diaktifkan', 'success');
+            } catch (error) {
+                console.error('Camera Error:', error);
+                showNotification('Gagal mengakses kamera: ' + error.message, 'error');
+            }
+        }
+
+        // Stop QR Scanner
+        function stopQRScanner() {
+            if (qrVideoStream) {
+                qrVideoStream.getTracks().forEach(track => track.stop());
+                qrVideoStream = null;
+            }
+            
+            if (qrCodeReader) {
+                try { qrCodeReader.reset(); } catch (e) { /* ignore */ }
+            }
+
+            if (qrDecodeControls && typeof qrDecodeControls.stop === 'function') {
+                try { qrDecodeControls.stop(); } catch (e) { /* ignore */ }
+                qrDecodeControls = null;
+            }
+
+            const video = document.getElementById('qrVideo');
+            if (video) {
+                video.srcObject = null;
+            }
+        }
+
+        // Handle QR Scan Result
+        function handleQRScanResult(data) {
+            document.getElementById('qrData').value = data;
+            document.getElementById('qrResult').style.display = 'block';
+            
+            // Try to parse the QR data if it's structured
+            try {
+                const parsed = JSON.parse(data);
+                if (parsed.nisn) document.getElementById('nisn').value = parsed.nisn;
+                if (parsed.nis) document.getElementById('nis').value = parsed.nis;
+                showNotification('Data QR berhasil dipindai dan diisi otomatis', 'success');
+            } catch (e) {
+                showNotification('Data QR berhasil dipindai', 'success');
+            }
+            
+            stopQRScanner();
+        }
+
+        // Start Photo Capture
+        async function startPhotoCapture() {
+            try {
+                document.getElementById('photoModal').style.display = 'flex';
+                
+                const video = document.getElementById('photoVideo');
+                const constraints = {
+                    video: {
+                        facingMode: 'user', // Use front camera for selfie
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                };
+
+                photoVideoStream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = photoVideoStream;
+
+                showNotification('Kamera foto berhasil diaktifkan', 'success');
+            } catch (error) {
+                console.error('Photo Camera Error:', error);
+                showNotification('Gagal mengakses kamera: ' + error.message, 'error');
+                closePhotoModal();
+            }
+        }
+
+        // Capture Photo
+        function capturePhoto() {
+            const video = document.getElementById('photoVideo');
+            const canvas = document.getElementById('photoCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            // Draw video frame to canvas
+            ctx.drawImage(video, 0, 0);
+
+            // Convert to base64
+            currentCapturedPhoto = canvas.toDataURL('image/jpeg', 0.8);
+
+            // Update preview
+            const preview = document.getElementById('photoPreview');
+            preview.innerHTML = `<img src="${currentCapturedPhoto}" alt="Captured Photo">`;
+
+            // Show retake button
+            document.getElementById('retakeBtn').style.display = 'inline-block';
+
+            closePhotoModal();
+            showNotification('Foto berhasil diambil', 'success');
+        }
+
+        // Retake Photo
+        function retakePhoto() {
+            currentCapturedPhoto = null;
+            document.getElementById('photoPreview').innerHTML = `
+                <i class="fas fa-user-circle"></i>
+                <p>Belum ada foto</p>
+            `;
+            document.getElementById('retakeBtn').style.display = 'none';
+            startPhotoCapture();
+        }
+
+        // Close Photo Modal
+        function closePhotoModal() {
+            document.getElementById('photoModal').style.display = 'none';
+            
+            if (photoVideoStream) {
+                photoVideoStream.getTracks().forEach(track => track.stop());
+                photoVideoStream = null;
+            }
+
+            const video = document.getElementById('photoVideo');
+            if (video) {
+                video.srcObject = null;
+            }
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQRReader();
+        });
+
         // Enhanced toggle sidebar with smooth animations
         document.getElementById('menuToggle')?.addEventListener('click', function() {
             const sidebar = document.getElementById('sidebar');
@@ -1709,36 +3058,14 @@
             const button = event.target.closest('.book-btn-primary');
             if (!button) return;
             
-            // Disable button and show loading
-            const originalContent = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Meminjam...';
-            button.disabled = true;
-            button.style.cursor = 'not-allowed';
+            // Check if user is authenticated
+            <?php if(auth()->guard()->guest()): ?>
+                showNotification('Silakan login terlebih dahulu untuk meminjam buku', 'warning');
+                return;
+            <?php endif; ?>
             
-            // Simulate API call (replace with actual implementation)
-            setTimeout(() => {
-                if (confirm('Apakah Anda yakin ingin meminjam buku ini?')) {
-                    // Show success state
-                    button.innerHTML = '<i class="fas fa-check"></i> Dipinjam!';
-                    button.style.background = 'var(--success)';
-                    
-                    // Show notification
-                    showNotification('Buku berhasil dipinjam!', 'success');
-                    
-                    // Reset after delay
-                    setTimeout(() => {
-                        button.innerHTML = originalContent;
-                        button.disabled = false;
-                        button.style.cursor = 'pointer';
-                        button.style.background = '';
-                    }, 2000);
-                } else {
-                    // Reset if cancelled
-                    button.innerHTML = originalContent;
-                    button.disabled = false;
-                    button.style.cursor = 'pointer';
-                }
-            }, 1000);
+            // Open request loan modal with book details
+            requestBookLoan(bookId);
         }
 
         // Enhanced view details with loading state
@@ -1962,6 +3289,527 @@
             }
         `;
         document.head.appendChild(dynamicStyles);
+
+        // ===== LOAN REQUEST FUNCTIONS =====
+        
+        // Request Book Loan
+        function requestBookLoan(bookId) {
+            // Fetch book details first
+            fetch(`/api/books/${bookId}`, {
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const book = data.book;
+                    const modal = document.getElementById('requestLoanModal');
+                    const bookPreview = document.getElementById('bookPreview');
+                    
+                    // Populate book preview
+                    bookPreview.innerHTML = `
+                        <div class="preview-cover">
+                            ${book.cover_image ? 
+                                `<img src="${book.cover_image.startsWith('http') ? book.cover_image : '/storage/' + book.cover_image}" alt="${book.title}">` : 
+                                '<i class="fas fa-book"></i>'
+                            }
+                        </div>
+                        <div class="preview-info">
+                            <h3 class="preview-title">${book.title}</h3>
+                            <p class="preview-author">oleh ${book.author}</p>
+                            <div class="preview-details">
+                                <div class="preview-detail">
+                                    <i class="fas fa-tag"></i>
+                                    <span>${book.category?.name || 'Umum'}</span>
+                                </div>
+                                <div class="preview-detail">
+                                    <i class="fas fa-calendar"></i>
+                                    <span>${book.publication_year || 'N/A'}</span>
+                                </div>
+                                <div class="preview-detail">
+                                    <i class="fas fa-copy"></i>
+                                    <span>${book.available} tersedia</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Store book ID for form submission
+                    document.getElementById('loanRequestForm').dataset.bookId = bookId;
+                    
+                    // Show modal
+                    modal.classList.add('active');
+                } else {
+                    showNotification('Gagal memuat detail buku', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Gagal memuat detail buku', 'error');
+            });
+        }
+
+        // Close Request Loan Modal (defined later with reset)
+
+        // Submit Loan Request
+        if (document.getElementById('loanRequestForm')) {
+            document.getElementById('loanRequestForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                console.log('Form submission started');
+                
+                const bookId = this.dataset.bookId;
+                const loanDuration = document.getElementById('loanDuration').value;
+                const notes = document.getElementById('loanNotes').value;
+                
+                // Get identification method and data (robust to missing active button)
+                let identificationMethod = 'manual_input';
+                const activeBtn = document.querySelector('.tab-btn.active');
+                if (activeBtn) {
+                    identificationMethod = activeBtn.id === 'qr-tab-btn' ? 'qr_scan' : 'manual_input';
+                } else {
+                    // Fallback: check which tab content is visible
+                    const qrTabActive = document.getElementById('qr-scan-tab')?.classList.contains('active');
+                    identificationMethod = qrTabActive ? 'qr_scan' : 'manual_input';
+                }
+                
+                // Collect form data based on active tab
+                let nisn = null;
+                let nis = null;
+                let qrData = null;
+                
+                if (identificationMethod === 'qr_scan') {
+                    qrData = document.getElementById('qrData').value;
+                    // Try to extract NISN/NIS from QR data
+                    try {
+                        const parsed = JSON.parse(qrData);
+                        nisn = parsed.nisn || null;
+                        nis = parsed.nis || null;
+                    } catch (e) {
+                        // QR data is not JSON, keep as is
+                    }
+                } else {
+                    nisn = document.getElementById('nisn').value || null;
+                    nis = document.getElementById('nis').value || null;
+                }
+
+                // Validation
+                if (identificationMethod === 'qr_scan' && !qrData) {
+                    showNotification('Silakan scan QR code terlebih dahulu', 'warning');
+                    return;
+                }
+
+                if (identificationMethod === 'manual_input' && !nisn && !nis) {
+                    showNotification('Silakan isi NISN atau NIS', 'warning');
+                    return;
+                }
+
+                if (!currentCapturedPhoto) {
+                    showNotification('Silakan ambil foto peminjam terlebih dahulu', 'warning');
+                    return;
+                }
+                
+                const formData = {
+                    book_id: bookId,
+                    loan_duration: loanDuration,
+                    notes: notes,
+                    nisn: nisn,
+                    nis: nis,
+                    borrower_photo: currentCapturedPhoto,
+                    qr_data: qrData,
+                    identification_method: identificationMethod
+                };
+                
+                console.log('Form data:', formData);
+                
+                // Show loading
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+                submitBtn.disabled = true;
+                
+                // Submit request
+                fetch('/api/request-loan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify(formData)
+                })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Response data:', data);
+                    if (data.success) {
+                        showNotification(data.message, 'success');
+                        closeRequestLoanModal();
+                        // Reset form and clear photo
+                        this.reset();
+                        resetLoanForm();
+                    } else {
+                        showNotification(data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Fetch error:', error);
+                    showNotification('Terjadi kesalahan. Silakan coba lagi.', 'error');
+                })
+                .finally(() => {
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                });
+            });
+        }
+
+        // Reset Loan Form
+        function resetLoanForm() {
+            // Reset photo
+            currentCapturedPhoto = null;
+            document.getElementById('photoPreview').innerHTML = `
+                <i class="fas fa-user-circle"></i>
+                <p>Belum ada foto</p>
+            `;
+            document.getElementById('retakeBtn').style.display = 'none';
+            
+            // Reset QR result
+            document.getElementById('qrResult').style.display = 'none';
+            document.getElementById('qrData').value = '';
+            
+            // Reset form fields
+            document.getElementById('nisn').value = '';
+            document.getElementById('nis').value = '';
+            
+            // Reset to first tab
+            switchTab('qr-scan');
+            
+            // Stop any running cameras
+            stopQRScanner();
+            closePhotoModal();
+        }
+
+        // Enhanced close modal function
+        function closeRequestLoanModal() {
+            document.getElementById('requestLoanModal').classList.remove('active');
+            resetLoanForm();
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // ===== BORROWED BOOKS MODAL FUNCTIONS =====
+        
+        // Show Borrowed Books Modal
+        function showBorrowedBooks() {
+            const modal = document.getElementById('borrowedBooksModal');
+            const booksList = document.getElementById('borrowedBooksList');
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Show loading
+            booksList.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Memuat buku yang sedang dipinjam...</p>
+                </div>
+            `;
+            
+            // Fetch borrowed books
+            fetch('/api/borrowed-books', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.borrowed_books.length === 0) {
+                        booksList.innerHTML = `
+                            <div class="empty-state-modal">
+                                <i class="fas fa-book-open"></i>
+                                <h3>Tidak Ada Buku yang Sedang Dipinjam</h3>
+                                <p>Mulai jelajahi koleksi kami dan pinjam buku favorit Anda!</p>
+                            </div>
+                        `;
+                    } else {
+                        booksList.innerHTML = data.borrowed_books.map(book => `
+                            <div class="borrowed-book-item">
+                                <div class="borrowed-book-cover">
+                                    ${book.book.cover_image ? 
+                                        `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/storage/' + book.book.cover_image}" alt="${book.book.title}">` : 
+                                        '<i class="fas fa-book"></i>'
+                                    }
+                                </div>
+                                <div class="borrowed-book-info">
+                                    <h3 class="borrowed-book-title">${book.book.title}</h3>
+                                    <p class="borrowed-book-author">oleh ${book.book.author}</p>
+                                    <div class="borrowed-book-dates">
+                                        <div class="borrowed-book-date">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            Dipinjam: ${book.loan_date}
+                                        </div>
+                                        <div class="borrowed-book-date">
+                                            <i class="fas fa-calendar-check"></i>
+                                            Jatuh Tempo: ${book.due_date}
+                                        </div>
+                                    </div>
+                                    <div class="borrowed-book-status">
+                                        <span class="status-badge ${book.status}">${book.status_text}</span>
+                                        ${book.can_extend ? 
+                                            `<button class="extend-btn" onclick="extendLoan(${book.id})">
+                                                <i class="fas fa-clock"></i> Perpanjang
+                                            </button>` : ''
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    booksList.innerHTML = `
+                        <div class="empty-state-modal">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Gagal Memuat Data</h3>
+                            <p>${data.message || 'Terjadi kesalahan saat memuat data.'}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                booksList.innerHTML = `
+                    <div class="empty-state-modal">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Gagal Memuat Data</h3>
+                        <p>Terjadi kesalahan saat memuat data. Silakan coba lagi.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Close Borrowed Books Modal
+        function closeBorrowedBooksModal() {
+            document.getElementById('borrowedBooksModal').classList.remove('active');
+        }
+
+        // ===== LOAN HISTORY MODAL FUNCTIONS =====
+        
+        // Show Loan History Modal
+        function showLoanHistory() {
+            const modal = document.getElementById('loanHistoryModal');
+            const historyList = document.getElementById('loanHistoryList');
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Load history
+            loadLoanHistory();
+        }
+
+        // Close Loan History Modal
+        function closeLoanHistoryModal() {
+            document.getElementById('loanHistoryModal').classList.remove('active');
+        }
+
+        // Load Loan History
+        function loadLoanHistory(status = 'all', search = '') {
+            const historyList = document.getElementById('loanHistoryList');
+            
+            // Show loading
+            historyList.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Memuat riwayat peminjaman...</p>
+                </div>
+            `;
+            
+            // Build query parameters
+            const params = new URLSearchParams();
+            if (status !== 'all') params.append('status', status);
+            if (search) params.append('search', search);
+            
+            // Fetch loan history
+            fetch('/api/loan-history?' + params.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.loan_history.length === 0) {
+                        historyList.innerHTML = `
+                            <div class="empty-state-modal">
+                                <i class="fas fa-history"></i>
+                                <h3>Tidak Ada Riwayat Peminjaman</h3>
+                                <p>Belum ada riwayat peminjaman yang sesuai dengan filter.</p>
+                            </div>
+                        `;
+                    } else {
+                        historyList.innerHTML = data.loan_history.map(history => `
+                            <div class="history-item">
+                                <div class="history-book-cover">
+                                    ${history.book.cover_image ? 
+                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/storage/' + history.book.cover_image}" alt="${history.book.title}">` : 
+                                        '<i class="fas fa-book"></i>'
+                                    }
+                                </div>
+                                <div class="history-book-info">
+                                    <h3 class="history-book-title">${history.book.title}</h3>
+                                    <p class="history-book-author">oleh ${history.book.author}</p>
+                                    <div class="history-dates">
+                                        ${history.request_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-paper-plane"></i>
+                                                Diajukan: ${history.request_date}
+                                            </div>
+                                        ` : ''}
+                                        ${history.loan_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                Dipinjam: ${history.loan_date}
+                                            </div>
+                                        ` : ''}
+                                        ${history.return_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-calendar-check"></i>
+                                                Dikembalikan: ${history.return_date}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <div class="history-status">
+                                        <span class="status-badge ${history.status}">${history.status_text}</span>
+                                        <span style="font-size: 0.8rem; color: var(--text-light);">${history.duration}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    historyList.innerHTML = `
+                        <div class="empty-state-modal">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Gagal Memuat Data</h3>
+                            <p>${data.message || 'Terjadi kesalahan saat memuat data.'}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                historyList.innerHTML = `
+                    <div class="empty-state-modal">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Gagal Memuat Data</h3>
+                        <p>Terjadi kesalahan saat memuat data. Silakan coba lagi.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Filter History
+        function filterHistory() {
+            const status = document.getElementById('historyFilter').value;
+            const search = document.getElementById('historySearch').value;
+            loadLoanHistory(status, search);
+        }
+
+        // Search History
+        function searchHistory() {
+            const status = document.getElementById('historyFilter').value;
+            const search = document.getElementById('historySearch').value;
+            loadLoanHistory(status, search);
+        }
+
+        // Extend Loan
+        function extendLoan(loanId) {
+            if (!confirm('Apakah Anda yakin ingin memperpanjang peminjaman buku ini selama 7 hari?')) {
+                return;
+            }
+            
+            fetch(`/api/extend-loan/${loanId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification(data.message, 'success');
+                    // Refresh borrowed books list
+                    showBorrowedBooks();
+                } else {
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('Terjadi kesalahan. Silakan coba lagi.', 'error');
+            });
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            const existingNotifications = document.querySelectorAll('.notification');
+            existingNotifications.forEach(notification => notification.remove());
+            
+            // Create notification
+            const notification = document.createElement('div');
+            notification.className = `notification notification-${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <i class="fas fa-${getNotificationIcon(type)}"></i>
+                    <span>${message}</span>
+                </div>
+                <button onclick="this.parentElement.remove()">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Add to page
+            document.body.appendChild(notification);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        function getNotificationIcon(type) {
+            const icons = {
+                success: 'check-circle',
+                error: 'exclamation-circle',
+                warning: 'exclamation-triangle',
+                info: 'info-circle'
+            };
+            return icons[type] || 'info-circle';
+        }
+
+        // Make functions globally available
+        window.requestBookLoan = requestBookLoan;
+        window.closeRequestLoanModal = closeRequestLoanModal;
+        window.showBorrowedBooks = showBorrowedBooks;
+        window.closeBorrowedBooksModal = closeBorrowedBooksModal;
+        window.showLoanHistory = showLoanHistory;
+        window.closeLoanHistoryModal = closeLoanHistoryModal;
+        window.filterHistory = filterHistory;
+        window.searchHistory = searchHistory;
+        window.extendLoan = extendLoan;
     </script>
 </body>
 </html><?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/dashboard/browse.blade.php ENDPATH**/ ?>

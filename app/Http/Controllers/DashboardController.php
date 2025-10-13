@@ -176,4 +176,35 @@ class DashboardController extends Controller
             return redirect()->route('books.browse')->with('error', 'Buku tidak ditemukan');
         }
     }
+
+    public function getBookDetails($id)
+    {
+        try {
+            $book = Book::with('category')->findOrFail($id);
+            
+            return response()->json([
+                'success' => true,
+                'book' => [
+                    'id' => $book->id,
+                    'title' => $book->title,
+                    'author' => $book->author,
+                    'isbn' => $book->isbn,
+                    // DB uses published_year; keep both keys for backward compatibility in the UI
+                    'publication_year' => $book->published_year,
+                    'published_year' => $book->published_year,
+                    'stock' => $book->stock,
+                    'available' => $book->available,
+                    'cover_image' => $book->cover_image,
+                    'description' => $book->description,
+                    'category' => $book->category
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error getting book details: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Buku tidak ditemukan'
+            ], 404);
+        }
+    }
 }

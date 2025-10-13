@@ -18,13 +18,23 @@ class Loan extends Model
         'return_date',
         'status',
         'condition',
-        'notes'
+        'notes',
+        'request_date',
+        'approved_by',
+        'approved_at',
+        'nisn',
+        'nis',
+        'borrower_photo',
+        'qr_data',
+        'identification_method'
     ];
 
     protected $casts = [
         'loan_date' => 'date',
         'due_date' => 'date',
         'return_date' => 'date',
+        'request_date' => 'date',
+        'approved_at' => 'datetime',
     ];
 
     // Relationships
@@ -77,8 +87,18 @@ class Loan extends Model
         return $query->where('status', 'returned');
     }
 
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
     public function scopeActive($query)
     {
         return $query->whereIn('status', ['borrowed', 'overdue']);
+    }
+
+    public function scopeRequests($query)
+    {
+        return $query->where('status', 'pending');
     }
 }

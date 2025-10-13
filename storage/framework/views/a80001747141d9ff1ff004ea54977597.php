@@ -35,14 +35,14 @@
         
         <div class="nav-section">
             <div class="nav-section-title">Peminjaman Saya</div>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" onclick="showBorrowedBooks(); return false;">
                 <i class="fas fa-hand-holding-heart"></i>
                 <span>Sedang Dipinjam</span>
                 <?php if($activeLoans->count() > 0): ?>
                 <span class="notification-badge"><?php echo e($activeLoans->count()); ?></span>
                 <?php endif; ?>
             </a>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" onclick="showLoanHistory(); return false;">
                 <i class="fas fa-history"></i>
                 <span>Riwayat Peminjaman</span>
             </a>
