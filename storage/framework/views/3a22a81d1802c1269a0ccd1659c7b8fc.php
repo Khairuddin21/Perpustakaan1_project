@@ -907,6 +907,33 @@
             padding-top: 0.5rem;
         }
 
+        .book-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .book-rating-stars {
+            display: flex;
+            gap: 0.125rem;
+        }
+
+        .book-rating-stars i {
+            font-size: 0.875rem;
+            color: #f59e0b;
+        }
+
+        .book-rating-stars i.far {
+            color: #e2e8f0;
+        }
+
+        .book-rating-text {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
         .book-actions {
             display: flex;
             gap: 0.375rem;
@@ -1861,6 +1888,41 @@
             min-height: 80px;
         }
 
+        /* Duration Selector */
+        .duration-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .duration-btn {
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border);
+            background: white;
+            color: var(--text-dark);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+            min-width: 70px;
+            text-align: center;
+        }
+
+        .duration-btn:hover {
+            border-color: var(--primary);
+            background: rgba(102, 126, 234, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .duration-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
         .form-actions {
             display: flex;
             gap: 1rem;
@@ -1937,6 +1999,42 @@
             gap: 0.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 1px solid var(--border);
+        }
+
+        .section-description {
+            margin: 0 0 1.5rem 0;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.5;
+        }
+
+        /* ===== VERIFICATION PANEL ===== */
+        .verification-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem 2rem;
+        }
+
+        .verification-item label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-light);
+            margin-bottom: 0.35rem;
+        }
+
+        .readonly-value {
+            padding: 0.75rem 0.9rem;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-dark);
+            min-height: 42px;
+            display: flex;
+            align-items: center;
         }
 
         /* ===== CAMERA SECTION ===== */
@@ -2349,6 +2447,26 @@
                                     </div>
                                 </div>
                                 <div class="book-content-footer">
+                                    <!-- Book Rating -->
+                                    <?php
+                                        $avgRating = $book->averageRating();
+                                        $ratingCount = $book->ratingsCount();
+                                    ?>
+                                    <?php if($ratingCount > 0): ?>
+                                    <div class="book-rating">
+                                        <div class="book-rating-stars">
+                                            <?php for($i = 1; $i <= 5; $i++): ?>
+                                                <?php if($i <= round($avgRating)): ?>
+                                                    <i class="fas fa-star"></i>
+                                                <?php else: ?>
+                                                    <i class="far fa-star"></i>
+                                                <?php endif; ?>
+                                            <?php endfor; ?>
+                                        </div>
+                                        <span class="book-rating-text"><?php echo e(number_format($avgRating, 1)); ?> (<?php echo e($ratingCount); ?>)</span>
+                                    </div>
+                                    <?php endif; ?>
+                                    
                                     <div class="book-actions">
                                         <?php if($book->available > 0): ?>
                                         <button class="book-btn book-btn-primary" onclick="borrowBook(<?php echo e($book->id); ?>)">
@@ -2514,6 +2632,34 @@
                                     </div>
                                 </div>
                             </div>
+                            
+                            <!-- Verification Section for QR Tab -->
+                            <div class="identity-section">
+                                <h4><i class="fas fa-shield-check"></i> Verifikasi Data dari QR</h4>
+                                <p class="section-description">Setelah QR terbaca, data dari QR akan tampil di bawah untuk diverifikasi.</p>
+                                <div class="verification-grid">
+                                    <div class="verification-item">
+                                        <label>Nama Lengkap</label>
+                                        <div class="readonly-value" id="qrVerifyFullName">—</div>
+                                    </div>
+                                    <div class="verification-item">
+                                        <label>Kelas</label>
+                                        <div class="readonly-value" id="qrVerifyStudentClass">—</div>
+                                    </div>
+                                    <div class="verification-item">
+                                        <label>Jurusan</label>
+                                        <div class="readonly-value" id="qrVerifyMajor">—</div>
+                                    </div>
+                                    <div class="verification-item">
+                                        <label>NISN</label>
+                                        <div class="readonly-value" id="qrVerifyNisn">—</div>
+                                    </div>
+                                    <div class="verification-item">
+                                        <label>NIS</label>
+                                        <div class="readonly-value" id="qrVerifyNis">—</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Manual Input Tab -->
@@ -2528,6 +2674,22 @@
                                     <div class="form-group">
                                         <label for="nis">NIS (Nomor Induk Siswa)</label>
                                         <input type="text" id="nis" name="nis" placeholder="Masukkan NIS" maxlength="20">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="fullName">Nama Lengkap</label>
+                                        <input type="text" id="fullName" name="full_name" placeholder="Masukkan nama lengkap" maxlength="100" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="studentClass">Kelas</label>
+                                        <input type="text" id="studentClass" name="student_class" placeholder="Contoh: XII IPA 1" maxlength="20" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="major">Jurusan</label>
+                                        <input type="text" id="major" name="major" placeholder="Contoh: IPA, IPS, Bahasa" maxlength="50" required>
                                     </div>
                                 </div>
                             </div>
@@ -2582,11 +2744,16 @@
                             <div class="form-row">
                                 <div class="form-group">
                                     <label for="loanDuration">Durasi Peminjaman</label>
-                                    <select id="loanDuration" name="loan_duration" required>
-                                        <option value="7">7 Hari</option>
-                                        <option value="14" selected>14 Hari</option>
-                                        <option value="21">21 Hari</option>
-                                    </select>
+                                    <div class="duration-selector">
+                                        <button type="button" class="duration-btn" data-days="1">1 Hari</button>
+                                        <button type="button" class="duration-btn" data-days="2">2 Hari</button>
+                                        <button type="button" class="duration-btn" data-days="3">3 Hari</button>
+                                        <button type="button" class="duration-btn" data-days="4">4 Hari</button>
+                                        <button type="button" class="duration-btn" data-days="5">5 Hari</button>
+                                        <button type="button" class="duration-btn" data-days="6">6 Hari</button>
+                                        <button type="button" class="duration-btn active" data-days="7">7 Hari</button>
+                                    </div>
+                                    <input type="hidden" id="loanDuration" name="loan_duration" value="7" required>
                                 </div>
                             </div>
                             <div class="form-group">
@@ -2668,6 +2835,8 @@
     let qrDecodeControls = null; // ZXing decode controls to stop decoding
         let photoVideoStream = null;
         let currentCapturedPhoto = null;
+    // Store last parsed QR values for submission
+    let lastQrParsed = { fullName: null, studentClass: null, major: null, nisn: null, nis: null };
 
         // Initialize QR Code Reader
         function initializeQRReader() {
@@ -2772,9 +2941,22 @@
             // Try to parse the QR data if it's structured
             try {
                 const parsed = JSON.parse(data);
-                if (parsed.nisn) document.getElementById('nisn').value = parsed.nisn;
-                if (parsed.nis) document.getElementById('nis').value = parsed.nis;
-                showNotification('Data QR berhasil dipindai dan diisi otomatis', 'success');
+                // Map common keys
+                lastQrParsed.fullName = parsed.fullName || parsed.nama || parsed.name || null;
+                lastQrParsed.studentClass = parsed.studentClass || parsed.kelas || null;
+                lastQrParsed.major = parsed.major || parsed.jurusan || null;
+                lastQrParsed.nisn = parsed.nisn || null;
+                lastQrParsed.nis = parsed.nis || null;
+
+                // Update verification panel
+                const setText = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || '—'; };
+                setText('qrVerifyFullName', lastQrParsed.fullName);
+                setText('qrVerifyStudentClass', lastQrParsed.studentClass);
+                setText('qrVerifyMajor', lastQrParsed.major);
+                setText('qrVerifyNisn', lastQrParsed.nisn);
+                setText('qrVerifyNis', lastQrParsed.nis);
+
+                showNotification('Data QR berhasil dipindai', 'success');
             } catch (e) {
                 showNotification('Data QR berhasil dipindai', 'success');
             }
@@ -2863,7 +3045,30 @@
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function() {
             initializeQRReader();
+            initializeDurationButtons();
         });
+
+        // Duration Button Functionality
+        function initializeDurationButtons() {
+            const durationButtons = document.querySelectorAll('.duration-btn');
+            const hiddenInput = document.getElementById('loanDuration');
+
+            durationButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    durationButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Update hidden input value
+                    const days = this.getAttribute('data-days');
+                    hiddenInput.value = days;
+                    
+                    console.log('Duration selected:', days, 'days');
+                });
+            });
+        }
 
         // Enhanced toggle sidebar with smooth animations
         document.getElementById('menuToggle')?.addEventListener('click', function() {
@@ -3377,19 +3582,23 @@
                 // Collect form data based on active tab
                 let nisn = null;
                 let nis = null;
+                let fullName = null;
+                let studentClass = null;
+                let major = null;
                 let qrData = null;
-                
+
                 if (identificationMethod === 'qr_scan') {
                     qrData = document.getElementById('qrData').value;
-                    // Try to extract NISN/NIS from QR data
-                    try {
-                        const parsed = JSON.parse(qrData);
-                        nisn = parsed.nisn || null;
-                        nis = parsed.nis || null;
-                    } catch (e) {
-                        // QR data is not JSON, keep as is
-                    }
+                    // Use parsed values from QR only (no manual inputs on QR tab)
+                    fullName = lastQrParsed.fullName;
+                    studentClass = lastQrParsed.studentClass;
+                    major = lastQrParsed.major;
+                    nisn = lastQrParsed.nisn;
+                    nis = lastQrParsed.nis;
                 } else {
+                    fullName = document.getElementById('fullName').value || null;
+                    studentClass = document.getElementById('studentClass').value || null;
+                    major = document.getElementById('major').value || null;
                     nisn = document.getElementById('nisn').value || null;
                     nis = document.getElementById('nis').value || null;
                 }
@@ -3399,9 +3608,18 @@
                     showNotification('Silakan scan QR code terlebih dahulu', 'warning');
                     return;
                 }
+                if (!fullName) {
+                    showNotification('Nama lengkap harus diisi', 'warning');
+                    return;
+                }
 
-                if (identificationMethod === 'manual_input' && !nisn && !nis) {
-                    showNotification('Silakan isi NISN atau NIS', 'warning');
+                if (!studentClass) {
+                    showNotification('Kelas harus diisi', 'warning');
+                    return;
+                }
+
+                if (!major) {
+                    showNotification('Jurusan harus diisi', 'warning');
                     return;
                 }
 
@@ -3414,6 +3632,9 @@
                     book_id: bookId,
                     loan_duration: loanDuration,
                     notes: notes,
+                    full_name: fullName,
+                    student_class: studentClass,
+                    major: major,
                     nisn: nisn,
                     nis: nis,
                     borrower_photo: currentCapturedPhoto,
@@ -3478,10 +3699,25 @@
             // Reset QR result
             document.getElementById('qrResult').style.display = 'none';
             document.getElementById('qrData').value = '';
+            // Clear verification panel and stored parsed values
+            lastQrParsed = { fullName: null, studentClass: null, major: null, nisn: null, nis: null };
+            ['qrVerifyFullName','qrVerifyStudentClass','qrVerifyMajor','qrVerifyNisn','qrVerifyNis']
+                .forEach(id => { const el = document.getElementById(id); if (el) el.textContent = '—'; });
             
-            // Reset form fields
+            // Reset form fields - Manual tab
+            document.getElementById('fullName').value = '';
+            document.getElementById('studentClass').value = '';
+            document.getElementById('major').value = '';
             document.getElementById('nisn').value = '';
             document.getElementById('nis').value = '';
+            
+            // Reset duration to default (7 days)
+            document.querySelectorAll('.duration-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.duration-btn[data-days="7"]').classList.add('active');
+            document.getElementById('loanDuration').value = '7';
+            
+            // Reset notes
+            document.getElementById('loanNotes').value = '';
             
             // Reset to first tab
             switchTab('qr-scan');
@@ -3564,7 +3800,7 @@
                                         </div>
                                     </div>
                                     <div class="borrowed-book-status">
-                                        <span class="status-badge ${book.status}">${book.status_text}</span>
+                                        <span class="status-badge ${book.status}">${formatStatusText(book.status_text)}</span>
                                         ${book.can_extend ? 
                                             `<button class="extend-btn" onclick="extendLoan(${book.id})">
                                                 <i class="fas fa-clock"></i> Perpanjang
@@ -3600,6 +3836,20 @@
         // Close Borrowed Books Modal
         function closeBorrowedBooksModal() {
             document.getElementById('borrowedBooksModal').classList.remove('active');
+        }
+
+        // Format status text (e.g., 'TERLAMBAT 7.2057 HARI' -> 'TERLAMBAT 7 HARI')
+        function formatStatusText(text) {
+            if (!text || typeof text !== 'string') return text;
+            const lower = text.toLowerCase();
+            if (!lower.includes('terlambat')) return text;
+            // Replace the number right before the word 'hari'
+            const replaced = text.replace(/(\d+\.\d+|\d+)(?=\s*hari)/gi, (m) => {
+                const n = Number(m);
+                if (Number.isNaN(n)) return m;
+                return String(Math.floor(n));
+            });
+            return replaced;
         }
 
         // ===== LOAN HISTORY MODAL FUNCTIONS =====
@@ -3810,6 +4060,28 @@
         window.filterHistory = filterHistory;
         window.searchHistory = searchHistory;
         window.extendLoan = extendLoan;
+        
+        // View Book Details
+        window.viewDetails = function(bookId) {
+            window.location.href = '/books/' + bookId;
+        };
+
+        // If navigated with ?loan=BOOK_ID, open the loan modal automatically
+        (function autoOpenLoanFromQuery() {
+            try {
+                const url = new URL(window.location.href);
+                const loanParam = url.searchParams.get('loan');
+                if (loanParam) {
+                    const bookId = parseInt(loanParam, 10);
+                    if (!isNaN(bookId)) {
+                        requestBookLoan(bookId);
+                        // Clean the query param without reload
+                        url.searchParams.delete('loan');
+                        window.history.replaceState({}, '', url.pathname + (url.searchParams.toString() ? '?' + url.searchParams.toString() : ''));
+                    }
+                }
+            } catch (_) { /* noop */ }
+        })();
     </script>
 </body>
 </html><?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/dashboard/browse.blade.php ENDPATH**/ ?>

@@ -61,7 +61,7 @@ class DashboardController extends Controller
     public function browse(Request $request)
     {
         try {
-            $query = Book::with('category');
+            $query = Book::with(['category', 'ratings']);
             
             // Search functionality
             if ($request->filled('search')) {

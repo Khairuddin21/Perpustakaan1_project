@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\LoanController;
+use App\Http\Controllers\BookController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -22,7 +23,7 @@ Route::middleware('auth')->group(function () {
     // Book browsing routes for members
     Route::get('/books/browse', [DashboardController::class, 'browse'])->name('books.browse');
     Route::get('/books/search', [DashboardController::class, 'search'])->name('books.search');
-    Route::get('/books/{id}', [DashboardController::class, 'show'])->name('books.show');
+    Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show');
     
     // Loan Management API Routes
     Route::prefix('api')->group(function () {
@@ -31,6 +32,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/loan-history', [LoanController::class, 'getLoanHistory'])->name('api.loan-history');
         Route::post('/extend-loan/{id}', [LoanController::class, 'extendLoan'])->name('api.extend-loan');
         Route::get('/books/{id}', [DashboardController::class, 'getBookDetails'])->name('api.book-details');
+        
+        // Book interactions (rating, comments, wishlist)
+        Route::post('/books/{id}/rate', [BookController::class, 'rateBook'])->name('api.book.rate');
+        Route::post('/books/{id}/wishlist', [BookController::class, 'toggleWishlist'])->name('api.book.wishlist');
+        Route::post('/books/{id}/comments', [BookController::class, 'addComment'])->name('api.book.comment');
+        Route::get('/wishlist', [BookController::class, 'getWishlist'])->name('api.wishlist');
         
         // Admin routes for loan management
         Route::middleware(['role:admin,pustakawan'])->group(function () {

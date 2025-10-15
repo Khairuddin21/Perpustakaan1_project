@@ -1,11 +1,11 @@
 
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard Admin - {{ config('app.name', 'Sistem Perpustakaan') }}</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title>Dashboard Admin - <?php echo e(config('app.name', 'Sistem Perpustakaan')); ?></title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,12 +16,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Styles -->
-    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js', 'resources/js/welcome-enhancements.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/dashboard.css', 'resources/js/dashboard.js', 'resources/js/welcome-enhancements.js']); ?>
 </head>
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
-            @include('components.admin-sidebar')
+            <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
@@ -37,16 +37,17 @@
                     <div class="header-actions">
                         <div class="user-info">
                             <div class="user-avatar">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                <?php echo e(strtoupper(substr(auth()->user()->name, 0, 2))); ?>
+
                             </div>
                             <div class="user-details">
-                                <div class="user-name">{{ auth()->user()->name }}</div>
-                                <div class="user-role">{{ ucfirst(auth()->user()->role) }}</div>
+                                <div class="user-name"><?php echo e(auth()->user()->name); ?></div>
+                                <div class="user-role"><?php echo e(ucfirst(auth()->user()->role)); ?></div>
                             </div>
                         </div>
                         
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline;">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="nav-item" style="background: none; border: none; color: #64748b; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: all 0.3s ease;">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Logout
@@ -66,21 +67,21 @@
                                 <i class="fas fa-crown"></i>
                                 <span>Administrator</span>
                             </div>
-                            <h2 class="welcome-title">Selamat Datang, {{ auth()->user()->name }}! 👋</h2>
+                            <h2 class="welcome-title">Selamat Datang, <?php echo e(auth()->user()->name); ?>! 👋</h2>
                             <p class="welcome-subtitle">Kelola sistem perpustakaan dengan mudah dan efisien. Monitor aktivitas dan kelola koleksi buku digital Anda.</p>
                             
                             <div class="welcome-stats-inline">
                                 <div class="inline-stat">
                                     <i class="fas fa-users"></i>
                                     <div class="inline-stat-info">
-                                        <span class="inline-stat-number">{{ $stats['total_users'] }}</span>
+                                        <span class="inline-stat-number"><?php echo e($stats['total_users']); ?></span>
                                         <span class="inline-stat-label">Anggota</span>
                                     </div>
                                 </div>
                                 <div class="inline-stat">
                                     <i class="fas fa-book-reader"></i>
                                     <div class="inline-stat-info">
-                                        <span class="inline-stat-number">{{ $stats['total_loans'] }}</span>
+                                        <span class="inline-stat-number"><?php echo e($stats['total_loans']); ?></span>
                                         <span class="inline-stat-label">Akses Peminjaman</span>
                                     </div>
                                 </div>
@@ -107,7 +108,7 @@
                         
                         <div class="welcome-visual">
                             <div class="book-illustration">
-                                <img src="{{ asset('Gambar/buku 916.jpg') }}" alt="Library Books" class="books-image">
+                                <img src="<?php echo e(asset('Gambar/buku 916.jpg')); ?>" alt="Library Books" class="books-image">
                                 <div class="floating-elements">
                                     <div class="floating-icon icon-1">
                                         <i class="fas fa-book"></i>
@@ -132,7 +133,7 @@
                                 <i class="fas fa-book"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $stats['total_books'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($stats['total_books']); ?></h3>
                                 <p class="stat-label">Total Buku</p>
                                 <p class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
@@ -148,7 +149,7 @@
                                 <i class="fas fa-users"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $stats['total_users'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($stats['total_users']); ?></h3>
                                 <p class="stat-label">Total Anggota</p>
                                 <p class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
@@ -164,7 +165,7 @@
                                 <i class="fas fa-hand-holding"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $stats['total_loans'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($stats['total_loans']); ?></h3>
                                 <p class="stat-label">Sedang Dipinjam</p>
                                 <p class="stat-change negative">
                                     <i class="fas fa-arrow-down"></i>
@@ -180,7 +181,7 @@
                                 <i class="fas fa-tags"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $stats['total_categories'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($stats['total_categories']); ?></h3>
                                 <p class="stat-label">Kategori Buku</p>
                                 <p class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
@@ -284,4 +285,4 @@
     
     <!-- Scripts loaded via Vite -->
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/dashboard/admin.blade.php ENDPATH**/ ?>

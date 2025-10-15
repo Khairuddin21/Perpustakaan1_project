@@ -24,6 +24,33 @@ class Book extends Model
         return $this->hasMany(Loan::class);
     }
 
+    public function ratings()
+    {
+        return $this->hasMany(BookRating::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(BookComment::class)->with('user')->latest();
+    }
+
+    public function wishlists()
+    {
+        return $this->hasMany(BookWishlist::class);
+    }
+
+    // Get average rating
+    public function averageRating()
+    {
+        return $this->ratings()->avg('rating') ?? 0;
+    }
+
+    // Get total ratings count
+    public function ratingsCount()
+    {
+        return $this->ratings()->count();
+    }
+
     // Check if book is available
     public function isAvailable()
     {
