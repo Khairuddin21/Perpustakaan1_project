@@ -178,7 +178,7 @@ class ReportController extends Controller
             // Header information
             fputcsv($file, ['LAPORAN PEMINJAMAN BUKU - SISTEM PERPUSTAKAAN DIGITAL']);
             fputcsv($file, ['Periode:', "$month $year"]);
-            fputcsv($file, ['Tanggal Cetak:', Carbon::now()->format('d F Y, H:i') . ' WIB']);
+            fputcsv($file, ['Tanggal Cetak:', Carbon::now()->format('d F Y, g:i A')]);
             fputcsv($file, []); // Empty row
             
             // Summary
@@ -207,11 +207,11 @@ class ReportController extends Controller
                 
                 fputcsv($file, [
                     $index + 1,
-                    Carbon::parse($loan->loan_date ?? $loan->request_date)->format('d M Y'),
+                    Carbon::parse($loan->loan_date ?? $loan->request_date)->format('d M Y, g:i A'),
                     $loan->user->name,
                     $loan->book->title,
                     $loan->book->author ?? '-',
-                    $loan->due_date ? Carbon::parse($loan->due_date)->format('d M Y') : '-',
+                    $loan->due_date ? Carbon::parse($loan->due_date)->format('d M Y, g:i A') : '-',
                     ucfirst($loan->status),
                     $duration
                 ]);

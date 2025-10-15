@@ -147,7 +147,7 @@
         <h1>📚 LAPORAN PEMINJAMAN BUKU</h1>
         <p>Sistem Perpustakaan Digital</p>
         <p><strong>Periode:</strong> {{ $month }} {{ $year }}</p>
-        <p><strong>Tanggal Cetak:</strong> {{ \Carbon\Carbon::now()->format('d F Y, H:i') }} WIB</p>
+        <p><strong>Tanggal Cetak:</strong> {{ \Carbon\Carbon::now()->format('d F Y, g:i A') }}</p>
     </div>
     
     <h2 class="section-title">Ringkasan Data</h2>
@@ -190,10 +190,10 @@
                 @forelse($loans as $index => $loan)
                 <tr>
                     <td>{{ $index + 1 }}</td>
-                    <td>{{ \Carbon\Carbon::parse($loan->loan_date ?? $loan->request_date)->format('d M Y') }}</td>
+                    <td>{{ \Carbon\Carbon::parse($loan->loan_date ?? $loan->request_date)->format('d M Y, g:i A') }}</td>
                     <td>{{ $loan->user->name }}</td>
                     <td>{{ $loan->book->title }}</td>
-                    <td>{{ $loan->due_date ? \Carbon\Carbon::parse($loan->due_date)->format('d M Y') : '-' }}</td>
+                    <td>{{ $loan->due_date ? \Carbon\Carbon::parse($loan->due_date)->format('d M Y, g:i A') : '-' }}</td>
                     <td>
                         <span class="status-badge status-{{ $loan->status }}">
                             {{ ucfirst($loan->status) }}

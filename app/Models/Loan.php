@@ -32,6 +32,7 @@ class Loan extends Model
         'return_notes',
         'return_request_date',
         'return_condition'
+        ,'return_hidden'
     ];
 
     protected $casts = [
@@ -40,6 +41,7 @@ class Loan extends Model
         'return_date' => 'date',
         'request_date' => 'date',
         'approved_at' => 'datetime',
+        'return_hidden' => 'boolean',
     ];
 
     // Relationships

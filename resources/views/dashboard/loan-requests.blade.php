@@ -814,7 +814,11 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
-        @include('components.admin-sidebar')
+        @if(auth()->user()->role === 'admin')
+            <x-admin-sidebar />
+        @elseif(auth()->user()->role === 'pustakawan')
+            <x-pustakawan-sidebar />
+        @endif
         
         <!-- Main Content -->
         <main class="main-content" id="mainContent">

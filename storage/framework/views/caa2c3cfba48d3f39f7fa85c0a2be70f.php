@@ -626,6 +626,378 @@
             }
         }
 
+        /* ===== MODAL STYLES ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9) translateY(20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            padding: 2rem;
+            max-height: calc(85vh - 100px);
+            overflow-y: auto;
+        }
+
+        .modal-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .modal-content::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .modal-content::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+
+        /* Borrowed Books Modal Styles */
+        .borrowed-books-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .borrowed-book-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .borrowed-book-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .borrowed-book-cover {
+            width: 80px;
+            height: 120px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .borrowed-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .borrowed-book-cover i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .borrowed-book-info {
+            flex: 1;
+        }
+
+        .borrowed-book-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .borrowed-book-author {
+            font-size: 0.95rem;
+            color: #6b7280;
+            margin-bottom: 1rem;
+        }
+
+        .borrowed-book-dates {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .borrowed-book-date {
+            font-size: 0.9rem;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .borrowed-book-date i {
+            color: var(--primary);
+        }
+
+        .borrowed-book-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .extend-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .extend-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Loan History Modal Styles */
+        .history-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .history-filters select,
+        .history-filters input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .history-filters select:focus,
+        .history-filters input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .loan-history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .history-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .history-book-cover {
+            width: 70px;
+            height: 100px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .history-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .history-book-cover i {
+            font-size: 1.75rem;
+            color: white;
+        }
+
+        .history-book-info {
+            flex: 1;
+        }
+
+        .history-book-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .history-book-author {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+
+        .history-dates {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .history-date {
+            font-size: 0.85rem;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .history-date i {
+            color: var(--primary);
+            font-size: 0.75rem;
+        }
+
+        .history-status {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-badge.returned {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-badge.rejected {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-badge.due-soon {
+            background: #fed7aa;
+            color: #9a3412;
+        }
+
+        .loading-state,
+        .empty-state-modal {
+            text-align: center;
+            padding: 3rem 1rem;
+        }
+
+        .loading-state i,
+        .empty-state-modal i {
+            font-size: 3rem;
+            color: #d1d5db;
+            margin-bottom: 1rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(102, 126, 234, 0.2);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .empty-state-modal h3 {
+            font-size: 1.25rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-modal p {
+            color: #6b7280;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
@@ -672,7 +1044,70 @@
 </head>
 <body>
     <div class="dashboard-wrapper">
-        <?php echo $__env->make('components.sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
+        <?php if(auth()->user()->role === 'admin'): ?>
+            <?php if (isset($component)) { $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
+<?php $attributes = $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
+<?php unset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
+<?php $component = $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
+<?php unset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
+<?php endif; ?>
+        <?php elseif(auth()->user()->role === 'pustakawan'): ?>
+            <?php if (isset($component)) { $__componentOriginal3669d248200f2dc31f2689292901c050 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3669d248200f2dc31f2689292901c050 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.pustakawan-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('pustakawan-sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $attributes = $__attributesOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__attributesOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $component = $__componentOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__componentOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
+        <?php else: ?>
+            <?php if (isset($component)) { $__componentOriginal2880b66d47486b4bfeaf519598a469d6 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal2880b66d47486b4bfeaf519598a469d6 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal2880b66d47486b4bfeaf519598a469d6)): ?>
+<?php $attributes = $__attributesOriginal2880b66d47486b4bfeaf519598a469d6; ?>
+<?php unset($__attributesOriginal2880b66d47486b4bfeaf519598a469d6); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal2880b66d47486b4bfeaf519598a469d6)): ?>
+<?php $component = $__componentOriginal2880b66d47486b4bfeaf519598a469d6; ?>
+<?php unset($__componentOriginal2880b66d47486b4bfeaf519598a469d6); ?>
+<?php endif; ?>
+        <?php endif; ?>
 
         <div class="main-content" id="mainContent">
             <div class="header">
@@ -687,17 +1122,25 @@
             <div class="content-area">
                 <div class="page-header">
                     <h2><i class="fas fa-undo-alt"></i> Pengembalian Buku</h2>
-                    <p>Ajukan pengembalian untuk buku yang sedang Anda pinjam. Isi formulir di bawah ini dan datang ke perpustakaan untuk mengembalikan buku secara fisik.</p>
+                    <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
+                        <p>Kelola permintaan pengembalian buku dari anggota perpustakaan. Verifikasi kondisi buku dan proses pengembalian.</p>
+                    <?php else: ?>
+                        <p>Ajukan pengembalian untuk buku yang sedang Anda pinjam. Isi formulir di bawah ini dan datang ke perpustakaan untuk mengembalikan buku secara fisik.</p>
+                    <?php endif; ?>
                 </div>
 
                 <?php if($borrowedBooks->isEmpty()): ?>
                     <div class="empty-state">
                         <i class="fas fa-book-open"></i>
                         <h3>Tidak Ada Buku yang Dipinjam</h3>
-                        <p>Anda belum memiliki buku yang sedang dipinjam saat ini.</p>
-                        <a href="<?php echo e(route('books.browse')); ?>" class="btn">
-                            <i class="fas fa-search"></i> Jelajahi Buku
-                        </a>
+                        <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
+                            <p>Belum ada buku yang sedang dipinjam oleh anggota saat ini.</p>
+                        <?php else: ?>
+                            <p>Anda belum memiliki buku yang sedang dipinjam saat ini.</p>
+                            <a href="<?php echo e(route('books.browse')); ?>" class="btn">
+                                <i class="fas fa-search"></i> Jelajahi Buku
+                            </a>
+                        <?php endif; ?>
                     </div>
                 <?php else: ?>
                     <div class="books-grid">
@@ -709,6 +1152,25 @@
                                 </div>
 
                                 <div class="book-card-body">
+                                    <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
+                                        <div class="book-info-row">
+                                            <i class="fas fa-user"></i>
+                                            <span class="label">Peminjam:</span>
+                                            <span class="value"><?php echo e($loan->user->name); ?></span>
+                                        </div>
+                                        <div class="book-info-row">
+                                            <i class="fas fa-envelope"></i>
+                                            <span class="label">Email:</span>
+                                            <span class="value"><?php echo e($loan->user->email); ?></span>
+                                        </div>
+                                        <?php if($loan->nis): ?>
+                                            <div class="book-info-row">
+                                                <i class="fas fa-id-card"></i>
+                                                <span class="label">NIS:</span>
+                                                <span class="value"><?php echo e($loan->nis); ?></span>
+                                            </div>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                     <div class="book-info-row">
                                         <i class="fas fa-calendar"></i>
                                         <span class="label">Tanggal Pinjam:</span>
@@ -740,37 +1202,46 @@
 
                                     <?php if(!$loan->return_request_date): ?>
                                         <div class="return-form">
-                                            <h4><i class="fas fa-clipboard-list"></i> Formulir Pengembalian</h4>
+                                            <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
+                                                <h4><i class="fas fa-check-circle"></i> Proses Pengembalian</h4>
+                                            <?php else: ?>
+                                                <h4><i class="fas fa-clipboard-list"></i> Formulir Pengembalian</h4>
+                                            <?php endif; ?>
                                             <form class="return-request-form" data-loan-id="<?php echo e($loan->id); ?>">
-                                                <div class="form-group">
-                                                    <label for="return_nis_<?php echo e($loan->id); ?>">
-                                                        <i class="fas fa-id-card"></i> NIS <span style="color: red;">*</span>
-                                                    </label>
-                                                    <input 
-                                                        type="text" 
-                                                        id="return_nis_<?php echo e($loan->id); ?>" 
-                                                        name="return_nis" 
-                                                        placeholder="Masukkan NIS Anda"
-                                                        value="<?php echo e($loan->nis ?? ''); ?>"
-                                                        required
-                                                    >
-                                                    <div class="form-help">Nomor Induk Siswa Anda</div>
-                                                </div>
+                                                <?php if(!in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
+                                                    <div class="form-group">
+                                                        <label for="return_nis_<?php echo e($loan->id); ?>">
+                                                            <i class="fas fa-id-card"></i> NIS <span style="color: red;">*</span>
+                                                        </label>
+                                                        <input 
+                                                            type="text" 
+                                                            id="return_nis_<?php echo e($loan->id); ?>" 
+                                                            name="return_nis" 
+                                                            placeholder="Masukkan NIS Anda"
+                                                            value="<?php echo e($loan->nis ?? ''); ?>"
+                                                            required
+                                                        >
+                                                        <div class="form-help">Nomor Induk Siswa Anda</div>
+                                                    </div>
 
-                                                <div class="form-group">
-                                                    <label for="return_borrower_name_<?php echo e($loan->id); ?>">
-                                                        <i class="fas fa-user"></i> Nama Lengkap <span style="color: red;">*</span>
-                                                    </label>
-                                                    <input 
-                                                        type="text" 
-                                                        id="return_borrower_name_<?php echo e($loan->id); ?>" 
-                                                        name="return_borrower_name" 
-                                                        placeholder="Masukkan nama lengkap Anda"
-                                                        value="<?php echo e(auth()->user()->name); ?>"
-                                                        required
-                                                    >
-                                                    <div class="form-help">Nama sesuai identitas</div>
-                                                </div>
+                                                    <div class="form-group">
+                                                        <label for="return_borrower_name_<?php echo e($loan->id); ?>">
+                                                            <i class="fas fa-user"></i> Nama Lengkap <span style="color: red;">*</span>
+                                                        </label>
+                                                        <input 
+                                                            type="text" 
+                                                            id="return_borrower_name_<?php echo e($loan->id); ?>" 
+                                                            name="return_borrower_name" 
+                                                            placeholder="Masukkan nama lengkap Anda"
+                                                            value="<?php echo e(auth()->user()->name); ?>"
+                                                            required
+                                                        >
+                                                        <div class="form-help">Nama sesuai identitas</div>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <input type="hidden" name="return_nis" value="<?php echo e($loan->nis ?? 'STAFF'); ?>">
+                                                    <input type="hidden" name="return_borrower_name" value="<?php echo e($loan->user->name); ?>">
+                                                <?php endif; ?>
 
                                                 <div class="form-group">
                                                     <label for="return_condition_<?php echo e($loan->id); ?>">
@@ -802,8 +1273,13 @@
                                                 </div>
 
                                                 <button type="submit" class="btn-return">
-                                                    <i class="fas fa-paper-plane"></i>
-                                                    Ajukan Pengembalian
+                                                    <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
+                                                        <i class="fas fa-check"></i>
+                                                        Proses Pengembalian
+                                                    <?php else: ?>
+                                                        <i class="fas fa-paper-plane"></i>
+                                                        Ajukan Pengembalian
+                                                    <?php endif; ?>
                                                 </button>
                                             </form>
                                         </div>
@@ -833,7 +1309,56 @@
         </div>
     </div>
 
+    <!-- Modal for Borrowed Books -->
+    <div class="modal-overlay" id="borrowedBooksModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-book-reader"></i> Buku yang Sedang Dipinjam</h2>
+                <button class="modal-close" onclick="closeBorrowedBooksModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="borrowed-books-list" id="borrowedBooksList">
+                    <!-- Borrowed books will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Loan History -->
+    <div class="modal-overlay" id="loanHistoryModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-history"></i> Riwayat Peminjaman</h2>
+                <button class="modal-close" onclick="closeLoanHistoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="history-filters">
+                    <select id="historyFilter" onchange="filterHistory()">
+                        <option value="all">Semua Status</option>
+                        <option value="returned">Sudah Dikembalikan</option>
+                        <option value="borrowed">Sedang Dipinjam</option>
+                        <option value="overdue">Terlambat</option>
+                        <option value="pending">Menunggu Persetujuan</option>
+                        <option value="rejected">Ditolak</option>
+                    </select>
+                    <input type="text" id="historySearch" placeholder="Cari judul buku..." onkeyup="searchHistory()">
+                </div>
+                <div class="loan-history-list" id="loanHistoryList">
+                    <!-- Loan history will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Check user role
+        const userRole = '<?php echo e(auth()->user()->role); ?>';
+        const isStaff = ['admin', 'pustakawan'].includes(userRole);
+        
         // Form submission handler (reusable function)
         function attachFormSubmitHandler(form) {
             form.addEventListener('submit', async function(e) {
@@ -858,20 +1383,28 @@
                     return;
                 }
                 
-                // Confirm submission
+                // Confirm submission - different message for staff
+                const confirmTitle = isStaff ? 'Konfirmasi Proses Pengembalian' : 'Konfirmasi Pengembalian';
+                const confirmText = isStaff ? 
+                    'Apakah Anda yakin ingin memproses pengembalian buku ini?' : 
+                    'Apakah Anda yakin ingin mengajukan pengembalian dengan data berikut?';
+                const warningText = isStaff ? 
+                    '<i class="fas fa-check-circle"></i> Buku akan dikembalikan ke stok perpustakaan.' :
+                    '<i class="fas fa-exclamation-triangle"></i> Setelah mengajukan, silakan datang ke perpustakaan untuk mengembalikan buku secara fisik.';
+                
                 const result = await Swal.fire({
-                    title: 'Konfirmasi Pengembalian',
+                    title: confirmTitle,
                     html: `
                         <div style="text-align: left; padding: 1rem;">
-                            <p style="margin-bottom: 1rem;">Apakah Anda yakin ingin mengajukan pengembalian dengan data berikut?</p>
+                            <p style="margin-bottom: 1rem;">${confirmText}</p>
                             <div style="background: #f3f4f6; padding: 1rem; border-radius: 8px;">
                                 <p style="margin: 0.5rem 0;"><strong>NIS:</strong> ${nis}</p>
                                 <p style="margin: 0.5rem 0;"><strong>Nama:</strong> ${name}</p>
                                 <p style="margin: 0.5rem 0;"><strong>Kondisi:</strong> ${condition === 'baik' ? 'Baik' : condition === 'rusak_ringan' ? 'Rusak Ringan' : 'Rusak Berat'}</p>
                                 ${formData.get('return_notes') ? `<p style="margin: 0.5rem 0;"><strong>Catatan:</strong> ${formData.get('return_notes')}</p>` : ''}
                             </div>
-                            <p style="margin-top: 1rem; color: #d97706; font-weight: 600;">
-                                <i class="fas fa-exclamation-triangle"></i> Setelah mengajukan, silakan datang ke perpustakaan untuk mengembalikan buku secara fisik.
+                            <p style="margin-top: 1rem; color: ${isStaff ? '#10b981' : '#d97706'}; font-weight: 600;">
+                                ${warningText}
                             </p>
                         </div>
                     `,
@@ -879,7 +1412,7 @@
                     showCancelButton: true,
                     confirmButtonColor: '#10b981',
                     cancelButtonColor: '#6b7280',
-                    confirmButtonText: 'Ya, Ajukan',
+                    confirmButtonText: isStaff ? 'Ya, Proses' : 'Ya, Ajukan',
                     cancelButtonText: 'Batal',
                     width: '600px'
                 });
@@ -890,7 +1423,9 @@
                 
                 // Disable button
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+                submitBtn.innerHTML = isStaff ? 
+                    '<i class="fas fa-spinner fa-spin"></i> Memproses...' :
+                    '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
                 
                 try {
                     const response = await fetch('/api/returns/submit', {
@@ -927,13 +1462,15 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: error.message || 'Terjadi kesalahan saat mengajukan pengembalian.',
+                        text: error.message || 'Terjadi kesalahan saat ' + (isStaff ? 'memproses' : 'mengajukan') + ' pengembalian.',
                         confirmButtonColor: '#ef4444'
                     });
                     
                     // Re-enable button
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Ajukan Pengembalian';
+                    submitBtn.innerHTML = isStaff ?
+                        '<i class="fas fa-check"></i> Proses Pengembalian' :
+                        '<i class="fas fa-paper-plane"></i> Ajukan Pengembalian';
                 }
             });
         }
@@ -1084,15 +1621,289 @@
         // Placeholder functions for sidebar navigation (if not defined elsewhere)
         if (typeof showBorrowedBooks === 'undefined') {
             window.showBorrowedBooks = function() {
-                window.location.href = '<?php echo e(route("dashboard")); ?>';
+                const modal = document.getElementById('borrowedBooksModal');
+                const booksList = document.getElementById('borrowedBooksList');
+                
+                // Show modal
+                modal.classList.add('active');
+                
+                // Show loading
+                booksList.innerHTML = `
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p>Memuat buku yang sedang dipinjam...</p>
+                    </div>
+                `;
+                
+                // Fetch borrowed books
+                fetch('/api/borrowed-books', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        if (data.borrowed_books.length === 0) {
+                            booksList.innerHTML = `
+                                <div class="empty-state-modal">
+                                    <i class="fas fa-book-open"></i>
+                                    <h3>Tidak Ada Buku yang Sedang Dipinjam</h3>
+                                    <p>Mulai jelajahi koleksi kami dan pinjam buku favorit Anda!</p>
+                                </div>
+                            `;
+                        } else {
+                            booksList.innerHTML = data.borrowed_books.map(book => `
+                                <div class="borrowed-book-item">
+                                    <div class="borrowed-book-cover">
+                                        ${book.book.cover_image ? 
+                                            `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/storage/' + book.book.cover_image}" alt="${book.book.title}">` : 
+                                            '<i class="fas fa-book"></i>'
+                                        }
+                                    </div>
+                                    <div class="borrowed-book-info">
+                                        <h3 class="borrowed-book-title">${book.book.title}</h3>
+                                        <p class="borrowed-book-author">oleh ${book.book.author}</p>
+                                        <div class="borrowed-book-dates">
+                                            <div class="borrowed-book-date">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                Dipinjam: ${book.loan_date}
+                                            </div>
+                                            <div class="borrowed-book-date">
+                                                <i class="fas fa-calendar-check"></i>
+                                                Jatuh Tempo: ${book.due_date}
+                                            </div>
+                                        </div>
+                                        <div class="borrowed-book-status">
+                                            <span class="status-badge ${book.status}">${book.status_text}</span>
+                                            ${book.can_extend ? 
+                                                `<button class="extend-btn" onclick="extendLoan(${book.id})">
+                                                    <i class="fas fa-clock"></i> Perpanjang
+                                                </button>` : ''
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('');
+                        }
+                    } else {
+                        booksList.innerHTML = `
+                            <div class="empty-state-modal">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <h3>Gagal Memuat Data</h3>
+                                <p>${data.message || 'Terjadi kesalahan saat memuat data.'}</p>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    booksList.innerHTML = `
+                        <div class="empty-state-modal">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Gagal Memuat Data</h3>
+                            <p>Terjadi kesalahan saat memuat data. Silakan coba lagi.</p>
+                        </div>
+                    `;
+                });
             };
         }
 
         if (typeof showLoanHistory === 'undefined') {
             window.showLoanHistory = function() {
-                window.location.href = '<?php echo e(route("dashboard")); ?>';
+                const modal = document.getElementById('loanHistoryModal');
+                const historyList = document.getElementById('loanHistoryList');
+                
+                // Show modal
+                modal.classList.add('active');
+                
+                // Load history
+                loadLoanHistory();
             };
         }
+
+        // Close Borrowed Books Modal
+        function closeBorrowedBooksModal() {
+            document.getElementById('borrowedBooksModal').classList.remove('active');
+        }
+
+        // Close Loan History Modal
+        function closeLoanHistoryModal() {
+            document.getElementById('loanHistoryModal').classList.remove('active');
+        }
+
+        // Load Loan History
+        function loadLoanHistory(status = 'all', search = '') {
+            const historyList = document.getElementById('loanHistoryList');
+            
+            // Show loading
+            historyList.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Memuat riwayat peminjaman...</p>
+                </div>
+            `;
+            
+            // Build query parameters
+            const params = new URLSearchParams();
+            if (status !== 'all') params.append('status', status);
+            if (search) params.append('search', search);
+            
+            // Fetch loan history
+            fetch('/api/loan-history?' + params.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.loan_history.length === 0) {
+                        historyList.innerHTML = `
+                            <div class="empty-state-modal">
+                                <i class="fas fa-history"></i>
+                                <h3>Tidak Ada Riwayat Peminjaman</h3>
+                                <p>Belum ada riwayat peminjaman yang sesuai dengan filter.</p>
+                            </div>
+                        `;
+                    } else {
+                        historyList.innerHTML = data.loan_history.map(history => `
+                            <div class="history-item">
+                                <div class="history-book-cover">
+                                    ${history.book.cover_image ? 
+                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/storage/' + history.book.cover_image}" alt="${history.book.title}">` : 
+                                        '<i class="fas fa-book"></i>'
+                                    }
+                                </div>
+                                <div class="history-book-info">
+                                    <h3 class="history-book-title">${history.book.title}</h3>
+                                    <p class="history-book-author">oleh ${history.book.author}</p>
+                                    <div class="history-dates">
+                                        ${history.request_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-paper-plane"></i>
+                                                Diajukan: ${history.request_date}
+                                            </div>
+                                        ` : ''}
+                                        ${history.loan_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                Dipinjam: ${history.loan_date}
+                                            </div>
+                                        ` : ''}
+                                        ${history.return_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-calendar-check"></i>
+                                                Dikembalikan: ${history.return_date}
+                                            </div>
+                                        ` : ''}
+                                        ${history.due_date && !history.return_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-clock"></i>
+                                                Jatuh Tempo: ${history.due_date}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <div class="history-status">
+                                        <span class="status-badge ${history.status}">${history.status_text}</span>
+                                        <span style="font-size: 0.8rem; color: var(--text-light);">${history.duration}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    historyList.innerHTML = `
+                        <div class="empty-state-modal">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Gagal Memuat Data</h3>
+                            <p>${data.message || 'Terjadi kesalahan saat memuat data.'}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                historyList.innerHTML = `
+                    <div class="empty-state-modal">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Gagal Memuat Data</h3>
+                        <p>Terjadi kesalahan saat memuat data. Silakan coba lagi.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Filter History
+        function filterHistory() {
+            const status = document.getElementById('historyFilter').value;
+            const search = document.getElementById('historySearch').value;
+            loadLoanHistory(status, search);
+        }
+
+        // Search History
+        function searchHistory() {
+            const status = document.getElementById('historyFilter').value;
+            const search = document.getElementById('historySearch').value;
+            loadLoanHistory(status, search);
+        }
+
+        // Extend Loan
+        function extendLoan(loanId) {
+            if (!confirm('Apakah Anda yakin ingin memperpanjang peminjaman buku ini selama 7 hari?')) {
+                return;
+            }
+            
+            fetch(`/api/extend-loan/${loanId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: data.message,
+                        confirmButtonColor: '#10b981'
+                    });
+                    // Refresh borrowed books list
+                    showBorrowedBooks();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: data.message,
+                        confirmButtonColor: '#ef4444'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Terjadi kesalahan. Silakan coba lagi.',
+                    confirmButtonColor: '#ef4444'
+                });
+            });
+        }
+
+        // Close modals when clicking outside
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+        });
     </script>
 </body>
 </html>

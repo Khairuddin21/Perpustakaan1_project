@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Riwayat Pengembalian - {{ config('app.name', 'Sistem Perpustakaan') }}</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title>Riwayat Pengembalian - <?php echo e(config('app.name', 'Sistem Perpustakaan')); ?></title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Styles -->
-    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/dashboard.css', 'resources/js/dashboard.js']); ?>
 </head>
 <body>
     <div class="dashboard-container">
@@ -32,7 +32,7 @@
             <div class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">Menu Utama</div>
-                    <a href="{{ route('dashboard') }}" class="nav-item">
+                    <a href="<?php echo e(route('dashboard')); ?>" class="nav-item">
                         <i class="fas fa-tachometer-alt"></i>
                         Dashboard
                     </a>
@@ -44,7 +44,7 @@
                         <i class="fas fa-hand-holding"></i>
                         Peminjaman Buku
                     </a>
-                    <a href="{{ route('returns.index') }}" class="nav-item" data-page="returns">
+                    <a href="<?php echo e(route('returns.index')); ?>" class="nav-item" data-page="returns">
                         <i class="fas fa-undo"></i>
                         Pengembalian Buku
                     </a>
@@ -54,7 +54,7 @@
                     </a>
                 </div>
                 
-                @if(auth()->user()->isAdmin())
+                <?php if(auth()->user()->isAdmin()): ?>
                 <div class="nav-section">
                     <div class="nav-section-title">Manajemen Data</div>
                     <a href="#" class="nav-item" data-page="books">
@@ -70,7 +70,7 @@
                         Kelola Anggota
                     </a>
                 </div>
-                @endif
+                <?php endif; ?>
                 
                 <div class="nav-section">
                     <div class="nav-section-title">Laporan</div>
@@ -78,7 +78,7 @@
                         <i class="fas fa-chart-bar"></i>
                         Laporan & Statistik
                     </a>
-                    <a href="{{ route('returns.history') }}" class="nav-item active" data-page="history">
+                    <a href="<?php echo e(route('returns.history')); ?>" class="nav-item active" data-page="history">
                         <i class="fas fa-history"></i>
                         Riwayat Pengembalian
                     </a>
@@ -98,23 +98,24 @@
                     <h1 class="header-title">Riwayat Pengembalian</h1>
                     
                     <div class="header-actions">
-                        <a href="{{ route('returns.index') }}" class="action-btn primary">
+                        <a href="<?php echo e(route('returns.index')); ?>" class="action-btn primary">
                             <i class="fas fa-undo"></i>
                             Proses Pengembalian
                         </a>
                         
                         <div class="user-info">
                             <div class="user-avatar">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                <?php echo e(strtoupper(substr(auth()->user()->name, 0, 2))); ?>
+
                             </div>
                             <div class="user-details">
-                                <div class="user-name">{{ auth()->user()->name }}</div>
-                                <div class="user-role">{{ ucfirst(auth()->user()->role) }}</div>
+                                <div class="user-name"><?php echo e(auth()->user()->name); ?></div>
+                                <div class="user-role"><?php echo e(ucfirst(auth()->user()->role)); ?></div>
                             </div>
                         </div>
                         
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline;">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="nav-item" style="background: none; border: none; color: #64748b; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: all 0.3s ease;">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Logout
@@ -140,7 +141,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $returned_loans->count() }}</h3>
+                                <h3 class="stat-number"><?php echo e($returned_loans->count()); ?></h3>
                                 <p class="stat-label">Total Dikembalikan</p>
                                 <p class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
@@ -156,7 +157,7 @@
                                 <i class="fas fa-exclamation-triangle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $returned_loans->where('return_date', '>', 'due_date')->count() }}</h3>
+                                <h3 class="stat-number"><?php echo e($returned_loans->where('return_date', '>', 'due_date')->count()); ?></h3>
                                 <p class="stat-label">Terlambat Dikembalikan</p>
                                 <p class="stat-change negative">
                                     <i class="fas fa-clock"></i>
@@ -172,7 +173,7 @@
                                 <i class="fas fa-calendar-check"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $returned_loans->where('return_date', '<=', 'due_date')->count() }}</h3>
+                                <h3 class="stat-number"><?php echo e($returned_loans->where('return_date', '<=', 'due_date')->count()); ?></h3>
                                 <p class="stat-label">Tepat Waktu</p>
                                 <p class="stat-change positive">
                                     <i class="fas fa-check"></i>
@@ -184,7 +185,7 @@
                 </div>
 
                 <!-- History Table -->
-                @if($returned_loans->count() > 0)
+                <?php if($returned_loans->count() > 0): ?>
                     <div class="data-section slide-up">
                         <div class="data-card">
                             <div class="data-header">
@@ -193,7 +194,7 @@
                                     Riwayat Pengembalian Buku
                                 </h3>
                                 <div class="data-stats">
-                                    <span class="stat-badge">{{ $returned_loans->count() }} transaksi</span>
+                                    <span class="stat-badge"><?php echo e($returned_loans->count()); ?> transaksi</span>
                                 </div>
                             </div>
                             <div class="table-container">
@@ -210,94 +211,99 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($returned_loans as $loan)
+                                        <?php $__currentLoopData = $returned_loans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                         <tr class="table-row">
                                             <td class="member-cell">
                                                 <div class="member-info">
                                                     <div class="member-avatar">
-                                                        {{ strtoupper(substr($loan->user->name, 0, 2)) }}
+                                                        <?php echo e(strtoupper(substr($loan->user->name, 0, 2))); ?>
+
                                                     </div>
                                                     <div class="member-details">
-                                                        <div class="member-name">{{ $loan->user->name }}</div>
-                                                        <div class="member-email">{{ $loan->user->email }}</div>
+                                                        <div class="member-name"><?php echo e($loan->user->name); ?></div>
+                                                        <div class="member-email"><?php echo e($loan->user->email); ?></div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="book-cell">
                                                 <div class="book-info">
-                                                    <div class="book-title">{{ $loan->book->title }}</div>
-                                                    <div class="book-author">{{ $loan->book->author }}</div>
+                                                    <div class="book-title"><?php echo e($loan->book->title); ?></div>
+                                                    <div class="book-author"><?php echo e($loan->book->author); ?></div>
                                                 </div>
                                             </td>
                                             <td class="date-cell">
                                                 <div class="date-info">
                                                     <i class="fas fa-calendar-plus"></i>
-                                                    {{ $loan->loan_date->format('d M Y') }}
+                                                    <?php echo e($loan->loan_date->format('d M Y')); ?>
+
                                                 </div>
                                             </td>
                                             <td class="date-cell">
                                                 <div class="date-info">
                                                     <i class="fas fa-calendar-times"></i>
-                                                    {{ $loan->due_date->format('d M Y') }}
+                                                    <?php echo e($loan->due_date->format('d M Y')); ?>
+
                                                 </div>
                                             </td>
                                             <td class="date-cell">
-                                                <div class="date-info {{ $loan->return_date->gt($loan->due_date) ? 'overdue' : 'success' }}">
-                                                    <i class="fas {{ $loan->return_date->gt($loan->due_date) ? 'fa-exclamation-triangle' : 'fa-check-circle' }}"></i>
-                                                    {{ $loan->return_date->format('d M Y') }}
+                                                <div class="date-info <?php echo e($loan->return_date->gt($loan->due_date) ? 'overdue' : 'success'); ?>">
+                                                    <i class="fas <?php echo e($loan->return_date->gt($loan->due_date) ? 'fa-exclamation-triangle' : 'fa-check-circle'); ?>"></i>
+                                                    <?php echo e($loan->return_date->format('d M Y')); ?>
+
                                                 </div>
-                                                @if($loan->return_date->gt($loan->due_date))
+                                                <?php if($loan->return_date->gt($loan->due_date)): ?>
                                                     <div class="overdue-info">
-                                                        Terlambat {{ $loan->due_date->diffInDays($loan->return_date) }} hari
+                                                        Terlambat <?php echo e($loan->due_date->diffInDays($loan->return_date)); ?> hari
                                                     </div>
-                                                @endif
+                                                <?php endif; ?>
                                             </td>
                                             <td class="condition-cell">
-                                                <span class="condition-badge {{ $loan->condition ?? 'good' }}">
-                                                    @switch($loan->condition ?? 'good')
-                                                        @case('good')
+                                                <span class="condition-badge <?php echo e($loan->condition ?? 'good'); ?>">
+                                                    <?php switch($loan->condition ?? 'good'):
+                                                        case ('good'): ?>
                                                             <i class="fas fa-check-circle"></i>
                                                             Baik
-                                                            @break
-                                                        @case('damaged')
+                                                            <?php break; ?>
+                                                        <?php case ('damaged'): ?>
                                                             <i class="fas fa-exclamation-triangle"></i>
                                                             Rusak
-                                                            @break
-                                                        @case('lost')
+                                                            <?php break; ?>
+                                                        <?php case ('lost'): ?>
                                                             <i class="fas fa-times-circle"></i>
                                                             Hilang
-                                                            @break
-                                                        @default
+                                                            <?php break; ?>
+                                                        <?php default: ?>
                                                             <i class="fas fa-check-circle"></i>
                                                             Baik
-                                                    @endswitch
+                                                    <?php endswitch; ?>
                                                 </span>
                                             </td>
                                             <td class="status-cell">
-                                                <span class="status-badge {{ $loan->return_date->gt($loan->due_date) ? 'overdue' : 'success' }}">
-                                                    @if($loan->return_date->gt($loan->due_date))
+                                                <span class="status-badge <?php echo e($loan->return_date->gt($loan->due_date) ? 'overdue' : 'success'); ?>">
+                                                    <?php if($loan->return_date->gt($loan->due_date)): ?>
                                                         <i class="fas fa-exclamation-triangle"></i>
                                                         Terlambat
-                                                    @else
+                                                    <?php else: ?>
                                                         <i class="fas fa-check-circle"></i>
                                                         Tepat Waktu
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </span>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
                             
-                            @if($returned_loans->hasPages())
+                            <?php if($returned_loans->hasPages()): ?>
                             <div class="pagination-wrapper">
-                                {{ $returned_loans->links() }}
+                                <?php echo e($returned_loans->links()); ?>
+
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="empty-state slide-up">
                         <div class="empty-state-icon">
                             <i class="fas fa-history"></i>
@@ -307,17 +313,17 @@
                             Belum ada buku yang dikembalikan. Riwayat pengembalian akan muncul di sini setelah ada transaksi pengembalian.
                         </p>
                         <div class="empty-state-actions">
-                            <a href="{{ route('returns.index') }}" class="action-btn primary">
+                            <a href="<?php echo e(route('returns.index')); ?>" class="action-btn primary">
                                 <i class="fas fa-undo"></i>
                                 Proses Pengembalian
                             </a>
-                            <a href="{{ route('dashboard') }}" class="action-btn secondary">
+                            <a href="<?php echo e(route('dashboard')); ?>" class="action-btn secondary">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Kembali ke Dashboard
                             </a>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </main>
     </div>
@@ -598,48 +604,56 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            @foreach($returned_loans as $loan)
+                            <?php $__currentLoopData = $returned_loans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ $loan->user->name }}
+                                        <?php echo e($loan->user->name); ?>
+
                                     </div>
                                     <div class="text-sm text-gray-500">
-                                        {{ $loan->user->email }}
+                                        <?php echo e($loan->user->email); ?>
+
                                     </div>
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="text-sm font-medium text-gray-900">
-                                        {{ $loan->book->title }}
+                                        <?php echo e($loan->book->title); ?>
+
                                     </div>
                                     <div class="text-sm text-gray-500">
-                                        {{ $loan->book->author }}
+                                        <?php echo e($loan->book->author); ?>
+
                                     </div>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $loan->loan_date->format('d/m/Y') }}
+                                    <?php echo e($loan->loan_date->format('d/m/Y')); ?>
+
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                    {{ $loan->return_date->format('d/m/Y') }}
+                                    <?php echo e($loan->return_date->format('d/m/Y')); ?>
+
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-500">
-                                    {{ $loan->notes ?: '-' }}
+                                    <?php echo e($loan->notes ?: '-'); ?>
+
                                 </td>
                             </tr>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="mt-4">
-                    {{ $returned_loans->links() }}
+                    <?php echo e($returned_loans->links()); ?>
+
                 </div>
-            @else
+            <?php else: ?>
                 <div class="text-center py-12">
                     <p class="text-gray-500">Belum ada riwayat pengembalian.</p>
                 </div>
-            @endif
+            <?php endif; ?>
         </div>
     </div>
 </div>
-@endsection
+<?php $__env->stopSection(); ?><?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/returns/history.blade.php ENDPATH**/ ?>

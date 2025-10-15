@@ -65,6 +65,20 @@ Route::middleware('auth')->group(function () {
         Route::get('/reports/download', [ReportController::class, 'download'])->name('admin.reports.download');
         Route::get('/reports/download-excel', [ReportController::class, 'downloadExcel'])->name('admin.reports.download.excel');
     });
+    
+    // Admin Returns Routes - Khusus untuk Admin (BUKAN pustakawan biasa)
+    Route::middleware(['role:admin'])->prefix('admin')->group(function () {
+        Route::get('/returns', [ReturnController::class, 'adminIndex'])->name('admin.returns.index');
+        Route::get('/returns/search', [ReturnController::class, 'adminSearch'])->name('admin.returns.search');
+        Route::post('/returns/{id}/process', [ReturnController::class, 'adminProcess'])->name('admin.returns.process');
+        
+        // Books Management Routes
+        Route::get('/books', [BookController::class, 'index'])->name('admin.books.index');
+        Route::post('/books', [BookController::class, 'store'])->name('admin.books.store');
+        Route::get('/books/{id}/edit', [BookController::class, 'edit'])->name('admin.books.edit');
+        Route::post('/books/{id}', [BookController::class, 'update'])->name('admin.books.update');
+        Route::delete('/books/{id}', [BookController::class, 'destroy'])->name('admin.books.destroy');
+    });
 });
 
 // Return Routes - untuk pustakawan dan admin

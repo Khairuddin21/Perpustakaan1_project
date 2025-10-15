@@ -43,6 +43,8 @@ body {
   transition: transform 0.3s ease-in-out;
   z-index: 1000;
   box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar.collapsed {
@@ -73,6 +75,8 @@ body {
 
 .sidebar-nav {
   padding: 1rem 0;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .nav-section {

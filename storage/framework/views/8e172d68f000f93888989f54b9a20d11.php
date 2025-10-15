@@ -634,10 +634,10 @@
                                     <?php $__currentLoopData = $loans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                     <tr>
                                         <td><?php echo e($index + 1); ?></td>
-                                        <td><?php echo e(\Carbon\Carbon::parse($loan->loan_date ?? $loan->request_date)->format('d M Y')); ?></td>
+                                        <td><?php echo e(\Carbon\Carbon::parse($loan->loan_date ?? $loan->request_date)->format('d M Y, g:i A')); ?></td>
                                         <td><?php echo e($loan->user->name); ?></td>
                                         <td><?php echo e($loan->book->title); ?></td>
-                                        <td><?php echo e($loan->due_date ? \Carbon\Carbon::parse($loan->due_date)->format('d M Y') : '-'); ?></td>
+                                        <td><?php echo e($loan->due_date ? \Carbon\Carbon::parse($loan->due_date)->format('d M Y, g:i A') : '-'); ?></td>
                                         <td>
                                             <span class="status-badge <?php echo e($loan->status); ?>">
                                                 <?php echo e(ucfirst($loan->status)); ?>

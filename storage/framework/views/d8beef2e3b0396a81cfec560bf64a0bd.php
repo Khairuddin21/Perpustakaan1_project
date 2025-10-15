@@ -1,4 +1,4 @@
-<!-- Admin Sidebar -->
+<!-- Pustakawan Sidebar -->
 <nav class="sidebar" id="sidebar">
     <div class="sidebar-header">
         <h1 class="sidebar-title">
@@ -18,28 +18,12 @@
         </div>
         
         <div class="nav-section">
-            <div class="nav-section-title">Manajemen Data</div>
-            <a href="<?php echo e(route('admin.books.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.books.*') ? 'active' : ''); ?>">
-                <i class="fas fa-book"></i>
-                Kelola Buku
-            </a>
-            <a href="#" class="nav-item" data-page="categories">
-                <i class="fas fa-tags"></i>
-                Kategori Buku
-            </a>
-            <a href="#" class="nav-item" data-page="users">
-                <i class="fas fa-users"></i>
-                Kelola Anggota
-            </a>
-        </div>
-        
-        <div class="nav-section">
             <div class="nav-section-title">Transaksi</div>
             <a href="<?php echo e(route('loan-requests')); ?>" class="nav-item <?php echo e(request()->routeIs('loan-requests') ? 'active' : ''); ?>">
                 <i class="fas fa-hand-holding"></i>
                 Akses Peminjaman
             </a>
-            <a href="<?php echo e(route('admin.returns.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.returns.*') ? 'active' : ''); ?>">
+            <a href="<?php echo e(route('returns.index')); ?>" class="nav-item <?php echo e(request()->routeIs('returns.*') ? 'active' : ''); ?>">
                 <i class="fas fa-undo"></i>
                 Pengembalian Buku
             </a>
@@ -54,4 +38,4 @@
         </div>
     </div>
 </nav>
-<?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/components/admin-sidebar.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/components/pustakawan-sidebar.blade.php ENDPATH**/ ?>

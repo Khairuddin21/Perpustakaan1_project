@@ -813,30 +813,8 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
-        <?php if(auth()->user()->role === 'admin'): ?>
-            <?php if (isset($component)) { $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2 = $component; } ?>
-<?php if (isset($attributes)) { $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2 = $attributes; } ?>
-<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
-<?php $component->withName('admin-sidebar'); ?>
-<?php if ($component->shouldRender()): ?>
-<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
-<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
-<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
-<?php endif; ?>
-<?php $component->withAttributes([]); ?>
-<?php echo $__env->renderComponent(); ?>
-<?php endif; ?>
-<?php if (isset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
-<?php $attributes = $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
-<?php unset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
-<?php endif; ?>
-<?php if (isset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
-<?php $component = $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
-<?php unset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
-<?php endif; ?>
-        <?php elseif(auth()->user()->role === 'pustakawan'): ?>
-            <?php if (isset($component)) { $__componentOriginal3669d248200f2dc31f2689292901c050 = $component; } ?>
+        <!-- Sidebar Pustakawan -->
+        <?php if (isset($component)) { $__componentOriginal3669d248200f2dc31f2689292901c050 = $component; } ?>
 <?php if (isset($attributes)) { $__attributesOriginal3669d248200f2dc31f2689292901c050 = $attributes; } ?>
 <?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.pustakawan-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
 <?php $component->withName('pustakawan-sidebar'); ?>
@@ -856,7 +834,6 @@
 <?php $component = $__componentOriginal3669d248200f2dc31f2689292901c050; ?>
 <?php unset($__componentOriginal3669d248200f2dc31f2689292901c050); ?>
 <?php endif; ?>
-        <?php endif; ?>
         
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
@@ -1492,4 +1469,4 @@
     <?php echo app('Illuminate\Foundation\Vite')(['resources/js/dashboard.js']); ?>
 </body>
 </html>
-<?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/dashboard/loan-requests.blade.php ENDPATH**/ ?>
+<?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/dashboard/pustakawan-loan-requests.blade.php ENDPATH**/ ?>

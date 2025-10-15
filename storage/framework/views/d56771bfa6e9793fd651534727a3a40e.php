@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Pengembalian Buku - {{ config('app.name', 'Sistem Perpustakaan') }}</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title>Pengembalian Buku - <?php echo e(config('app.name', 'Sistem Perpustakaan')); ?></title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Styles -->
-    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/dashboard.css', 'resources/js/dashboard.js']); ?>
 </head>
 <body>
     <div class="dashboard-container">
@@ -32,7 +32,7 @@
             <div class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">Menu Utama</div>
-                    <a href="{{ route('dashboard') }}" class="nav-item">
+                    <a href="<?php echo e(route('dashboard')); ?>" class="nav-item">
                         <i class="fas fa-tachometer-alt"></i>
                         Dashboard
                     </a>
@@ -44,7 +44,7 @@
                         <i class="fas fa-hand-holding"></i>
                         Peminjaman Buku
                     </a>
-                    <a href="{{ route('returns.index') }}" class="nav-item active" data-page="returns">
+                    <a href="<?php echo e(route('returns.index')); ?>" class="nav-item active" data-page="returns">
                         <i class="fas fa-undo"></i>
                         Pengembalian Buku
                     </a>
@@ -54,7 +54,7 @@
                     </a>
                 </div>
                 
-                @if(auth()->user()->isAdmin())
+                <?php if(auth()->user()->isAdmin()): ?>
                 <div class="nav-section">
                     <div class="nav-section-title">Manajemen Data</div>
                     <a href="#" class="nav-item" data-page="books">
@@ -70,7 +70,7 @@
                         Kelola Anggota
                     </a>
                 </div>
-                @endif
+                <?php endif; ?>
                 
                 <div class="nav-section">
                     <div class="nav-section-title">Laporan</div>
@@ -78,7 +78,7 @@
                         <i class="fas fa-chart-bar"></i>
                         Laporan & Statistik
                     </a>
-                    <a href="{{ route('returns.history') }}" class="nav-item" data-page="history">
+                    <a href="<?php echo e(route('returns.history')); ?>" class="nav-item" data-page="history">
                         <i class="fas fa-history"></i>
                         Riwayat Pengembalian
                     </a>
@@ -98,23 +98,24 @@
                     <h1 class="header-title">Pengembalian Buku</h1>
                     
                     <div class="header-actions">
-                        <a href="{{ route('returns.history') }}" class="action-btn secondary">
+                        <a href="<?php echo e(route('returns.history')); ?>" class="action-btn secondary">
                             <i class="fas fa-history"></i>
                             Riwayat
                         </a>
                         
                         <div class="user-info">
                             <div class="user-avatar">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                <?php echo e(strtoupper(substr(auth()->user()->name, 0, 2))); ?>
+
                             </div>
                             <div class="user-details">
-                                <div class="user-name">{{ auth()->user()->name }}</div>
-                                <div class="user-role">{{ ucfirst(auth()->user()->role) }}</div>
+                                <div class="user-name"><?php echo e(auth()->user()->name); ?></div>
+                                <div class="user-role"><?php echo e(ucfirst(auth()->user()->role)); ?></div>
                             </div>
                         </div>
                         
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline;">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="nav-item" style="background: none; border: none; color: #64748b; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: all 0.3s ease;">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Logout
@@ -133,29 +134,29 @@
                 </div>
 
                 <!-- Notifications -->
-                @if(session('success'))
+                <?php if(session('success')): ?>
                     <div class="notification-card success fade-in">
                         <div class="notification-icon">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <div class="notification-content">
                             <h4>Berhasil!</h4>
-                            <p>{{ session('success') }}</p>
+                            <p><?php echo e(session('success')); ?></p>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
-                @if(session('error'))
+                <?php if(session('error')): ?>
                     <div class="notification-card error fade-in">
                         <div class="notification-icon">
                             <i class="fas fa-exclamation-circle"></i>
                         </div>
                         <div class="notification-content">
                             <h4>Error!</h4>
-                            <p>{{ session('error') }}</p>
+                            <p><?php echo e(session('error')); ?></p>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Search Section -->
                 <div class="search-section slide-up">
@@ -166,30 +167,30 @@
                                 Cari Peminjaman
                             </h3>
                         </div>
-                        <form action="{{ route('returns.search') }}" method="GET" class="search-form">
+                        <form action="<?php echo e(route('returns.search')); ?>" method="GET" class="search-form">
                             <div class="search-input-group">
                                 <input type="text" 
                                        name="search" 
-                                       value="{{ $search ?? '' }}"
+                                       value="<?php echo e($search ?? ''); ?>"
                                        placeholder="Cari berdasarkan nama anggota, email, judul buku, atau ISBN..." 
                                        class="search-input">
                                 <button type="submit" class="search-btn">
                                     <i class="fas fa-search"></i>
                                     Cari
                                 </button>
-                                @if(isset($search))
-                                <a href="{{ route('returns.index') }}" class="search-reset">
+                                <?php if(isset($search)): ?>
+                                <a href="<?php echo e(route('returns.index')); ?>" class="search-reset">
                                     <i class="fas fa-times"></i>
                                     Reset
                                 </a>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </form>
                     </div>
                 </div>
 
                 <!-- Returns Table -->
-                @if($borrowed_loans->count() > 0)
+                <?php if($borrowed_loans->count() > 0): ?>
                     <div class="data-section slide-up">
                         <div class="data-card">
                             <div class="data-header">
@@ -198,7 +199,7 @@
                                     Daftar Peminjaman Aktif
                                 </h3>
                                 <div class="data-stats">
-                                    <span class="stat-badge">{{ $borrowed_loans->count() }} peminjaman</span>
+                                    <span class="stat-badge"><?php echo e($borrowed_loans->count()); ?> peminjaman</span>
                                 </div>
                             </div>
                             <div class="table-container">
@@ -214,95 +215,100 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($borrowed_loans as $loan)
-                                        <tr class="table-row {{ $loan->isOverdue() ? 'overdue' : '' }}">
+                                        <?php $__currentLoopData = $borrowed_loans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <tr class="table-row <?php echo e($loan->isOverdue() ? 'overdue' : ''); ?>">
                                             <td class="member-cell">
                                                 <div class="member-info">
                                                     <div class="member-avatar">
-                                                        {{ strtoupper(substr($loan->user->name, 0, 2)) }}
+                                                        <?php echo e(strtoupper(substr($loan->user->name, 0, 2))); ?>
+
                                                     </div>
                                                     <div class="member-details">
-                                                        <div class="member-name">{{ $loan->user->name }}</div>
-                                                        <div class="member-email">{{ $loan->user->email }}</div>
+                                                        <div class="member-name"><?php echo e($loan->user->name); ?></div>
+                                                        <div class="member-email"><?php echo e($loan->user->email); ?></div>
                                                     </div>
                                                 </div>
                                             </td>
                                             <td class="book-cell">
                                                 <div class="book-info">
-                                                    <div class="book-title">{{ $loan->book->title }}</div>
-                                                    <div class="book-author">{{ $loan->book->author }}</div>
+                                                    <div class="book-title"><?php echo e($loan->book->title); ?></div>
+                                                    <div class="book-author"><?php echo e($loan->book->author); ?></div>
                                                 </div>
                                             </td>
                                             <td class="date-cell">
                                                 <div class="date-info">
                                                     <i class="fas fa-calendar-plus"></i>
-                                                    {{ $loan->loan_date->format('d M Y') }}
+                                                    <?php echo e($loan->loan_date->format('d M Y')); ?>
+
                                                 </div>
                                             </td>
-                                            <td class="due-cell {{ $loan->isOverdue() ? 'overdue' : '' }}">
+                                            <td class="due-cell <?php echo e($loan->isOverdue() ? 'overdue' : ''); ?>">
                                                 <div class="due-info">
                                                     <i class="fas fa-calendar-check"></i>
-                                                    {{ $loan->due_date->format('d M Y') }}
-                                                    @if($loan->isOverdue())
+                                                    <?php echo e($loan->due_date->format('d M Y')); ?>
+
+                                                    <?php if($loan->isOverdue()): ?>
                                                         <div class="overdue-badge">
                                                             <i class="fas fa-exclamation-triangle"></i>
-                                                            Terlambat {{ $loan->due_date->diffInDays(now()) }} hari
+                                                            Terlambat <?php echo e($loan->due_date->diffInDays(now())); ?> hari
                                                         </div>
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </div>
                                             </td>
                                             <td class="status-cell">
-                                                <span class="status-badge {{ $loan->isOverdue() ? 'overdue' : 'active' }}">
-                                                    <i class="fas {{ $loan->isOverdue() ? 'fa-exclamation-triangle' : 'fa-clock' }}"></i>
-                                                    {{ $loan->isOverdue() ? 'Terlambat' : 'Dipinjam' }}
+                                                <span class="status-badge <?php echo e($loan->isOverdue() ? 'overdue' : 'active'); ?>">
+                                                    <i class="fas <?php echo e($loan->isOverdue() ? 'fa-exclamation-triangle' : 'fa-clock'); ?>"></i>
+                                                    <?php echo e($loan->isOverdue() ? 'Terlambat' : 'Dipinjam'); ?>
+
                                                 </span>
                                             </td>
                                             <td class="action-cell">
-                                                <a href="{{ route('returns.show', $loan->id) }}" class="action-btn primary">
+                                                <a href="<?php echo e(route('returns.show', $loan->id)); ?>" class="action-btn primary">
                                                     <i class="fas fa-undo"></i>
                                                     Proses Pengembalian
                                                 </a>
                                             </td>
                                         </tr>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </tbody>
                                 </table>
                             </div>
                             
-                            @if($borrowed_loans->hasPages())
+                            <?php if($borrowed_loans->hasPages()): ?>
                             <div class="pagination-wrapper">
-                                {{ $borrowed_loans->links() }}
+                                <?php echo e($borrowed_loans->links()); ?>
+
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="empty-state slide-up">
                         <div class="empty-state-icon">
                             <i class="fas fa-check-circle"></i>
                         </div>
                         <h3 class="empty-state-title">Tidak Ada Peminjaman Aktif</h3>
                         <p class="empty-state-description">
-                            @if(isset($search))
-                                Tidak ditemukan peminjaman yang sesuai dengan pencarian "{{ $search }}".
-                            @else
+                            <?php if(isset($search)): ?>
+                                Tidak ditemukan peminjaman yang sesuai dengan pencarian "<?php echo e($search); ?>".
+                            <?php else: ?>
                                 Semua buku sudah dikembalikan. Tidak ada peminjaman yang perlu diproses saat ini.
-                            @endif
+                            <?php endif; ?>
                         </p>
                         <div class="empty-state-actions">
-                            @if(isset($search))
-                                <a href="{{ route('returns.index') }}" class="action-btn secondary">
+                            <?php if(isset($search)): ?>
+                                <a href="<?php echo e(route('returns.index')); ?>" class="action-btn secondary">
                                     <i class="fas fa-list"></i>
                                     Lihat Semua Peminjaman
                                 </a>
-                            @endif
-                            <a href="{{ route('dashboard') }}" class="action-btn primary">
+                            <?php endif; ?>
+                            <a href="<?php echo e(route('dashboard')); ?>" class="action-btn primary">
                                 <i class="fas fa-tachometer-alt"></i>
                                 Kembali ke Dashboard
                             </a>
                         </div>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </main>
     </div>
@@ -690,4 +696,4 @@
     
     <!-- Scripts loaded via Vite -->
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/returns/index.blade.php ENDPATH**/ ?>

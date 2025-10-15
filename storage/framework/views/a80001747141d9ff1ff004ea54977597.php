@@ -76,6 +76,7 @@
         </div>
     </div>
 
+    <!-- User Profile & Logout Section -->
     <div class="sidebar-footer">
         <div class="user-card">
             <div class="user-avatar">
@@ -84,10 +85,11 @@
             </div>
             <div class="user-details">
                 <strong><?php echo e(auth()->user()->name); ?></strong>
-                <small><?php echo e(ucfirst(auth()->user()->role)); ?></small>
+                <small><?php echo e(auth()->user()->email); ?></small>
             </div>
         </div>
-        <form method="POST" action="<?php echo e(route('logout')); ?>">
+        
+        <form method="POST" action="<?php echo e(route('logout')); ?>" style="width: 100%;">
             <?php echo csrf_field(); ?>
             <button type="submit" class="logout-btn">
                 <i class="fas fa-sign-out-alt"></i>

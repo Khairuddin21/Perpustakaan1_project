@@ -76,6 +76,7 @@
         </div>
     </div>
 
+    <!-- User Profile & Logout Section -->
     <div class="sidebar-footer">
         <div class="user-card">
             <div class="user-avatar">
@@ -83,10 +84,11 @@
             </div>
             <div class="user-details">
                 <strong>{{ auth()->user()->name }}</strong>
-                <small>{{ ucfirst(auth()->user()->role) }}</small>
+                <small>{{ auth()->user()->email }}</small>
             </div>
         </div>
-        <form method="POST" action="{{ route('logout') }}">
+        
+        <form method="POST" action="{{ route('logout') }}" style="width: 100%;">
             @csrf
             <button type="submit" class="logout-btn">
                 <i class="fas fa-sign-out-alt"></i>

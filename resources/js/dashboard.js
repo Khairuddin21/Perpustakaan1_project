@@ -244,7 +244,7 @@ function handleActionCardClick(action) {
             // Navigate to return page
             showNotification('Mengarahkan ke halaman pengembalian...', 'info');
             setTimeout(() => {
-                window.location.href = '/returns';
+                window.location.href = '/admin/returns';
             }, 1000);
             break;
         case 'reports':

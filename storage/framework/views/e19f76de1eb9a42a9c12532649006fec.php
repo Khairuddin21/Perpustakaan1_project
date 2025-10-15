@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Dashboard Pustakawan - {{ config('app.name', 'Sistem Perpustakaan') }}</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title>Dashboard Pustakawan - <?php echo e(config('app.name', 'Sistem Perpustakaan')); ?></title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,12 +15,31 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Styles -->
-    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/dashboard.css', 'resources/js/dashboard.js']); ?>
 </head>
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
-        <x-pustakawan-sidebar />
+        <?php if (isset($component)) { $__componentOriginal3669d248200f2dc31f2689292901c050 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3669d248200f2dc31f2689292901c050 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.pustakawan-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('pustakawan-sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $attributes = $__attributesOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__attributesOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $component = $__componentOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__componentOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
         
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
@@ -36,16 +55,17 @@
                     <div class="header-actions">
                         <div class="user-info">
                             <div class="user-avatar">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                <?php echo e(strtoupper(substr(auth()->user()->name, 0, 2))); ?>
+
                             </div>
                             <div class="user-details">
-                                <div class="user-name">{{ auth()->user()->name }}</div>
-                                <div class="user-role">{{ ucfirst(auth()->user()->role) }}</div>
+                                <div class="user-name"><?php echo e(auth()->user()->name); ?></div>
+                                <div class="user-role"><?php echo e(ucfirst(auth()->user()->role)); ?></div>
                             </div>
                         </div>
                         
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline;">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="nav-item" style="background: none; border: none; color: #64748b; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: all 0.3s ease;">
                                 <i class="fas fa-sign-out-alt"></i>
                                 Logout
@@ -59,7 +79,7 @@
             <div class="dashboard-content">
                 <!-- Welcome Section -->
                 <div class="welcome-section fade-in">
-                    <h2 class="welcome-title">Selamat Datang, {{ auth()->user()->name }}! 📚</h2>
+                    <h2 class="welcome-title">Selamat Datang, <?php echo e(auth()->user()->name); ?>! 📚</h2>
                     <p class="welcome-subtitle">Kelola transaksi peminjaman dan pengembalian buku dengan mudah dan efisien.</p>
                 </div>
                 
@@ -71,7 +91,7 @@
                                 <i class="fas fa-hand-holding"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $stats['total_loans'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($stats['total_loans']); ?></h3>
                                 <p class="stat-label">Sedang Dipinjam</p>
                                 <p class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
@@ -87,7 +107,7 @@
                                 <i class="fas fa-exclamation-triangle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $stats['overdue_loans'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($stats['overdue_loans']); ?></h3>
                                 <p class="stat-label">Buku Terlambat</p>
                                 <p class="stat-change negative">
                                     <i class="fas fa-arrow-down"></i>
@@ -103,7 +123,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $stats['returned_today'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($stats['returned_today']); ?></h3>
                                 <p class="stat-label">Dikembalikan Hari Ini</p>
                                 <p class="stat-change positive">
                                     <i class="fas fa-arrow-up"></i>
@@ -191,4 +211,4 @@
     
     <!-- Scripts loaded via Vite -->
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\PERPUSTAKAAN\resources\views/dashboard/pustakawan.blade.php ENDPATH**/ ?>
