@@ -35,9 +35,9 @@
         
         <div class="nav-section">
             <div class="nav-section-title">Transaksi</div>
-            <a href="#" class="nav-item" data-page="loans">
+            <a href="{{ route('loan-requests') }}" class="nav-item" data-page="loans">
                 <i class="fas fa-hand-holding"></i>
-                Peminjaman Buku
+                Akses Peminjaman
             </a>
             <a href="{{ route('returns.index') }}" class="nav-item" data-page="returns">
                 <i class="fas fa-undo"></i>

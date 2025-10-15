@@ -42,6 +42,15 @@ class DashboardController extends Controller
                                ->limit(10)
                                ->get();
             
+            // Calculate loans due within 3 days for notifications
+            $upcoming_due_loans = $active_loans->filter(function($loan) {
+                $now = \Carbon\Carbon::now()->startOfDay();
+                $dueDate = \Carbon\Carbon::parse($loan->due_date)->startOfDay();
+                $daysLeft = $now->diffInDays($dueDate, false);
+                // Show notification if due within 3 days or overdue
+                return $daysLeft <= 3;
+            });
+            
             // Get featured books for browsing
             $featured_books = Book::with('category')
                                  ->where('available', '>', 0)
@@ -54,7 +63,7 @@ class DashboardController extends Controller
                 $query->where('available', '>', 0);
             }])->orderBy('name')->get();
             
-            return view('dashboard.anggota', compact('active_loans', 'loan_history', 'featured_books', 'categories'));
+            return view('dashboard.anggota', compact('active_loans', 'loan_history', 'featured_books', 'categories', 'upcoming_due_loans'));
         }
     }
     

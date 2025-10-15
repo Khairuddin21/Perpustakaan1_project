@@ -315,8 +315,9 @@ class LoanController extends Controller
      */
     public function approveLoan(Request $request, $id)
     {
+        // Make loan_duration optional, default to 7 days
         $request->validate([
-            'loan_duration' => 'required|integer|min:1|max:30'
+            'loan_duration' => 'nullable|integer|min:1|max:30'
         ]);
 
         $loan = Loan::with('book')->findOrFail($id);
@@ -336,10 +337,12 @@ class LoanController extends Controller
             ], 400);
         }
 
-        DB::transaction(function () use ($loan, $request) {
+        $duration = $request->loan_duration ?? 7; // Default 7 days
+
+        DB::transaction(function () use ($loan, $duration) {
             // Update loan
             $loanDate = Carbon::now();
-            $dueDate = $loanDate->copy()->addDays($request->loan_duration);
+            $dueDate = $loanDate->copy()->addDays($duration);
 
             $loan->update([
                 'status' => 'borrowed',
@@ -353,9 +356,12 @@ class LoanController extends Controller
             $loan->book->decrement('available');
         });
 
+        Log::info('Loan approved', ['loan_id' => $loan->id, 'admin' => Auth::id()]);
+
         return response()->json([
             'success' => true,
-            'message' => 'Permintaan peminjaman berhasil disetujui.'
+            'message' => 'Permintaan peminjaman berhasil disetujui.',
+            'loan' => $loan->load('user', 'book')
         ]);
     }
 
@@ -364,8 +370,9 @@ class LoanController extends Controller
      */
     public function rejectLoan(Request $request, $id)
     {
+        // Make reason optional
         $request->validate([
-            'reason' => 'required|string|max:500'
+            'reason' => 'nullable|string|max:500'
         ]);
 
         $loan = Loan::findOrFail($id);
@@ -377,14 +384,21 @@ class LoanController extends Controller
             ], 400);
         }
 
+        $rejectionNote = $request->reason 
+            ? $request->reason . ' (Ditolak oleh admin)' 
+            : 'Ditolak oleh admin';
+
         $loan->update([
             'status' => 'rejected',
-            'notes' => $request->reason . ' (Ditolak oleh admin)'
+            'notes' => $rejectionNote
         ]);
+
+        Log::info('Loan rejected', ['loan_id' => $loan->id, 'admin' => Auth::id()]);
 
         return response()->json([
             'success' => true,
-            'message' => 'Permintaan peminjaman berhasil ditolak.'
+            'message' => 'Permintaan peminjaman berhasil ditolak.',
+            'loan' => $loan->load('user', 'book')
         ]);
     }
 
@@ -433,5 +447,44 @@ class LoanController extends Controller
         // Can extend if not overdue and due date is within 3 days
         $daysLeft = Carbon::now()->diffInDays($loan->due_date, false);
         return $daysLeft >= 0 && $daysLeft <= 3;
+    }
+
+    /**
+     * Get all loan requests for admin
+     */
+    public function getAllLoanRequests()
+    {
+        try {
+            $loans = Loan::with(['user', 'book', 'book.category'])
+                        ->orderByRaw("CASE 
+                            WHEN status = 'pending' THEN 1
+                            WHEN status = 'borrowed' THEN 2
+                            WHEN status = 'overdue' THEN 3
+                            ELSE 4 
+                        END")
+                        ->orderBy('request_date', 'desc')
+                        ->get();
+
+            return response()->json([
+                'success' => true,
+                'loans' => $loans
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error fetching loan requests', ['error' => $e->getMessage()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat mengambil data peminjaman'
+            ], 500);
+        }
+    }
+
+    /**
+
+    /**
+     * Show loan requests page for admin
+     */
+    public function showLoanRequests()
+    {
+        return view('dashboard.loan-requests');
     }
 }

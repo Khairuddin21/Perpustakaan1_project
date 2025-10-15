@@ -26,7 +26,12 @@ class Loan extends Model
         'nis',
         'borrower_photo',
         'qr_data',
-        'identification_method'
+        'identification_method',
+        'return_nis',
+        'return_borrower_name',
+        'return_notes',
+        'return_request_date',
+        'return_condition'
     ];
 
     protected $casts = [

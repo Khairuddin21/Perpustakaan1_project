@@ -20,19 +20,13 @@ function initializeRealTimeClock() {
 function handleQuickAction(action) {
     switch(action) {
         case 'loans':
-            // Navigate to loans page or trigger modal
-            const loansNavItem = document.querySelector('[data-page="loans"]');
-            if (loansNavItem) {
-                loansNavItem.click();
-            }
+            // Navigate to loan requests page
+            window.location.href = '/loan-requests';
             break;
             
         case 'reports':
             // Navigate to reports page
-            const reportsNavItem = document.querySelector('[data-page="reports"]');
-            if (reportsNavItem) {
-                reportsNavItem.click();
-            }
+            window.location.href = '/reports';
             break;
             
         default:

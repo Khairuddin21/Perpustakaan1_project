@@ -256,7 +256,9 @@ body {
 
 /* Enhanced Welcome Section */
 .welcome-section-enhanced {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0) 0%, rgba(118, 75, 162, 0) 100%),
+                url('/Gambar/buku%20916.jpg') center/cover no-repeat;
+  background-blend-mode: overlay;
   border-radius: 1.5rem;
   padding: 0;
   margin-bottom: 2rem;
@@ -272,8 +274,8 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  opacity: 0.3;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
 }
 
 .welcome-content {
@@ -420,24 +422,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 400px;
 }
 
-.book-illustration {
+.library-illustration {
   position: relative;
   width: 100%;
-  max-width: 450px;
-  height: 450px;
+  max-width: 500px;
+  height: 400px;
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.books-image {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
-  animation: float 3s ease-in-out infinite;
 }
 
 .floating-elements {
@@ -451,38 +446,53 @@ body {
 
 .floating-icon {
   position: absolute;
-  width: 60px;
-  height: 60px;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(10px);
+  width: 80px;
+  height: 80px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.floating-icon:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.6);
 }
 
 .floating-icon i {
-  font-size: 1.5rem;
+  font-size: 2rem;
   color: white;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .floating-icon.icon-1 {
-  top: 10%;
-  left: 10%;
+  top: 5%;
+  left: 15%;
   animation: float-1 4s ease-in-out infinite;
 }
 
 .floating-icon.icon-2 {
-  top: 60%;
+  top: 15%;
   right: 10%;
   animation: float-2 5s ease-in-out infinite;
 }
 
 .floating-icon.icon-3 {
-  bottom: 15%;
-  left: 15%;
+  bottom: 20%;
+  left: 8%;
   animation: float-3 6s ease-in-out infinite;
+}
+
+.floating-icon.icon-4 {
+  bottom: 10%;
+  right: 20%;
+  animation: float-4 5.5s ease-in-out infinite;
 }
 
 /* Animations */
@@ -522,6 +532,15 @@ body {
   }
 }
 
+@keyframes float-4 {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(-10px, -15px) rotate(-5deg);
+  }
+}
+
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -543,15 +562,30 @@ body {
   
   .welcome-visual {
     order: -1;
+    min-height: 300px;
   }
   
-  .book-illustration {
-    max-width: 350px;
-    height: 350px;
+  .library-illustration {
+    max-width: 400px;
+    height: 300px;
   }
   
   .welcome-section-enhanced .welcome-title {
     font-size: 2rem;
+  }
+  
+  .floating-icon {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .floating-icon i {
+    font-size: 1.6rem;
+  }
+
+  .action-grid-single-row {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
   }
 }
 
@@ -575,18 +609,22 @@ body {
     justify-content: center;
   }
   
-  .book-illustration {
-    max-width: 280px;
-    height: 280px;
+  .welcome-visual {
+    min-height: 250px;
+  }
+  
+  .library-illustration {
+    max-width: 300px;
+    height: 250px;
   }
   
   .floating-icon {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
   }
   
   .floating-icon i {
-    font-size: 1.2rem;
+    font-size: 1.3rem;
   }
 }
 
@@ -716,6 +754,14 @@ body {
 .action-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Action Cards - Single Row (5 items) */
+.action-grid-single-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -886,6 +932,10 @@ body {
   }
 
   .action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .action-grid-single-row {
     grid-template-columns: 1fr;
   }
 

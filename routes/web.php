@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -25,6 +26,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/search', [DashboardController::class, 'search'])->name('books.search');
     Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show');
     
+    // User return routes
+    Route::get('/my-returns', [ReturnController::class, 'userReturns'])->name('user.returns');
+    
     // Loan Management API Routes
     Route::prefix('api')->group(function () {
         Route::post('/request-loan', [LoanController::class, 'requestLoan'])->name('api.request-loan');
@@ -39,12 +43,27 @@ Route::middleware('auth')->group(function () {
         Route::post('/books/{id}/comments', [BookController::class, 'addComment'])->name('api.book.comment');
         Route::get('/wishlist', [BookController::class, 'getWishlist'])->name('api.wishlist');
         
+        // Return request API
+        Route::post('/returns/submit', [ReturnController::class, 'submitReturn'])->name('api.returns.submit');
+        Route::post('/returns/clear', [ReturnController::class, 'clearReturnRequest'])->name('api.returns.clear');
+        
         // Admin routes for loan management
         Route::middleware(['role:admin,pustakawan'])->group(function () {
             Route::get('/pending-requests', [LoanController::class, 'getPendingRequests'])->name('api.pending-requests');
             Route::post('/approve-loan/{id}', [LoanController::class, 'approveLoan'])->name('api.approve-loan');
             Route::post('/reject-loan/{id}', [LoanController::class, 'rejectLoan'])->name('api.reject-loan');
+            Route::get('/admin/loan-requests', [LoanController::class, 'getAllLoanRequests'])->name('api.admin.loan-requests');
+            Route::post('/admin/loans/{id}/approve', [LoanController::class, 'approveLoan'])->name('api.admin.loans.approve');
+            Route::post('/admin/loans/{id}/reject', [LoanController::class, 'rejectLoan'])->name('api.admin.loans.reject');
         });
+    });
+    
+    // Admin pages for loan management
+    Route::middleware(['role:admin,pustakawan'])->group(function () {
+        Route::get('/loan-requests', [LoanController::class, 'showLoanRequests'])->name('loan-requests');
+        Route::get('/reports', [ReportController::class, 'index'])->name('admin.reports');
+        Route::get('/reports/download', [ReportController::class, 'download'])->name('admin.reports.download');
+        Route::get('/reports/download-excel', [ReportController::class, 'downloadExcel'])->name('admin.reports.download.excel');
     });
 });
 

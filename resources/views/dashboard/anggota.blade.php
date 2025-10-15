@@ -2445,7 +2445,7 @@
 <body>
     <div class="dashboard-wrapper">
         <!-- Sidebar -->
-        @include('components.sidebar', ['activeLoans' => $active_loans])
+        @include('components.sidebar', ['activeLoans' => $active_loans, 'upcomingDueLoans' => $upcoming_due_loans])
 
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
@@ -2465,7 +2465,9 @@
                     
                     <div class="notification-icon">
                         <i class="fas fa-bell"></i>
-                        <span class="badge">3</span>
+                        @if($upcoming_due_loans->count() > 0)
+                        <span class="badge">{{ $upcoming_due_loans->count() }}</span>
+                        @endif
                     </div>
                 </div>
             </header>
@@ -2648,9 +2650,25 @@
                                     </div>
                                 </div>
                                 @php
-                                    $daysLeft = \Carbon\Carbon::parse($loan->due_date)->diffInDays(now(), false);
-                                    $badgeClass = $daysLeft < 0 ? 'danger' : ($daysLeft <= 3 ? 'warning' : 'success');
-                                    $badgeText = $daysLeft < 0 ? 'Terlambat ' . abs($daysLeft) . ' hari' : ($daysLeft == 0 ? 'Jatuh tempo hari ini' : $daysLeft . ' hari lagi');
+                                    // Calculate days left properly
+                                    $now = \Carbon\Carbon::now()->startOfDay();
+                                    $dueDate = \Carbon\Carbon::parse($loan->due_date)->startOfDay();
+                                    $daysLeft = $now->diffInDays($dueDate, false);
+                                    
+                                    // Determine badge class and text
+                                    if ($daysLeft < 0) {
+                                        $badgeClass = 'danger';
+                                        $badgeText = 'Terlambat ' . abs($daysLeft) . ' hari';
+                                    } elseif ($daysLeft == 0) {
+                                        $badgeClass = 'danger';
+                                        $badgeText = 'Jatuh tempo hari ini';
+                                    } elseif ($daysLeft <= 3) {
+                                        $badgeClass = 'warning';
+                                        $badgeText = $daysLeft . ' hari lagi';
+                                    } else {
+                                        $badgeClass = 'success';
+                                        $badgeText = $daysLeft . ' hari lagi';
+                                    }
                                 @endphp
                                 <span class="due-badge {{ $badgeClass }}">{{ $badgeText }}</span>
                             </div>
@@ -3622,6 +3640,30 @@
             if (e.target.classList.contains('modal-overlay')) {
                 e.target.classList.remove('active');
             }
+        });
+
+        // Normalize any decimal day counts in due badges (defensive UI cleanup)
+        document.addEventListener('DOMContentLoaded', function() {
+            const normalizeText = (text) => {
+                if (!text || typeof text !== 'string') return text;
+                const lower = text.toLowerCase();
+                if (lower.includes('jatuh tempo hari ini')) return text;
+                // Decide rounding mode: floor for 'terlambat', ceil for 'hari lagi'
+                const rounder = lower.includes('terlambat') ? Math.floor : (lower.includes('hari lagi') ? Math.ceil : Math.round);
+                return text.replace(/(\d+[.,]\d+|\d+)(?=\s*hari)/gi, (m) => {
+                    const n = Number(m.replace(',', '.'));
+                    if (Number.isNaN(n)) return m;
+                    return String(rounder(n));
+                });
+            };
+
+            document.querySelectorAll('.due-badge').forEach((el) => {
+                const original = el.textContent.trim();
+                const normalized = normalizeText(original);
+                if (normalized !== original) {
+                    el.textContent = normalized;
+                }
+            });
         });
 
         // Make functions globally available

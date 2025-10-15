@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -16,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Custom Styles -->
-    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js', 'resources/js/welcome-enhancements.js'])
+    @vite(['resources/css/dashboard.css', 'resources/js/dashboard.js'])
 </head>
 <body>
     <div class="dashboard-container">
@@ -106,17 +105,19 @@
                         </div>
                         
                         <div class="welcome-visual">
-                            <div class="book-illustration">
-                                <img src="{{ asset('Gambar/buku 916.jpg') }}" alt="Library Books" class="books-image">
+                            <div class="library-illustration">
                                 <div class="floating-elements">
                                     <div class="floating-icon icon-1">
-                                        <i class="fas fa-book"></i>
+                                        <i class="fas fa-book-open"></i>
                                     </div>
                                     <div class="floating-icon icon-2">
-                                        <i class="fas fa-bookmark"></i>
+                                        <i class="fas fa-glasses"></i>
                                     </div>
                                     <div class="floating-icon icon-3">
-                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-pen-fancy"></i>
+                                    </div>
+                                    <div class="floating-icon icon-4">
+                                        <i class="fas fa-lightbulb"></i>
                                     </div>
                                 </div>
                             </div>
@@ -192,15 +193,7 @@
                 </div>
                 
                 <!-- Action Cards -->
-                <div class="action-grid">
-                    <div class="action-card" data-action="borrow">
-                        <div class="action-icon">
-                            <i class="fas fa-plus-circle"></i>
-                        </div>
-                        <h3 class="action-title">Peminjaman Buku</h3>
-                        <p class="action-description">Proses peminjaman buku untuk anggota perpustakaan dengan sistem yang mudah dan cepat.</p>
-                    </div>
-                    
+                <div class="action-grid-single-row">
                     <div class="action-card" data-action="return">
                         <div class="action-icon">
                             <i class="fas fa-undo-alt"></i>

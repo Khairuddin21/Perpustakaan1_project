@@ -38,9 +38,13 @@
             <a href="#" class="nav-item" onclick="showBorrowedBooks(); return false;">
                 <i class="fas fa-hand-holding-heart"></i>
                 <span>Sedang Dipinjam</span>
-                @if($activeLoans->count() > 0)
-                <span class="notification-badge">{{ $activeLoans->count() }}</span>
+                @if(isset($upcomingDueLoans) && $upcomingDueLoans->count() > 0)
+                <span class="notification-badge">{{ $upcomingDueLoans->count() }}</span>
                 @endif
+            </a>
+            <a href="{{ route('user.returns') }}" class="nav-item {{ request()->routeIs('user.returns') ? 'active' : '' }}">
+                <i class="fas fa-undo-alt"></i>
+                <span>Pengembalian Buku</span>
             </a>
             <a href="#" class="nav-item" onclick="showLoanHistory(); return false;">
                 <i class="fas fa-history"></i>
@@ -61,7 +65,9 @@
             <a href="#" class="nav-item">
                 <i class="fas fa-bell"></i>
                 <span>Notifikasi</span>
-                <span class="notification-badge">3</span>
+                @if(isset($upcomingDueLoans) && $upcomingDueLoans->count() > 0)
+                <span class="notification-badge">{{ $upcomingDueLoans->count() }}</span>
+                @endif
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-cog"></i>

@@ -3837,18 +3837,21 @@
             document.getElementById('borrowedBooksModal').classList.remove('active');
         }
 
-        // Format status text (e.g., 'TERLAMBAT 7.2057 HARI' -> 'TERLAMBAT 7 HARI')
+        // Format status text to remove decimals near 'hari'
+        // - 'Terlambat 7.2057 hari' -> 'Terlambat 7 hari' (floor)
+        // - '2.9 hari lagi' -> '3 hari lagi' (ceil)
         function formatStatusText(text) {
             if (!text || typeof text !== 'string') return text;
             const lower = text.toLowerCase();
-            if (!lower.includes('terlambat')) return text;
-            // Replace the number right before the word 'hari'
-            const replaced = text.replace(/(\d+\.\d+|\d+)(?=\s*hari)/gi, (m) => {
-                const n = Number(m);
+            const rounder = lower.includes('terlambat')
+                ? Math.floor
+                : Math.ceil; // default to ceil for remaining days text
+            // Replace the number immediately before the word 'hari'
+            return text.replace(/(\d+[.,]\d+|\d+)(?=\s*hari)/gi, (m) => {
+                const n = Number(m.replace(',', '.'));
                 if (Number.isNaN(n)) return m;
-                return String(Math.floor(n));
+                return String(rounder(n));
             });
-            return replaced;
         }
 
         // ===== LOAN HISTORY MODAL FUNCTIONS =====
@@ -3939,7 +3942,7 @@
                                         ` : ''}
                                     </div>
                                     <div class="history-status">
-                                        <span class="status-badge ${history.status}">${history.status_text}</span>
+                                        <span class="status-badge ${history.status}">${formatStatusText(history.status_text)}</span>
                                         <span style="font-size: 0.8rem; color: var(--text-light);">${history.duration}</span>
                                     </div>
                                 </div>

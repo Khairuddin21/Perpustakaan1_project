@@ -148,4 +148,112 @@ class ReturnController extends Controller
 
         return view('returns.history', compact('returned_loans'));
     }
+
+    /**
+     * Show return page for logged-in user
+     */
+    public function userReturns()
+    {
+        $borrowedBooks = Loan::with(['book'])
+            ->where('user_id', auth()->id())
+            ->whereIn('status', ['borrowed', 'overdue'])
+            ->orderBy('due_date', 'asc')
+            ->get();
+
+        return view('dashboard.returns', compact('borrowedBooks'));
+    }
+
+    /**
+     * Submit return request from user
+     */
+    public function submitReturn(Request $request)
+    {
+        $request->validate([
+            'loan_id' => 'required|exists:loans,id',
+            'return_nis' => 'required|string|max:50',
+            'return_borrower_name' => 'required|string|max:255',
+            'return_notes' => 'nullable|string|max:500',
+            'return_condition' => 'required|in:baik,rusak_ringan,rusak_berat'
+        ]);
+
+        try {
+            $loan = Loan::where('id', $request->loan_id)
+                ->where('user_id', auth()->id())
+                ->whereIn('status', ['borrowed', 'overdue'])
+                ->firstOrFail();
+
+            // Update loan with return request information
+            $loan->return_nis = $request->return_nis;
+            $loan->return_borrower_name = $request->return_borrower_name;
+            $loan->return_notes = $request->return_notes;
+            $loan->return_condition = $request->return_condition;
+            $loan->return_request_date = Carbon::now();
+            $loan->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Permintaan pengembalian berhasil diajukan. Silakan datang ke perpustakaan untuk mengembalikan buku.'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Return request failed', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'loan_id' => $request->loan_id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengajukan pengembalian: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Clear/delete return request from user
+     */
+    public function clearReturnRequest(Request $request)
+    {
+        $request->validate([
+            'loan_id' => 'required|exists:loans,id'
+        ]);
+
+        try {
+            $loan = Loan::where('id', $request->loan_id)
+                ->where('user_id', auth()->id())
+                ->whereIn('status', ['borrowed', 'overdue'])
+                ->whereNotNull('return_request_date')
+                ->firstOrFail();
+
+            // Clear return request data
+            $loan->return_nis = null;
+            $loan->return_borrower_name = null;
+            $loan->return_notes = null;
+            $loan->return_condition = null;
+            $loan->return_request_date = null;
+            $loan->save();
+
+            Log::info('Return request cleared', [
+                'user_id' => auth()->id(),
+                'loan_id' => $request->loan_id
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Riwayat pengembalian berhasil dihapus.'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Clear return request failed', [
+                'error' => $e->getMessage(),
+                'user_id' => auth()->id(),
+                'loan_id' => $request->loan_id
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal menghapus riwayat: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

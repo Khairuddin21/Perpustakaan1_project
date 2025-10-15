@@ -1,4 +1,11 @@
 // Dashboard JavaScript
+// Bundle welcome enhancements with dashboard entry
+try {
+    // Using dynamic import to avoid breaking if file is moved/removed
+    import('./welcome-enhancements.js');
+} catch (e) {
+    console.warn('Optional welcome-enhancements not loaded:', e);
+}
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize dashboard
     initializeDashboard();
@@ -237,7 +244,14 @@ function handleActionCardClick(action) {
             // Navigate to return page
             showNotification('Mengarahkan ke halaman pengembalian...', 'info');
             setTimeout(() => {
-                window.location.href = '/pengembalian';
+                window.location.href = '/returns';
+            }, 1000);
+            break;
+        case 'reports':
+            // Navigate to reports page
+            showNotification('Membuka halaman laporan...', 'info');
+            setTimeout(() => {
+                window.location.href = '/reports';
             }, 1000);
             break;
         case 'books':

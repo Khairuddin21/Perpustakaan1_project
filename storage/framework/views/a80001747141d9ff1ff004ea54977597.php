@@ -38,9 +38,13 @@
             <a href="#" class="nav-item" onclick="showBorrowedBooks(); return false;">
                 <i class="fas fa-hand-holding-heart"></i>
                 <span>Sedang Dipinjam</span>
-                <?php if($activeLoans->count() > 0): ?>
-                <span class="notification-badge"><?php echo e($activeLoans->count()); ?></span>
+                <?php if(isset($upcomingDueLoans) && $upcomingDueLoans->count() > 0): ?>
+                <span class="notification-badge"><?php echo e($upcomingDueLoans->count()); ?></span>
                 <?php endif; ?>
+            </a>
+            <a href="<?php echo e(route('user.returns')); ?>" class="nav-item <?php echo e(request()->routeIs('user.returns') ? 'active' : ''); ?>">
+                <i class="fas fa-undo-alt"></i>
+                <span>Pengembalian Buku</span>
             </a>
             <a href="#" class="nav-item" onclick="showLoanHistory(); return false;">
                 <i class="fas fa-history"></i>
@@ -61,7 +65,9 @@
             <a href="#" class="nav-item">
                 <i class="fas fa-bell"></i>
                 <span>Notifikasi</span>
-                <span class="notification-badge">3</span>
+                <?php if(isset($upcomingDueLoans) && $upcomingDueLoans->count() > 0): ?>
+                <span class="notification-badge"><?php echo e($upcomingDueLoans->count()); ?></span>
+                <?php endif; ?>
             </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-cog"></i>
