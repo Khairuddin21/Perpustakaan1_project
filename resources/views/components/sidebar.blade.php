@@ -65,7 +65,7 @@
                 <span class="notification-badge">{{ $upcomingDueLoans->count() }}</span>
                 @endif
             </a>
-            <a href="#" class="nav-item">
+            <a href="{{ route('settings') }}" class="nav-item {{ request()->routeIs('settings') ? 'active' : '' }}">
                 <i class="fas fa-cog"></i>
                 <span>Pengaturan</span>
             </a>

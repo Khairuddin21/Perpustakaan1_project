@@ -65,7 +65,7 @@
                 <span class="notification-badge"><?php echo e($upcomingDueLoans->count()); ?></span>
                 <?php endif; ?>
             </a>
-            <a href="#" class="nav-item">
+            <a href="<?php echo e(route('settings')); ?>" class="nav-item <?php echo e(request()->routeIs('settings') ? 'active' : ''); ?>">
                 <i class="fas fa-cog"></i>
                 <span>Pengaturan</span>
             </a>

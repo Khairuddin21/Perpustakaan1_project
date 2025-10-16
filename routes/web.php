@@ -22,6 +22,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
+    // Settings page
+    Route::get('/settings', function () {
+        return view('dashboard.setting-anggota');
+    })->name('settings');
+    
     // Book browsing routes for members
     Route::get('/books/browse', [DashboardController::class, 'browse'])->name('books.browse');
     Route::get('/books/search', [DashboardController::class, 'search'])->name('books.search');
