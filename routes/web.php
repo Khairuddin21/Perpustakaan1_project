@@ -27,6 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/search', [DashboardController::class, 'search'])->name('books.search');
     Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show');
     
+    // Add yours - Member can add their own books
+    Route::get('/add-yours', [BookController::class, 'addYoursForm'])->name('books.add-yours');
+    Route::post('/add-yours', [BookController::class, 'storeUserBook'])->name('books.store-user-book');
+    
     // User return routes
     Route::get('/my-returns', [ReturnController::class, 'userReturns'])->name('user.returns');
     

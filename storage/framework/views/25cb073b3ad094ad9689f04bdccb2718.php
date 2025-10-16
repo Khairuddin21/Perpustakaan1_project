@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Anggota - SisPerpus</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -442,7 +442,7 @@
 
         /* ===== HERO SECTION ===== */
         .hero-section {
-            background: linear-gradient(135deg, rgba(181, 228, 255, 0.438), rgba(187, 188, 189, 0.26)), url('{{ asset('Gambar/background.jpg') }}');
+            background: linear-gradient(135deg, rgba(181, 228, 255, 0.438), rgba(187, 188, 189, 0.26)), url('<?php echo e(asset('Gambar/background.jpg')); ?>');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -2445,7 +2445,7 @@
 <body>
     <div class="dashboard-wrapper">
         <!-- Sidebar -->
-        @include('components.sidebar', ['activeLoans' => $active_loans, 'upcomingDueLoans' => $upcoming_due_loans])
+        <?php echo $__env->make('components.sidebar', ['activeLoans' => $active_loans, 'upcomingDueLoans' => $upcoming_due_loans], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
@@ -2465,9 +2465,9 @@
                     
                     <div class="notification-icon">
                         <i class="fas fa-bell"></i>
-                        @if($upcoming_due_loans->count() > 0)
-                        <span class="badge">{{ $upcoming_due_loans->count() }}</span>
-                        @endif
+                        <?php if($upcoming_due_loans->count() > 0): ?>
+                        <span class="badge"><?php echo e($upcoming_due_loans->count()); ?></span>
+                        <?php endif; ?>
                     </div>
                 </div>
             </header>
@@ -2491,21 +2491,21 @@
                     
                     <div class="hero-stats">
                         <div class="hero-stat">
-                            <span class="hero-stat-number">{{ $featured_books->count() }}</span>
+                            <span class="hero-stat-number"><?php echo e($featured_books->count()); ?></span>
                             <span class="hero-stat-label">Buku Tersedia</span>
                         </div>
                         <div class="hero-stat">
-                            <span class="hero-stat-number">{{ $active_loans->count() }}</span>
+                            <span class="hero-stat-number"><?php echo e($active_loans->count()); ?></span>
                             <span class="hero-stat-label">Sedang Dipinjam</span>
                         </div>
                         <div class="hero-stat">
-                            <span class="hero-stat-number">{{ auth()->user()->created_at->diffForHumans() }}</span>
+                            <span class="hero-stat-number"><?php echo e(auth()->user()->created_at->diffForHumans()); ?></span>
                             <span class="hero-stat-label">Member Sejak</span>
                         </div>
                     </div>
 
                     <div class="hero-cta">
-                        <a href="{{ route('books.browse') }}" class="hero-btn primary">
+                        <a href="<?php echo e(route('books.browse')); ?>" class="hero-btn primary">
                             <i class="fas fa-compass"></i>
                             Jelajahi Buku
                         </a>
@@ -2523,7 +2523,7 @@
                 <div class="welcome-section fade-in">
                     <div class="welcome-header">
                         <div class="welcome-text">
-                            <h1>👋 Selamat Datang, {{ auth()->user()->name }}!</h1>
+                            <h1>👋 Selamat Datang, <?php echo e(auth()->user()->name); ?>!</h1>
                             <p>Temukan buku favorit Anda dan nikmati pengalaman membaca yang menyenangkan</p>
                         </div>
                         <div class="widgets-container">
@@ -2554,7 +2554,7 @@
                         <div class="stat-icon">
                             <i class="fas fa-book-open"></i>
                         </div>
-                        <div class="stat-value">{{ $active_loans->count() }}</div>
+                        <div class="stat-value"><?php echo e($active_loans->count()); ?></div>
                         <div class="stat-label">Buku Dipinjam</div>
                     </div>
 
@@ -2562,7 +2562,7 @@
                         <div class="stat-icon">
                             <i class="fas fa-check-circle"></i>
                         </div>
-                        <div class="stat-value">{{ $loan_history->where('status', 'returned')->count() }}</div>
+                        <div class="stat-value"><?php echo e($loan_history->where('status', 'returned')->count()); ?></div>
                         <div class="stat-label">Buku Dikembalikan</div>
                     </div>
 
@@ -2571,9 +2571,10 @@
                             <i class="fas fa-clock"></i>
                         </div>
                         <div class="stat-value">
-                            {{ $active_loans->filter(function($loan) {
+                            <?php echo e($active_loans->filter(function($loan) {
                                 return \Carbon\Carbon::parse($loan->due_date)->diffInDays(now()) <= 3;
-                            })->count() }}
+                            })->count()); ?>
+
                         </div>
                         <div class="stat-label">Segera Jatuh Tempo</div>
                     </div>
@@ -2582,7 +2583,7 @@
                         <div class="stat-icon">
                             <i class="fas fa-star"></i>
                         </div>
-                        <div class="stat-value">{{ $featured_books->count() }}</div>
+                        <div class="stat-value"><?php echo e($featured_books->count()); ?></div>
                         <div class="stat-label">Buku Tersedia</div>
                     </div>
                 </div>
@@ -2592,12 +2593,12 @@
                     <h2 class="section-title">🚀 Aksi Cepat</h2>
                 </div>
                 <div class="quick-actions">
-                    <a href="{{ route('books.browse') }}" class="action-card">
+                    <a href="<?php echo e(route('books.browse')); ?>" class="action-card">
                         <i class="fas fa-compass"></i>
                         <h3>Jelajahi Buku</h3>
                         <p>Temukan koleksi buku terbaru</p>
                     </a>
-                    <a href="{{ route('books.browse') }}" class="action-card">
+                    <a href="<?php echo e(route('books.browse')); ?>" class="action-card">
                         <i class="fas fa-search-plus"></i>
                         <h3>Cari Buku</h3>
                         <p>Cari buku berdasarkan judul atau penulis</p>
@@ -2615,41 +2616,41 @@
                 </div>
 
                 <!-- Active Loans Section -->
-                @if($active_loans->count() > 0)
+                <?php if($active_loans->count() > 0): ?>
                 <div class="loans-section">
                     <div class="section-header">
                         <h2 class="section-title">📚 Buku yang Sedang Dipinjam</h2>
                     </div>
                     <div class="loans-grid">
-                        @foreach($active_loans as $loan)
+                        <?php $__currentLoopData = $active_loans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="loan-card fade-in">
                             <div class="loan-book-cover">
-                                @php
+                                <?php
                                     $cover = $loan->book->cover_image ?? null;
                                     // Determine if it's a full URL or a storage path
                                     $isUrl = $cover && (\Illuminate\Support\Str::startsWith($cover, ['http://', 'https://']));
                                     $src = $cover ? ($isUrl ? $cover : asset($cover)) : null;
-                                @endphp
-                                @if($src)
-                                    <img src="{{ $src }}" alt="{{ $loan->book->title }} cover" onerror="this.style.display='none'">
-                                @else
+                                ?>
+                                <?php if($src): ?>
+                                    <img src="<?php echo e($src); ?>" alt="<?php echo e($loan->book->title); ?> cover" onerror="this.style.display='none'">
+                                <?php else: ?>
                                     <i class="fas fa-book"></i>
-                                @endif
+                                <?php endif; ?>
                             </div>
                             <div class="loan-details">
-                                <h3 class="loan-book-title">{{ $loan->book->title }}</h3>
-                                <p class="loan-book-author">{{ $loan->book->author }}</p>
+                                <h3 class="loan-book-title"><?php echo e($loan->book->title); ?></h3>
+                                <p class="loan-book-author"><?php echo e($loan->book->author); ?></p>
                                 <div class="loan-date-info">
                                     <div class="loan-date">
                                         <i class="fas fa-calendar-alt"></i>
-                                        <span>Dipinjam: {{ \Carbon\Carbon::parse($loan->loan_date)->format('d M Y') }}</span>
+                                        <span>Dipinjam: <?php echo e(\Carbon\Carbon::parse($loan->loan_date)->format('d M Y')); ?></span>
                                     </div>
                                     <div class="loan-date">
                                         <i class="fas fa-calendar-check"></i>
-                                        <span>Jatuh Tempo: {{ \Carbon\Carbon::parse($loan->due_date)->format('d M Y') }}</span>
+                                        <span>Jatuh Tempo: <?php echo e(\Carbon\Carbon::parse($loan->due_date)->format('d M Y')); ?></span>
                                     </div>
                                 </div>
-                                @php
+                                <?php
                                     // Calculate days left properly
                                     $now = \Carbon\Carbon::now()->startOfDay();
                                     $dueDate = \Carbon\Carbon::parse($loan->due_date)->startOfDay();
@@ -2669,14 +2670,14 @@
                                         $badgeClass = 'success';
                                         $badgeText = $daysLeft . ' hari lagi';
                                     }
-                                @endphp
-                                <span class="due-badge {{ $badgeClass }}">{{ $badgeText }}</span>
+                                ?>
+                                <span class="due-badge <?php echo e($badgeClass); ?>"><?php echo e($badgeText); ?></span>
                             </div>
                         </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
-                @else
+                <?php else: ?>
                 <div class="loans-section">
                     <div class="section-header">
                         <h2 class="section-title">📚 Buku yang Sedang Dipinjam</h2>
@@ -2685,56 +2686,57 @@
                         <i class="fas fa-book-open"></i>
                         <h3>Belum Ada Buku yang Dipinjam</h3>
                         <p>Mulai jelajahi koleksi kami dan pinjam buku favorit Anda!</p>
-                        <a href="{{ route('books.browse') }}" class="btn btn-primary" style="display: inline-flex; text-decoration: none; max-width: 200px; margin: 0 auto;">
+                        <a href="<?php echo e(route('books.browse')); ?>" class="btn btn-primary" style="display: inline-flex; text-decoration: none; max-width: 200px; margin: 0 auto;">
                             <i class="fas fa-book"></i>
                             Jelajahi Buku
                         </a>
                     </div>
                 </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- Featured Books Section -->
                 <div class="books-section" id="featured-books">
                     <div class="section-header">
                         <h2 class="section-title">✨ Buku Terbaru & Populer</h2>
-                        <a href="{{ route('books.browse') }}" class="view-all-btn">
+                        <a href="<?php echo e(route('books.browse')); ?>" class="view-all-btn">
                             Lihat Semua <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                     <div class="books-grid">
-                        @foreach($featured_books as $book)
-                        <div class="book-card fade-in" onclick="window.location.href='{{ route('books.show', $book->id) }}'">
+                        <?php $__currentLoopData = $featured_books; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $book): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="book-card fade-in" onclick="window.location.href='<?php echo e(route('books.show', $book->id)); ?>'">
                             <div class="book-cover">
-                                @php
+                                <?php
                                     $cover = $book->cover_image ?? null;
                                     $isUrl = $cover && (\Illuminate\Support\Str::startsWith($cover, ['http://', 'https://']));
                                     $src = $cover ? ($isUrl ? $cover : asset($cover)) : null;
-                                @endphp
-                                @if($src)
-                                    <img src="{{ $src }}" alt="{{ $book->title }} cover" onerror="this.style.display='none'">
-                                @else
+                                ?>
+                                <?php if($src): ?>
+                                    <img src="<?php echo e($src); ?>" alt="<?php echo e($book->title); ?> cover" onerror="this.style.display='none'">
+                                <?php else: ?>
                                     <i class="fas fa-book"></i>
-                                @endif
-                                <span class="book-availability {{ $book->available > 0 ? 'available' : 'unavailable' }}">
-                                    {{ $book->available > 0 ? 'Tersedia' : 'Dipinjam' }}
+                                <?php endif; ?>
+                                <span class="book-availability <?php echo e($book->available > 0 ? 'available' : 'unavailable'); ?>">
+                                    <?php echo e($book->available > 0 ? 'Tersedia' : 'Dipinjam'); ?>
+
                                 </span>
                             </div>
                             <div class="book-info">
-                                <span class="book-category">{{ $book->category->name ?? 'Umum' }}</span>
-                                <h3 class="book-title">{{ $book->title }}</h3>
-                                <p class="book-author">{{ $book->author }}</p>
+                                <span class="book-category"><?php echo e($book->category->name ?? 'Umum'); ?></span>
+                                <h3 class="book-title"><?php echo e($book->title); ?></h3>
+                                <p class="book-author"><?php echo e($book->author); ?></p>
                                 <div class="book-actions">
                                     <button class="btn btn-primary" onclick="event.stopPropagation(); alert('Fitur peminjaman akan segera tersedia!')">
                                         <i class="fas fa-hand-holding"></i>
                                         Pinjam
                                     </button>
-                                    <button class="btn btn-outline" onclick="event.stopPropagation(); window.location.href='{{ route('books.show', $book->id) }}'">
+                                    <button class="btn btn-outline" onclick="event.stopPropagation(); window.location.href='<?php echo e(route('books.show', $book->id)); ?>'">
                                         <i class="fas fa-info-circle"></i>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
                 </div>
             </div>
@@ -2973,7 +2975,7 @@
                 if (e.key === 'Enter') {
                     const searchTerm = this.value.trim();
                     if (searchTerm) {
-                        window.location.href = '{{ route("books.browse") }}?search=' + encodeURIComponent(searchTerm);
+                        window.location.href = '<?php echo e(route("books.browse")); ?>?search=' + encodeURIComponent(searchTerm);
                     }
                 }
             });
@@ -3679,3 +3681,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\Perpustakaan1_project\resources\views/dashboard/anggota.blade.php ENDPATH**/ ?>

@@ -11,12 +11,18 @@ class Book extends Model
 
     protected $fillable = [
         'title', 'author', 'isbn', 'category_id', 'description',
-        'stock', 'available', 'publisher', 'published_year', 'cover_image'
+        'stock', 'available', 'publisher', 'published_year', 'cover_image', 
+        'pdf_file', 'created_by'
     ];
 
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function loans()

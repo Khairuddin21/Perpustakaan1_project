@@ -197,6 +197,11 @@ class BookController extends Controller
             unlink(public_path($book->cover_image));
         }
         
+        // Delete PDF file if exists
+        if ($book->pdf_file && file_exists(public_path($book->pdf_file))) {
+            unlink(public_path($book->pdf_file));
+        }
+        
         $book->delete();
         
         return response()->json([
@@ -371,5 +376,57 @@ class BookController extends Controller
             'success' => true,
             'wishlists' => $wishlists
         ]);
+    }
+
+    /**
+     * Show add yours form for members
+     */
+    public function addYoursForm()
+    {
+        $categories = Category::all();
+        return view('dashboard.add-yours-anggota', compact('categories'));
+    }
+
+    /**
+     * Store book added by member
+     */
+    public function storeUserBook(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'author' => 'required|string|max:255',
+            'isbn' => 'required|string|max:20|unique:books,isbn',
+            'category_id' => 'required|exists:categories,id',
+            'publisher' => 'required|string|max:255',
+            'published_year' => 'required|integer|min:1900|max:' . (date('Y') + 1),
+            'stock' => 'required|integer|min:1',
+            'description' => 'nullable|string',
+            'cover_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'pdf_file' => 'required|mimes:pdf|max:10240'
+        ]);
+
+        $data = $request->all();
+        $data['available'] = $request->stock;
+        $data['created_by'] = Auth::id();
+
+        // Handle cover image upload to public/Gambar/image
+        if ($request->hasFile('cover_image')) {
+            $image = $request->file('cover_image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('Gambar/image'), $imageName);
+            $data['cover_image'] = 'Gambar/image/' . $imageName;
+        }
+
+        // Handle PDF upload to public/Gambar/pdf
+        if ($request->hasFile('pdf_file')) {
+            $pdf = $request->file('pdf_file');
+            $pdfName = time() . '_' . $pdf->getClientOriginalName();
+            $pdf->move(public_path('Gambar/pdf'), $pdfName);
+            $data['pdf_file'] = 'Gambar/pdf/' . $pdfName;
+        }
+
+        Book::create($data);
+
+        return redirect()->route('dashboard')->with('success', 'Buku berhasil ditambahkan! Terima kasih atas kontribusi Anda.');
     }
 }

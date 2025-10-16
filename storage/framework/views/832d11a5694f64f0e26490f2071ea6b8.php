@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pengembalian Buku - SisPerpus</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1044,13 +1044,70 @@
 </head>
 <body>
     <div class="dashboard-wrapper">
-        @if(auth()->user()->role === 'admin')
-            <x-admin-sidebar />
-        @elseif(auth()->user()->role === 'pustakawan')
-            <x-pustakawan-sidebar />
-        @else
-            <x-sidebar />
-        @endif
+        <?php if(auth()->user()->role === 'admin'): ?>
+            <?php if (isset($component)) { $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.admin-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('admin-sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
+<?php $attributes = $__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
+<?php unset($__attributesOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2)): ?>
+<?php $component = $__componentOriginal6fc2d165f80d597f34aa0f8014c366d2; ?>
+<?php unset($__componentOriginal6fc2d165f80d597f34aa0f8014c366d2); ?>
+<?php endif; ?>
+        <?php elseif(auth()->user()->role === 'pustakawan'): ?>
+            <?php if (isset($component)) { $__componentOriginal3669d248200f2dc31f2689292901c050 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3669d248200f2dc31f2689292901c050 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.pustakawan-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('pustakawan-sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $attributes = $__attributesOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__attributesOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $component = $__componentOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__componentOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
+        <?php else: ?>
+            <?php if (isset($component)) { $__componentOriginal2880b66d47486b4bfeaf519598a469d6 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal2880b66d47486b4bfeaf519598a469d6 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal2880b66d47486b4bfeaf519598a469d6)): ?>
+<?php $attributes = $__attributesOriginal2880b66d47486b4bfeaf519598a469d6; ?>
+<?php unset($__attributesOriginal2880b66d47486b4bfeaf519598a469d6); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal2880b66d47486b4bfeaf519598a469d6)): ?>
+<?php $component = $__componentOriginal2880b66d47486b4bfeaf519598a469d6; ?>
+<?php unset($__componentOriginal2880b66d47486b4bfeaf519598a469d6); ?>
+<?php endif; ?>
+        <?php endif; ?>
 
         <div class="main-content" id="mainContent">
             <div class="header">
@@ -1065,133 +1122,133 @@
             <div class="content-area">
                 <div class="page-header">
                     <h2><i class="fas fa-undo-alt"></i> Pengembalian Buku</h2>
-                    @if(in_array(auth()->user()->role, ['admin', 'pustakawan']))
+                    <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
                         <p>Kelola permintaan pengembalian buku dari anggota perpustakaan. Verifikasi kondisi buku dan proses pengembalian.</p>
-                    @else
+                    <?php else: ?>
                         <p>Ajukan pengembalian untuk buku yang sedang Anda pinjam. Isi formulir di bawah ini dan datang ke perpustakaan untuk mengembalikan buku secara fisik.</p>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
-                @if($borrowedBooks->isEmpty())
+                <?php if($borrowedBooks->isEmpty()): ?>
                     <div class="empty-state">
                         <i class="fas fa-book-open"></i>
                         <h3>Tidak Ada Buku yang Dipinjam</h3>
-                        @if(in_array(auth()->user()->role, ['admin', 'pustakawan']))
+                        <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
                             <p>Belum ada buku yang sedang dipinjam oleh anggota saat ini.</p>
-                        @else
+                        <?php else: ?>
                             <p>Anda belum memiliki buku yang sedang dipinjam saat ini.</p>
-                            <a href="{{ route('books.browse') }}" class="btn">
+                            <a href="<?php echo e(route('books.browse')); ?>" class="btn">
                                 <i class="fas fa-search"></i> Jelajahi Buku
                             </a>
-                        @endif
+                        <?php endif; ?>
                     </div>
-                @else
+                <?php else: ?>
                     <div class="books-grid">
-                        @foreach($borrowedBooks as $loan)
+                        <?php $__currentLoopData = $borrowedBooks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <div class="book-card">
                                 <div class="book-card-header">
-                                    <div class="book-title">{{ $loan->book->title }}</div>
-                                    <div class="book-author">{{ $loan->book->author }}</div>
+                                    <div class="book-title"><?php echo e($loan->book->title); ?></div>
+                                    <div class="book-author"><?php echo e($loan->book->author); ?></div>
                                 </div>
 
                                 <div class="book-card-body">
-                                    @if(in_array(auth()->user()->role, ['admin', 'pustakawan']))
+                                    <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
                                         <div class="book-info-row">
                                             <i class="fas fa-user"></i>
                                             <span class="label">Peminjam:</span>
-                                            <span class="value">{{ $loan->user->name }}</span>
+                                            <span class="value"><?php echo e($loan->user->name); ?></span>
                                         </div>
                                         <div class="book-info-row">
                                             <i class="fas fa-envelope"></i>
                                             <span class="label">Email:</span>
-                                            <span class="value">{{ $loan->user->email }}</span>
+                                            <span class="value"><?php echo e($loan->user->email); ?></span>
                                         </div>
-                                        @if($loan->nis)
+                                        <?php if($loan->nis): ?>
                                             <div class="book-info-row">
                                                 <i class="fas fa-id-card"></i>
                                                 <span class="label">NIS:</span>
-                                                <span class="value">{{ $loan->nis }}</span>
+                                                <span class="value"><?php echo e($loan->nis); ?></span>
                                             </div>
-                                        @endif
-                                    @endif
+                                        <?php endif; ?>
+                                    <?php endif; ?>
                                     <div class="book-info-row">
                                         <i class="fas fa-calendar"></i>
                                         <span class="label">Tanggal Pinjam:</span>
-                                        <span class="value">{{ $loan->loan_date->format('d M Y') }}</span>
+                                        <span class="value"><?php echo e($loan->loan_date->format('d M Y')); ?></span>
                                     </div>
 
                                     <div class="book-info-row">
                                         <i class="fas fa-calendar-check"></i>
                                         <span class="label">Jatuh Tempo:</span>
-                                        <span class="value">{{ $loan->due_date->format('d M Y') }}</span>
+                                        <span class="value"><?php echo e($loan->due_date->format('d M Y')); ?></span>
                                     </div>
 
                                     <div class="book-info-row">
                                         <i class="fas fa-hourglass-half"></i>
                                         <span class="label">Status:</span>
-                                        @php
+                                        <?php
                                             $today = \Carbon\Carbon::now()->startOfDay();
                                             $dueDate = \Carbon\Carbon::parse($loan->due_date)->startOfDay();
                                             $daysRemaining = $today->diffInDays($dueDate, false);
-                                        @endphp
-                                        @if($daysRemaining < 0)
-                                            <span class="status-badge overdue">Terlambat {{ abs($daysRemaining) }} hari</span>
-                                        @elseif($daysRemaining == 0)
+                                        ?>
+                                        <?php if($daysRemaining < 0): ?>
+                                            <span class="status-badge overdue">Terlambat <?php echo e(abs($daysRemaining)); ?> hari</span>
+                                        <?php elseif($daysRemaining == 0): ?>
                                             <span class="status-badge overdue">Jatuh tempo hari ini</span>
-                                        @else
-                                            <span class="status-badge borrowed">{{ $daysRemaining }} hari lagi</span>
-                                        @endif
+                                        <?php else: ?>
+                                            <span class="status-badge borrowed"><?php echo e($daysRemaining); ?> hari lagi</span>
+                                        <?php endif; ?>
                                     </div>
 
-                                    @if(!$loan->return_request_date)
+                                    <?php if(!$loan->return_request_date): ?>
                                         <div class="return-form">
-                                            @if(in_array(auth()->user()->role, ['admin', 'pustakawan']))
+                                            <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
                                                 <h4><i class="fas fa-check-circle"></i> Proses Pengembalian</h4>
-                                            @else
+                                            <?php else: ?>
                                                 <h4><i class="fas fa-clipboard-list"></i> Formulir Pengembalian</h4>
-                                            @endif
-                                            <form class="return-request-form" data-loan-id="{{ $loan->id }}">
-                                                @if(!in_array(auth()->user()->role, ['admin', 'pustakawan']))
+                                            <?php endif; ?>
+                                            <form class="return-request-form" data-loan-id="<?php echo e($loan->id); ?>">
+                                                <?php if(!in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
                                                     <div class="form-group">
-                                                        <label for="return_nis_{{ $loan->id }}">
+                                                        <label for="return_nis_<?php echo e($loan->id); ?>">
                                                             <i class="fas fa-id-card"></i> NIS <span style="color: red;">*</span>
                                                         </label>
                                                         <input 
                                                             type="text" 
-                                                            id="return_nis_{{ $loan->id }}" 
+                                                            id="return_nis_<?php echo e($loan->id); ?>" 
                                                             name="return_nis" 
                                                             placeholder="Masukkan NIS Anda"
-                                                            value="{{ $loan->nis ?? '' }}"
+                                                            value="<?php echo e($loan->nis ?? ''); ?>"
                                                             required
                                                         >
                                                         <div class="form-help">Nomor Induk Siswa Anda</div>
                                                     </div>
 
                                                     <div class="form-group">
-                                                        <label for="return_borrower_name_{{ $loan->id }}">
+                                                        <label for="return_borrower_name_<?php echo e($loan->id); ?>">
                                                             <i class="fas fa-user"></i> Nama Lengkap <span style="color: red;">*</span>
                                                         </label>
                                                         <input 
                                                             type="text" 
-                                                            id="return_borrower_name_{{ $loan->id }}" 
+                                                            id="return_borrower_name_<?php echo e($loan->id); ?>" 
                                                             name="return_borrower_name" 
                                                             placeholder="Masukkan nama lengkap Anda"
-                                                            value="{{ auth()->user()->name }}"
+                                                            value="<?php echo e(auth()->user()->name); ?>"
                                                             required
                                                         >
                                                         <div class="form-help">Nama sesuai identitas</div>
                                                     </div>
-                                                @else
-                                                    <input type="hidden" name="return_nis" value="{{ $loan->nis ?? 'STAFF' }}">
-                                                    <input type="hidden" name="return_borrower_name" value="{{ $loan->user->name }}">
-                                                @endif
+                                                <?php else: ?>
+                                                    <input type="hidden" name="return_nis" value="<?php echo e($loan->nis ?? 'STAFF'); ?>">
+                                                    <input type="hidden" name="return_borrower_name" value="<?php echo e($loan->user->name); ?>">
+                                                <?php endif; ?>
 
                                                 <div class="form-group">
-                                                    <label for="return_condition_{{ $loan->id }}">
+                                                    <label for="return_condition_<?php echo e($loan->id); ?>">
                                                         <i class="fas fa-clipboard-check"></i> Kondisi Buku <span style="color: red;">*</span>
                                                     </label>
                                                     <select 
-                                                        id="return_condition_{{ $loan->id }}" 
+                                                        id="return_condition_<?php echo e($loan->id); ?>" 
                                                         name="return_condition" 
                                                         required
                                                     >
@@ -1204,11 +1261,11 @@
                                                 </div>
 
                                                 <div class="form-group">
-                                                    <label for="return_notes_{{ $loan->id }}">
+                                                    <label for="return_notes_<?php echo e($loan->id); ?>">
                                                         <i class="fas fa-comment-alt"></i> Catatan Tambahan (Opsional)
                                                     </label>
                                                     <textarea 
-                                                        id="return_notes_{{ $loan->id }}" 
+                                                        id="return_notes_<?php echo e($loan->id); ?>" 
                                                         name="return_notes" 
                                                         placeholder="Jelaskan kerusakan atau catatan lainnya (jika ada)"
                                                     ></textarea>
@@ -1216,37 +1273,38 @@
                                                 </div>
 
                                                 <button type="submit" class="btn-return">
-                                                    @if(in_array(auth()->user()->role, ['admin', 'pustakawan']))
+                                                    <?php if(in_array(auth()->user()->role, ['admin', 'pustakawan'])): ?>
                                                         <i class="fas fa-check"></i>
                                                         Proses Pengembalian
-                                                    @else
+                                                    <?php else: ?>
                                                         <i class="fas fa-paper-plane"></i>
                                                         Ajukan Pengembalian
-                                                    @endif
+                                                    <?php endif; ?>
                                                 </button>
                                             </form>
                                         </div>
-                                    @else
-                                        <div class="return-requested" id="return-requested-{{ $loan->id }}">
+                                    <?php else: ?>
+                                        <div class="return-requested" id="return-requested-<?php echo e($loan->id); ?>">
                                             <p>
                                                 <i class="fas fa-check-circle"></i>
-                                                Permintaan pengembalian sudah diajukan pada {{ \Carbon\Carbon::parse($loan->return_request_date)->format('d M Y H:i') }}
+                                                Permintaan pengembalian sudah diajukan pada <?php echo e(\Carbon\Carbon::parse($loan->return_request_date)->format('d M Y H:i')); ?>
+
                                             </p>
                                             <button 
                                                 type="button" 
                                                 class="btn-clear-request" 
-                                                onclick="clearReturnRequest({{ $loan->id }})"
+                                                onclick="clearReturnRequest(<?php echo e($loan->id); ?>)"
                                                 title="Hapus riwayat pengembalian"
                                             >
                                                 <i class="fas fa-times"></i>
                                             </button>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                @endif
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -1298,7 +1356,7 @@
 
     <script>
         // Check user role
-        const userRole = '{{ auth()->user()->role }}';
+        const userRole = '<?php echo e(auth()->user()->role); ?>';
         const isStaff = ['admin', 'pustakawan'].includes(userRole);
         
         // Form submission handler (reusable function)
@@ -1505,7 +1563,7 @@
                                     <i class=\"fas fa-book-open\"></i>
                                     <h3>Tidak Ada Buku yang Dipinjam</h3>
                                     <p>Anda belum memiliki buku yang sedang dipinjam saat ini.</p>
-                                    <a href=\"{{ route('books.browse') }}\" class=\"btn\">
+                                    <a href=\"<?php echo e(route('books.browse')); ?>\" class=\"btn\">
                                         <i class=\"fas fa-search\"></i> Jelajahi Buku
                                     </a>
                                 </div>`;
@@ -1601,7 +1659,7 @@
                                 <div class="borrowed-book-item">
                                     <div class="borrowed-book-cover">
                                         ${book.book.cover_image ? 
-                                            `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/' + book.book.cover_image}" alt="${book.book.title}">` : 
+                                            `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/storage/' + book.book.cover_image}" alt="${book.book.title}">` : 
                                             '<i class="fas fa-book"></i>'
                                         }
                                     </div>
@@ -1717,7 +1775,7 @@
                             <div class="history-item">
                                 <div class="history-book-cover">
                                     ${history.book.cover_image ? 
-                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/' + history.book.cover_image}" alt="${history.book.title}">` : 
+                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/storage/' + history.book.cover_image}" alt="${history.book.title}">` : 
                                         '<i class="fas fa-book"></i>'
                                     }
                                 </div>
@@ -1849,3 +1907,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\Perpustakaan1_project\resources\views/dashboard/returns.blade.php ENDPATH**/ ?>

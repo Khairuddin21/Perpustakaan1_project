@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $book->title }} - SisPerpus</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <title><?php echo e($book->title); ?> - SisPerpus</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1053,7 +1053,7 @@
     <!-- Header -->
     <div class="header">
         <div class="header-content">
-            <a href="{{ route('books.browse') }}" class="back-btn">
+            <a href="<?php echo e(route('books.browse')); ?>" class="back-btn">
                 <i class="fas fa-arrow-left"></i>
                 Kembali
             </a>
@@ -1067,41 +1067,42 @@
             <!-- Book Cover Section -->
             <div class="book-cover-section">
                 <div class="book-cover">
-                    @if($book->cover_image)
-                        <img src="{{ $book->cover_image && str_starts_with($book->cover_image, 'http') ? $book->cover_image : '/' . $book->cover_image }}" alt="{{ $book->title }}">
-                    @else
+                    <?php if($book->cover_image): ?>
+                        <img src="<?php echo e($book->cover_image && str_starts_with($book->cover_image, 'http') ? $book->cover_image : '/' . $book->cover_image); ?>" alt="<?php echo e($book->title); ?>">
+                    <?php else: ?>
                         <i class="fas fa-book"></i>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
-                <div class="availability-badge {{ $book->isAvailable() ? 'available' : 'unavailable' }}">
-                    <i class="fas {{ $book->isAvailable() ? 'fa-check-circle' : 'fa-times-circle' }}"></i>
-                    {{ $book->isAvailable() ? $book->available . ' tersedia' : 'Tidak tersedia' }}
+                <div class="availability-badge <?php echo e($book->isAvailable() ? 'available' : 'unavailable'); ?>">
+                    <i class="fas <?php echo e($book->isAvailable() ? 'fa-check-circle' : 'fa-times-circle'); ?>"></i>
+                    <?php echo e($book->isAvailable() ? $book->available . ' tersedia' : 'Tidak tersedia'); ?>
+
                 </div>
 
                 <div class="action-buttons">
-                    @if($book->isAvailable())
+                    <?php if($book->isAvailable()): ?>
                         <button class="btn btn-primary" onclick="requestLoan()">
                             <i class="fas fa-hand-holding"></i>
                             Ajukan Peminjaman
                         </button>
-                    @else
+                    <?php else: ?>
                         <button class="btn btn-primary" disabled>
                             <i class="fas fa-times-circle"></i>
                             Stok Habis
                         </button>
-                    @endif
+                    <?php endif; ?>
 
-                    @if($book->pdf_file)
-                        <a href="{{ asset($book->pdf_file) }}" target="_blank" class="btn btn-success">
+                    <?php if($book->pdf_file): ?>
+                        <a href="<?php echo e(asset($book->pdf_file)); ?>" target="_blank" class="btn btn-success">
                             <i class="fas fa-file-pdf"></i>
                             Lihat PDF
                         </a>
-                    @endif
+                    <?php endif; ?>
 
-                    <button class="btn btn-wishlist {{ $isWishlisted ? 'active' : '' }}" onclick="toggleWishlist()">
+                    <button class="btn btn-wishlist <?php echo e($isWishlisted ? 'active' : ''); ?>" onclick="toggleWishlist()">
                         <i class="fas fa-heart"></i>
-                        <span id="wishlistText">{{ $isWishlisted ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist' }}</span>
+                        <span id="wishlistText"><?php echo e($isWishlisted ? 'Hapus dari Wishlist' : 'Tambah ke Wishlist'); ?></span>
                     </button>
                 </div>
             </div>
@@ -1110,35 +1111,36 @@
             <div class="book-info-section">
                 <div class="book-header">
                     <div class="book-category">
-                        <i class="fas fa-tag"></i> {{ $book->category->name ?? 'Umum' }}
+                        <i class="fas fa-tag"></i> <?php echo e($book->category->name ?? 'Umum'); ?>
+
                     </div>
-                    <h1 class="book-title">{{ $book->title }}</h1>
-                    <p class="book-author">oleh {{ $book->author }}</p>
+                    <h1 class="book-title"><?php echo e($book->title); ?></h1>
+                    <p class="book-author">oleh <?php echo e($book->author); ?></p>
 
                     <!-- Rating Section -->
                     <div class="rating-section">
                         <div class="rating-score">
-                            <div class="rating-number">{{ number_format($averageRating, 1) }}</div>
+                            <div class="rating-number"><?php echo e(number_format($averageRating, 1)); ?></div>
                             <div class="rating-stars">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <i class="{{ $i <= round($averageRating) ? 'fas fa-star' : 'far fa-star' }}"></i>
-                                @endfor
+                                <?php for($i = 1; $i <= 5; $i++): ?>
+                                    <i class="<?php echo e($i <= round($averageRating) ? 'fas fa-star' : 'far fa-star'); ?>"></i>
+                                <?php endfor; ?>
                             </div>
-                            <div class="rating-count">{{ $ratingsCount }} penilaian</div>
+                            <div class="rating-count"><?php echo e($ratingsCount); ?> penilaian</div>
                         </div>
 
                         <div class="rating-interactive">
                             <h4>Beri Penilaian</h4>
                             <div class="star-rating" id="userRating">
-                                @for($i = 1; $i <= 5; $i++)
-                                    <i data-rating="{{ $i }}" onclick="rateBook({{ $i }})" class="{{ ($userRating && $i <= $userRating->rating) ? 'fas fa-star active' : 'far fa-star' }}"></i>
-                                @endfor
+                                <?php for($i = 1; $i <= 5; $i++): ?>
+                                    <i data-rating="<?php echo e($i); ?>" onclick="rateBook(<?php echo e($i); ?>)" class="<?php echo e(($userRating && $i <= $userRating->rating) ? 'fas fa-star active' : 'far fa-star'); ?>"></i>
+                                <?php endfor; ?>
                             </div>
-                            @if($userRating)
+                            <?php if($userRating): ?>
                                 <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-light);">
-                                    Anda memberi rating: {{ $userRating->rating }}/5
+                                    Anda memberi rating: <?php echo e($userRating->rating); ?>/5
                                 </p>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -1149,7 +1151,7 @@
                         <i class="fas fa-info-circle"></i> About
                     </button>
                     <button class="tab" onclick="switchTab('reviews')">
-                        <i class="fas fa-comments"></i> Reviews ({{ $commentsCount }})
+                        <i class="fas fa-comments"></i> Reviews (<?php echo e($commentsCount); ?>)
                     </button>
                 </div>
 
@@ -1158,25 +1160,25 @@
                     <div class="book-meta">
                         <div class="meta-item">
                             <div class="meta-label">ISBN</div>
-                            <div class="meta-value">{{ $book->isbn ?? '-' }}</div>
+                            <div class="meta-value"><?php echo e($book->isbn ?? '-'); ?></div>
                         </div>
                         <div class="meta-item">
                             <div class="meta-label">Penerbit</div>
-                            <div class="meta-value">{{ $book->publisher ?? '-' }}</div>
+                            <div class="meta-value"><?php echo e($book->publisher ?? '-'); ?></div>
                         </div>
                         <div class="meta-item">
                             <div class="meta-label">Tahun Terbit</div>
-                            <div class="meta-value">{{ $book->published_year ?? '-' }}</div>
+                            <div class="meta-value"><?php echo e($book->published_year ?? '-'); ?></div>
                         </div>
                         <div class="meta-item">
                             <div class="meta-label">Stok</div>
-                            <div class="meta-value">{{ $book->stock }} buku</div>
+                            <div class="meta-value"><?php echo e($book->stock); ?> buku</div>
                         </div>
                     </div>
 
                     <div class="description">
                         <h3>Deskripsi</h3>
-                        <p>{{ $book->description ?? 'Tidak ada deskripsi tersedia untuk buku ini.' }}</p>
+                        <p><?php echo e($book->description ?? 'Tidak ada deskripsi tersedia untuk buku ini.'); ?></p>
                     </div>
                 </div>
 
@@ -1207,26 +1209,27 @@
 
                         <!-- Comments List -->
                         <div class="comments-list" id="commentsList">
-                            @forelse($comments as $comment)
+                            <?php $__empty_1 = true; $__currentLoopData = $comments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $comment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <div class="comment-item">
                                     <div class="comment-header">
                                         <div class="comment-avatar">
-                                            {{ strtoupper(substr($comment->user->name, 0, 1)) }}
+                                            <?php echo e(strtoupper(substr($comment->user->name, 0, 1))); ?>
+
                                         </div>
                                         <div class="comment-info">
-                                            <div class="comment-author">{{ $comment->user->name }}</div>
-                                            <div class="comment-date">{{ $comment->created_at->diffForHumans() }}</div>
+                                            <div class="comment-author"><?php echo e($comment->user->name); ?></div>
+                                            <div class="comment-date"><?php echo e($comment->created_at->diffForHumans()); ?></div>
                                         </div>
                                     </div>
-                                    <div class="comment-text">{{ $comment->comment }}</div>
+                                    <div class="comment-text"><?php echo e($comment->comment); ?></div>
                                 </div>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <div class="no-comments">
                                     <i class="fas fa-comments"></i>
                                     <h3>Belum Ada Komentar</h3>
                                     <p>Jadilah yang pertama memberikan komentar untuk buku ini!</p>
                                 </div>
-                            @endforelse
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -1427,9 +1430,9 @@
     </div>
 
     <script>
-        const bookId = {{ $book->id }};
-        let isWishlisted = {{ $isWishlisted ? 'true' : 'false' }};
-        let currentUserRating = {{ $userRating ? $userRating->rating : 'null' }};
+        const bookId = <?php echo e($book->id); ?>;
+        let isWishlisted = <?php echo e($isWishlisted ? 'true' : 'false'); ?>;
+        let currentUserRating = <?php echo e($userRating ? $userRating->rating : 'null'); ?>;
 
         // Ensure stars reflect last user rating on initial load
         document.addEventListener('DOMContentLoaded', function() {
@@ -2021,3 +2024,4 @@
     </script>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\Perpustakaan1_project\resources\views/dashboard/book-detail.blade.php ENDPATH**/ ?>

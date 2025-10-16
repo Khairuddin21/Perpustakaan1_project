@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jelajahi Buku - SisPerpus</title>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@zxing/library@latest"></script>
@@ -2302,7 +2302,7 @@
 <body>
     <div class="dashboard-wrapper">
         <!-- Sidebar -->
-        @include('components.sidebar', ['activeLoans' => isset($active_loans) ? $active_loans : collect()])
+        <?php echo $__env->make('components.sidebar', ['activeLoans' => isset($active_loans) ? $active_loans : collect()], array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
         <!-- Main Content -->
         <div class="main-content" id="mainContent">
@@ -2340,7 +2340,7 @@
                     <div class="search-container">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" class="search-input" placeholder="Cari berdasarkan judul, penulis, atau ISBN..." 
-                               value="{{ request('search') }}" id="searchInput">
+                               value="<?php echo e(request('search')); ?>" id="searchInput">
                     </div>
                     
                     <div class="filters-grid">
@@ -2348,14 +2348,14 @@
                             <label class="filter-label">Kategori</label>
                             <select class="filter-select" id="categoryFilter">
                                 <option value="">Semua Kategori</option>
-                                @if(isset($categories))
-                                    @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" 
-                                            {{ request('category') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->name }} ({{ $category->books_count ?? 0 }})
+                                <?php if(isset($categories)): ?>
+                                    <?php $__currentLoopData = $categories; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $category): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($category->id); ?>" 
+                                            <?php echo e(request('category') == $category->id ? 'selected' : ''); ?>>
+                                        <?php echo e($category->name); ?> (<?php echo e($category->books_count ?? 0); ?>)
                                     </option>
-                                    @endforeach
-                                @endif
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                <?php endif; ?>
                             </select>
                         </div>
                         
@@ -2363,18 +2363,18 @@
                             <label class="filter-label">Status</label>
                             <select class="filter-select" id="statusFilter">
                                 <option value="">Semua Status</option>
-                                <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>Tersedia</option>
-                                <option value="unavailable" {{ request('status') == 'unavailable' ? 'selected' : '' }}>Tidak Tersedia</option>
+                                <option value="available" <?php echo e(request('status') == 'available' ? 'selected' : ''); ?>>Tersedia</option>
+                                <option value="unavailable" <?php echo e(request('status') == 'unavailable' ? 'selected' : ''); ?>>Tidak Tersedia</option>
                             </select>
                         </div>
                         
                         <div class="filter-group">
                             <label class="filter-label">Urutkan</label>
                             <select class="filter-select" id="sortFilter">
-                                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Terbaru</option>
-                                <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Terlama</option>
-                                <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>Judul A-Z</option>
-                                <option value="author" {{ request('sort') == 'author' ? 'selected' : '' }}>Penulis A-Z</option>
+                                <option value="newest" <?php echo e(request('sort') == 'newest' ? 'selected' : ''); ?>>Terbaru</option>
+                                <option value="oldest" <?php echo e(request('sort') == 'oldest' ? 'selected' : ''); ?>>Terlama</option>
+                                <option value="title" <?php echo e(request('sort') == 'title' ? 'selected' : ''); ?>>Judul A-Z</option>
+                                <option value="author" <?php echo e(request('sort') == 'author' ? 'selected' : ''); ?>>Penulis A-Z</option>
                             </select>
                         </div>
                         
@@ -2397,12 +2397,12 @@
                         <div>
                             <h2>Hasil Pencarian</h2>
                             <div class="books-meta">
-                                @if(isset($books))
-                                    Menampilkan {{ $books->firstItem() ?? 0 }}-{{ $books->lastItem() ?? 0 }} 
-                                    dari {{ $books->total() }} buku
-                                @else
+                                <?php if(isset($books)): ?>
+                                    Menampilkan <?php echo e($books->firstItem() ?? 0); ?>-<?php echo e($books->lastItem() ?? 0); ?> 
+                                    dari <?php echo e($books->total()); ?> buku
+                                <?php else: ?>
                                     Menampilkan 0 buku
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                         <div class="view-toggle">
@@ -2415,70 +2415,71 @@
                         </div>
                     </div>
 
-                    @if(isset($books) && $books->count() > 0)
+                    <?php if(isset($books) && $books->count() > 0): ?>
                     <div class="books-grid" id="booksGrid">
-                        @foreach($books as $index => $book)
+                        <?php $__currentLoopData = $books; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $book): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <div class="book-card fade-in">
                             <div class="book-image">
-                                @php
+                                <?php
                                     $cover = $book->cover_image ?? null;
                                     $isUrl = $cover && (\Illuminate\Support\Str::startsWith($cover, ['http://', 'https://']));
                                     $src = $cover ? ($isUrl ? $cover : asset($cover)) : null;
-                                @endphp
-                                @if($src)
-                                    <img src="{{ $src }}" alt="{{ $book->title }} cover" onerror="this.style.display='none'">
-                                @else
+                                ?>
+                                <?php if($src): ?>
+                                    <img src="<?php echo e($src); ?>" alt="<?php echo e($book->title); ?> cover" onerror="this.style.display='none'">
+                                <?php else: ?>
                                     <i class="fas fa-book"></i>
-                                @endif
-                                <span class="book-status {{ $book->available > 0 ? 'available' : 'unavailable' }}">
-                                    {{ $book->available > 0 ? 'Tersedia' : 'Tidak Tersedia' }}
+                                <?php endif; ?>
+                                <span class="book-status <?php echo e($book->available > 0 ? 'available' : 'unavailable'); ?>">
+                                    <?php echo e($book->available > 0 ? 'Tersedia' : 'Tidak Tersedia'); ?>
+
                                 </span>
                             </div>
                             <div class="book-content">
                                 <div class="book-content-main">
-                                    <span class="book-category">{{ $book->category->name ?? 'Umum' }}</span>
-                                    <h3 class="book-title">{{ $book->title }}</h3>
-                                    <p class="book-author">{{ $book->author }}</p>
+                                    <span class="book-category"><?php echo e($book->category->name ?? 'Umum'); ?></span>
+                                    <h3 class="book-title"><?php echo e($book->title); ?></h3>
+                                    <p class="book-author"><?php echo e($book->author); ?></p>
                                     <div class="book-meta">
-                                        <span><i class="fas fa-calendar"></i> {{ $book->publication_year ?? 'N/A' }}</span>
-                                        <span><i class="fas fa-copy"></i> {{ $book->stock }} eksemplar</span>
-                                        <span><i class="fas fa-check-circle"></i> {{ $book->available }} tersedia</span>
+                                        <span><i class="fas fa-calendar"></i> <?php echo e($book->publication_year ?? 'N/A'); ?></span>
+                                        <span><i class="fas fa-copy"></i> <?php echo e($book->stock); ?> eksemplar</span>
+                                        <span><i class="fas fa-check-circle"></i> <?php echo e($book->available); ?> tersedia</span>
                                     </div>
                                 </div>
                                 <div class="book-content-footer">
                                     <!-- Book Rating -->
-                                    @php
+                                    <?php
                                         $avgRating = $book->averageRating();
                                         $ratingCount = $book->ratingsCount();
-                                    @endphp
-                                    @if($ratingCount > 0)
+                                    ?>
+                                    <?php if($ratingCount > 0): ?>
                                     <div class="book-rating">
                                         <div class="book-rating-stars">
-                                            @for($i = 1; $i <= 5; $i++)
-                                                @if($i <= round($avgRating))
+                                            <?php for($i = 1; $i <= 5; $i++): ?>
+                                                <?php if($i <= round($avgRating)): ?>
                                                     <i class="fas fa-star"></i>
-                                                @else
+                                                <?php else: ?>
                                                     <i class="far fa-star"></i>
-                                                @endif
-                                            @endfor
+                                                <?php endif; ?>
+                                            <?php endfor; ?>
                                         </div>
-                                        <span class="book-rating-text">{{ number_format($avgRating, 1) }} ({{ $ratingCount }})</span>
+                                        <span class="book-rating-text"><?php echo e(number_format($avgRating, 1)); ?> (<?php echo e($ratingCount); ?>)</span>
                                     </div>
-                                    @endif
+                                    <?php endif; ?>
                                     
                                     <div class="book-actions">
-                                        @if($book->available > 0)
-                                        <button class="book-btn book-btn-primary" onclick="borrowBook({{ $book->id }})">
+                                        <?php if($book->available > 0): ?>
+                                        <button class="book-btn book-btn-primary" onclick="borrowBook(<?php echo e($book->id); ?>)">
                                             <i class="fas fa-hand-holding"></i>
                                             Pinjam
                                         </button>
-                                        @else
+                                        <?php else: ?>
                                         <button class="book-btn book-btn-disabled" disabled>
                                             <i class="fas fa-clock"></i>
                                             Tidak Tersedia
                                         </button>
-                                        @endif
-                                        <button class="book-btn book-btn-secondary" onclick="viewDetails({{ $book->id }})">
+                                        <?php endif; ?>
+                                        <button class="book-btn book-btn-secondary" onclick="viewDetails(<?php echo e($book->id); ?>)">
                                             <i class="fas fa-info-circle"></i>
                                             Detail
                                         </button>
@@ -2486,10 +2487,10 @@
                                 </div>
                             </div>
                         </div>
-                        @endforeach
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
 
-                    @else
+                    <?php else: ?>
                     <div class="no-results">
                         <i class="fas fa-search"></i>
                         <h3>Tidak Ada Buku Ditemukan</h3>
@@ -2499,78 +2500,78 @@
                             Reset Pencarian
                         </button>
                     </div>
-                    @endif
+                    <?php endif; ?>
 
-                    @if(isset($books) && $books instanceof \Illuminate\Pagination\LengthAwarePaginator && $books->hasPages())
+                    <?php if(isset($books) && $books instanceof \Illuminate\Pagination\LengthAwarePaginator && $books->hasPages()): ?>
                     <!-- Pagination Section -->
                     <div class="pagination-section">
                         <div class="pagination-wrapper">
                             <nav aria-label="Page navigation">
                                 <ul class="pagination">
-                                    {{-- Previous Page Link --}}
-                                    @if ($books->onFirstPage())
+                                    
+                                    <?php if($books->onFirstPage()): ?>
                                         <li class="page-item disabled">
                                             <span class="page-link">
                                                 <i class="fas fa-chevron-left"></i>
                                             </span>
                                         </li>
-                                    @else
+                                    <?php else: ?>
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $books->previousPageUrl() }}" rel="prev">
+                                            <a class="page-link" href="<?php echo e($books->previousPageUrl()); ?>" rel="prev">
                                                 <i class="fas fa-chevron-left"></i>
                                             </a>
                                         </li>
-                                    @endif
+                                    <?php endif; ?>
 
-                                    {{-- Pagination Elements --}}
-                                    @foreach ($books->getUrlRange(1, min(10, $books->lastPage())) as $page => $url)
-                                        @if ($page == $books->currentPage())
+                                    
+                                    <?php $__currentLoopData = $books->getUrlRange(1, min(10, $books->lastPage())); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $page => $url): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php if($page == $books->currentPage()): ?>
                                             <li class="page-item active">
-                                                <span class="page-link">{{ $page }}</span>
+                                                <span class="page-link"><?php echo e($page); ?></span>
                                             </li>
-                                        @else
+                                        <?php else: ?>
                                             <li class="page-item">
-                                                <a class="page-link" href="{{ $url }}">{{ $page }}</a>
+                                                <a class="page-link" href="<?php echo e($url); ?>"><?php echo e($page); ?></a>
                                             </li>
-                                        @endif
-                                    @endforeach
+                                        <?php endif; ?>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
 
-                                    {{-- Show dots if there are more than 10 pages --}}
-                                    @if($books->lastPage() > 10)
+                                    
+                                    <?php if($books->lastPage() > 10): ?>
                                         <li class="page-item disabled">
                                             <span class="page-link">...</span>
                                         </li>
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $books->url($books->lastPage()) }}">{{ $books->lastPage() }}</a>
+                                            <a class="page-link" href="<?php echo e($books->url($books->lastPage())); ?>"><?php echo e($books->lastPage()); ?></a>
                                         </li>
-                                    @endif
+                                    <?php endif; ?>
 
-                                    {{-- Next Page Link --}}
-                                    @if ($books->hasMorePages())
+                                    
+                                    <?php if($books->hasMorePages()): ?>
                                         <li class="page-item">
-                                            <a class="page-link" href="{{ $books->nextPageUrl() }}" rel="next">
+                                            <a class="page-link" href="<?php echo e($books->nextPageUrl()); ?>" rel="next">
                                                 <i class="fas fa-chevron-right"></i>
                                             </a>
                                         </li>
-                                    @else
+                                    <?php else: ?>
                                         <li class="page-item disabled">
                                             <span class="page-link">
                                                 <i class="fas fa-chevron-right"></i>
                                             </span>
                                         </li>
-                                    @endif
+                                    <?php endif; ?>
                                 </ul>
                             </nav>
                             
-                            @if(isset($books) && $books->total() > 0)
+                            <?php if(isset($books) && $books->total() > 0): ?>
                             <div class="pagination-info">
-                                Halaman {{ $books->currentPage() }} dari {{ $books->lastPage() }} 
-                                ({{ $books->total() }} total buku)
+                                Halaman <?php echo e($books->currentPage()); ?> dari <?php echo e($books->lastPage()); ?> 
+                                (<?php echo e($books->total()); ?> total buku)
                             </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
                     </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -3139,7 +3140,7 @@
                     setTimeout(() => {
                         this.style.transform = 'scale(1)';
                         if (searchTerm) {
-                            window.location.href = '{{ route("books.browse") }}?search=' + encodeURIComponent(searchTerm);
+                            window.location.href = '<?php echo e(route("books.browse")); ?>?search=' + encodeURIComponent(searchTerm);
                         }
                     }, 150);
                 }
@@ -3167,7 +3168,7 @@
             if (status) params.append('status', status);
             if (sort) params.append('sort', sort);
             
-            const url = `{{ route('books.browse') }}${params.toString() ? '?' + params.toString() : ''}`;
+            const url = `<?php echo e(route('books.browse')); ?>${params.toString() ? '?' + params.toString() : ''}`;
             
             // Smooth navigation with delay
             setTimeout(() => {
@@ -3202,7 +3203,7 @@
             
             // Navigate after animation
             setTimeout(() => {
-                window.location.href = '{{ route('books.browse') }}';
+                window.location.href = '<?php echo e(route('books.browse')); ?>';
             }, 400);
         }
 
@@ -3263,10 +3264,10 @@
             if (!button) return;
             
             // Check if user is authenticated
-            @guest
+            <?php if(auth()->guard()->guest()): ?>
                 showNotification('Silakan login terlebih dahulu untuk meminjam buku', 'warning');
                 return;
-            @endguest
+            <?php endif; ?>
             
             // Open request loan modal with book details
             requestBookLoan(bookId);
@@ -3288,7 +3289,7 @@
                 button.style.transform = 'scale(0.95)';
                 
                 setTimeout(() => {
-                    const baseUrl = '{{ url("/books") }}';
+                    const baseUrl = '<?php echo e(url("/books")); ?>';
                     window.location.href = `${baseUrl}/${bookId}`;
                 }, 500);
             }
@@ -4086,4 +4087,4 @@
         })();
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\xampp\htdocs\Perpustakaan1_project\resources\views/dashboard/browse.blade.php ENDPATH**/ ?>
