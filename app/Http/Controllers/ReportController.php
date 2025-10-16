@@ -225,4 +225,57 @@ class ReportController extends Controller
         
         return response()->stream($callback, 200, $headers);
     }
+    
+    /**
+     * Display pustakawan reports page
+     */
+    public function pustakawanReports(Request $request)
+    {
+        $query = Loan::with(['user', 'book']);
+        
+        // Filter by month
+        if ($request->filled('month')) {
+            $query->whereMonth('loan_date', $request->month);
+        }
+        
+        // Filter by year
+        if ($request->filled('year')) {
+            $query->whereYear('loan_date', $request->year);
+        } else {
+            // Default to current year if no year specified
+            $query->whereYear('loan_date', date('Y'));
+        }
+        
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        
+        // Order by date
+        $query->orderBy('loan_date', 'desc');
+        
+        $loans = $query->get();
+        
+        // Calculate summary
+        $summary = [
+            'total' => $loans->count(),
+            'borrowed' => $loans->where('status', 'borrowed')->count(),
+            'returned' => $loans->where('status', 'returned')->count(),
+            'overdue' => $loans->where('status', 'overdue')->count(),
+            'pending' => $loans->where('status', 'pending')->count(),
+        ];
+        
+        // Prepare chart data
+        $chartData = [
+            'labels' => ['Pending', 'Dipinjam', 'Dikembalikan', 'Terlambat'],
+            'data' => [
+                $summary['pending'],
+                $summary['borrowed'],
+                $summary['returned'],
+                $summary['overdue']
+            ]
+        ];
+        
+        return view('dashboard.pustakawan-reports', compact('loans', 'summary', 'chartData'));
+    }
 }

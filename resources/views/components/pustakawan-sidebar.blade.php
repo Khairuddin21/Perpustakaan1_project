@@ -31,7 +31,7 @@
         
         <div class="nav-section">
             <div class="nav-section-title">Laporan</div>
-            <a href="{{ route('admin.reports') }}" class="nav-item {{ request()->routeIs('admin.reports*') ? 'active' : '' }}">
+            <a href="{{ route('pustakawan.reports') }}" class="nav-item {{ request()->routeIs('pustakawan.reports*') ? 'active' : '' }}">
                 <i class="fas fa-chart-bar"></i>
                 Laporan & Statistik
             </a>

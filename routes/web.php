@@ -72,9 +72,18 @@ Route::middleware('auth')->group(function () {
     // Admin pages for loan management
     Route::middleware(['role:admin,pustakawan'])->group(function () {
         Route::get('/loan-requests', [LoanController::class, 'showLoanRequests'])->name('loan-requests');
-        Route::get('/reports', [ReportController::class, 'index'])->name('admin.reports');
-        Route::get('/reports/download', [ReportController::class, 'download'])->name('admin.reports.download');
-        Route::get('/reports/download-excel', [ReportController::class, 'downloadExcel'])->name('admin.reports.download.excel');
+    });
+    
+    // Admin Reports Routes
+    Route::middleware(['role:admin'])->group(function () {
+        Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports');
+        Route::get('/admin/reports/download', [ReportController::class, 'download'])->name('admin.reports.download');
+        Route::get('/admin/reports/download-excel', [ReportController::class, 'downloadExcel'])->name('admin.reports.download.excel');
+    });
+    
+    // Pustakawan Reports Routes
+    Route::middleware(['role:pustakawan'])->group(function () {
+        Route::get('/pustakawan/reports', [ReportController::class, 'pustakawanReports'])->name('pustakawan.reports');
     });
     
     // Admin Returns Routes - Khusus untuk Admin (BUKAN pustakawan biasa)

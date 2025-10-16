@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Laporan Pustakawan - {{ config('app.name', 'Sistem Perpustakaan') }}</title>
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
+    <title>Laporan Pustakawan - <?php echo e(config('app.name', 'Sistem Perpustakaan')); ?></title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <!-- Custom Styles -->
-    @vite(['resources/css/dashboard.css'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/css/dashboard.css']); ?>
     
     <style>
         .loan-requests-container {
@@ -355,7 +355,26 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
-        <x-pustakawan-sidebar />
+        <?php if (isset($component)) { $__componentOriginal3669d248200f2dc31f2689292901c050 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal3669d248200f2dc31f2689292901c050 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.pustakawan-sidebar','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('pustakawan-sidebar'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $attributes = $__attributesOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__attributesOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal3669d248200f2dc31f2689292901c050)): ?>
+<?php $component = $__componentOriginal3669d248200f2dc31f2689292901c050; ?>
+<?php unset($__componentOriginal3669d248200f2dc31f2689292901c050); ?>
+<?php endif; ?>
 
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
@@ -371,16 +390,17 @@
                     <div class="header-actions">
                         <div class="user-info">
                             <div class="user-avatar">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                <?php echo e(strtoupper(substr(auth()->user()->name, 0, 2))); ?>
+
                             </div>
                             <div class="user-details">
-                                <div class="user-name">{{ auth()->user()->name }}</div>
-                                <div class="user-role">{{ ucfirst(auth()->user()->role) }}</div>
+                                <div class="user-name"><?php echo e(auth()->user()->name); ?></div>
+                                <div class="user-role"><?php echo e(ucfirst(auth()->user()->role)); ?></div>
                             </div>
                         </div>
                         
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline;">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="nav-item" style="background: none; border: none; color: #64748b; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: all 0.3s ease;">
                                 <i class="fas fa-sign-out-alt"></i>
                             </button>
@@ -398,24 +418,24 @@
                 </div>
 
                 <div class="filter-section">
-                    <form method="GET" action="{{ route('pustakawan.reports') }}">
+                    <form method="GET" action="<?php echo e(route('pustakawan.reports')); ?>">
                         <div class="filter-grid">
                             <div class="filter-group">
                                 <label class="filter-label"><i class="fas fa-calendar"></i> Bulan</label>
                                 <select name="month" class="filter-input">
                                     <option value="">Semua</option>
-                                    @for ($m = 1; $m <= 12; $m++)
-                                        <option value="{{ $m }}" {{ request('month') == $m ? 'selected' : '' }}>{{ \DateTime::createFromFormat('!m', $m)->format('F') }}</option>
-                                    @endfor
+                                    <?php for($m = 1; $m <= 12; $m++): ?>
+                                        <option value="<?php echo e($m); ?>" <?php echo e(request('month') == $m ? 'selected' : ''); ?>><?php echo e(\DateTime::createFromFormat('!m', $m)->format('F')); ?></option>
+                                    <?php endfor; ?>
                                 </select>
                             </div>
 
                             <div class="filter-group">
                                 <label class="filter-label"><i class="fas fa-calendar-alt"></i> Tahun</label>
                                 <select name="year" class="filter-input">
-                                    @for ($y = date('Y'); $y >= date('Y') - 5; $y--)
-                                        <option value="{{ $y }}" {{ request('year', date('Y')) == $y ? 'selected' : '' }}>{{ $y }}</option>
-                                    @endfor
+                                    <?php for($y = date('Y'); $y >= date('Y') - 5; $y--): ?>
+                                        <option value="<?php echo e($y); ?>" <?php echo e(request('year', date('Y')) == $y ? 'selected' : ''); ?>><?php echo e($y); ?></option>
+                                    <?php endfor; ?>
                                 </select>
                             </div>
 
@@ -423,10 +443,10 @@
                                 <label class="filter-label"><i class="fas fa-filter"></i> Status</label>
                                 <select name="status" class="filter-input">
                                     <option value="">Semua</option>
-                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                    <option value="borrowed" {{ request('status') == 'borrowed' ? 'selected' : '' }}>Dipinjam</option>
-                                    <option value="returned" {{ request('status') == 'returned' ? 'selected' : '' }}>Dikembalikan</option>
-                                    <option value="overdue" {{ request('status') == 'overdue' ? 'selected' : '' }}>Terlambat</option>
+                                    <option value="pending" <?php echo e(request('status') == 'pending' ? 'selected' : ''); ?>>Pending</option>
+                                    <option value="borrowed" <?php echo e(request('status') == 'borrowed' ? 'selected' : ''); ?>>Dipinjam</option>
+                                    <option value="returned" <?php echo e(request('status') == 'returned' ? 'selected' : ''); ?>>Dikembalikan</option>
+                                    <option value="overdue" <?php echo e(request('status') == 'overdue' ? 'selected' : ''); ?>>Terlambat</option>
                                 </select>
                             </div>
 
@@ -447,7 +467,7 @@
                                 <i class="fas fa-layer-group"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $summary['total'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($summary['total']); ?></h3>
                                 <p class="stat-label">Total Transaksi</p>
                             </div>
                         </div>
@@ -458,7 +478,7 @@
                                 <i class="fas fa-book-reader"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $summary['borrowed'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($summary['borrowed']); ?></h3>
                                 <p class="stat-label">Sedang Dipinjam</p>
                             </div>
                         </div>
@@ -469,7 +489,7 @@
                                 <i class="fas fa-exclamation-triangle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $summary['overdue'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($summary['overdue']); ?></h3>
                                 <p class="stat-label">Terlambat</p>
                             </div>
                         </div>
@@ -480,7 +500,7 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="stat-info">
-                                <h3 class="stat-number">{{ $summary['returned'] }}</h3>
+                                <h3 class="stat-number"><?php echo e($summary['returned']); ?></h3>
                                 <p class="stat-label">Dikembalikan</p>
                             </div>
                         </div>
@@ -509,22 +529,22 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse ($loans as $index => $loan)
+                                <?php $__empty_1 = true; $__currentLoopData = $loans; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $loan): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
-                                        <td>{{ optional($loan->loan_date ?? $loan->request_date)->format('d M Y, H:i') }}</td>
-                                        <td>{{ $loan->user->name }}</td>
-                                        <td>{{ $loan->book->title }}</td>
-                                        <td>{{ $loan->due_date ? \Carbon\Carbon::parse($loan->due_date)->format('d M Y, H:i') : '-' }}</td>
+                                        <td><?php echo e($index + 1); ?></td>
+                                        <td><?php echo e(optional($loan->loan_date ?? $loan->request_date)->format('d M Y, H:i')); ?></td>
+                                        <td><?php echo e($loan->user->name); ?></td>
+                                        <td><?php echo e($loan->book->title); ?></td>
+                                        <td><?php echo e($loan->due_date ? \Carbon\Carbon::parse($loan->due_date)->format('d M Y, H:i') : '-'); ?></td>
                                         <td>
-                                            <span class="status-badge {{ $loan->status }}">{{ ucfirst($loan->status) }}</span>
+                                            <span class="status-badge <?php echo e($loan->status); ?>"><?php echo e(ucfirst($loan->status)); ?></span>
                                         </td>
                                     </tr>
-                                @empty
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                     <tr>
                                         <td colspan="6" style="text-align:center; color:#64748b; padding: 1rem;">Tidak ada data</td>
                                     </tr>
-                                @endforelse
+                                <?php endif; ?>
                             </tbody>
                         </table>
                     </div>
@@ -534,7 +554,7 @@
     </div>
 
     <script>
-        const chartData = @json($chartData);
+        const chartData = <?php echo json_encode($chartData, 15, 512) ?>;
         const ctx = document.getElementById('statusChart');
         if (ctx && chartData) {
             new Chart(ctx, {
@@ -568,6 +588,7 @@
         }
     </script>
 
-    @vite(['resources/js/dashboard.js'])
+    <?php echo app('Illuminate\Foundation\Vite')(['resources/js/dashboard.js']); ?>
 </body>
 </html>
+<?php /**PATH C:\xampp\htdocs\Perpustakaan1_project\resources\views/dashboard/pustakawan-reports.blade.php ENDPATH**/ ?>
