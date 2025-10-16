@@ -374,8 +374,16 @@ class BookController extends Controller
 
         return response()->json([
             'success' => true,
-            'wishlists' => $wishlists
+            'wishlist' => $wishlists
         ]);
+    }
+
+    /**
+     * Show wishlist page
+     */
+    public function wishlistView()
+    {
+        return view('dashboard.wishlist');
     }
 
     /**

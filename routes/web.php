@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/books/browse', [DashboardController::class, 'browse'])->name('books.browse');
     Route::get('/books/search', [DashboardController::class, 'search'])->name('books.search');
     Route::get('/books/{id}', [BookController::class, 'show'])->name('books.show');
+    Route::get('/books/wishlist/view', [BookController::class, 'wishlistView'])->name('books.wishlist');
     
     // Add yours - Member can add their own books
     Route::get('/add-yours', [BookController::class, 'addYoursForm'])->name('books.add-yours');

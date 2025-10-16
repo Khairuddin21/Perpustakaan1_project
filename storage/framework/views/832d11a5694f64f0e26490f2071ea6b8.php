@@ -1619,6 +1619,12 @@
         });
 
         // Placeholder functions for sidebar navigation (if not defined elsewhere)
+        if (typeof showProfileModal === 'undefined') {
+            window.showProfileModal = function() {
+                alert('Fitur profil akan segera tersedia!');
+            };
+        }
+
         if (typeof showBorrowedBooks === 'undefined') {
             window.showBorrowedBooks = function() {
                 const modal = document.getElementById('borrowedBooksModal');
@@ -1659,7 +1665,7 @@
                                 <div class="borrowed-book-item">
                                     <div class="borrowed-book-cover">
                                         ${book.book.cover_image ? 
-                                            `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/storage/' + book.book.cover_image}" alt="${book.book.title}">` : 
+                                            `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/' + book.book.cover_image}" alt="${book.book.title}">` : 
                                             '<i class="fas fa-book"></i>'
                                         }
                                     </div>
@@ -1775,7 +1781,7 @@
                             <div class="history-item">
                                 <div class="history-book-cover">
                                     ${history.book.cover_image ? 
-                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/storage/' + history.book.cover_image}" alt="${history.book.title}">` : 
+                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/' + history.book.cover_image}" alt="${history.book.title}">` : 
                                         '<i class="fas fa-book"></i>'
                                     }
                                 </div>

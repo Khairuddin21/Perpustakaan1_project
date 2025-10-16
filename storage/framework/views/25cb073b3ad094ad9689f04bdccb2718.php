@@ -2440,6 +2440,61 @@
                 opacity: 1;
             }
         }
+
+        /* ===== PROFILE MODAL STYLES ===== */
+        .profile-content {
+            padding: 1rem;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .profile-info-item label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-info-item label i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .profile-value {
+            padding: 0.75rem 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -2821,6 +2876,44 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Profil Saya</h2>
+                <button class="modal-close" onclick="closeProfileModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="profile-content">
+                    <div class="profile-avatar-large">
+                        <?php echo e(strtoupper(substr(Auth::user()->name, 0, 2))); ?>
+
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-user"></i> Nama Lengkap</label>
+                            <div class="profile-value"><?php echo e(Auth::user()->name); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <div class="profile-value"><?php echo e(Auth::user()->email); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-shield-alt"></i> Role</label>
+                            <div class="profile-value"><?php echo e(ucfirst(Auth::user()->role)); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-calendar-alt"></i> Bergabung Sejak</label>
+                            <div class="profile-value"><?php echo e(\Carbon\Carbon::parse(Auth::user()->created_at)->format('d M Y')); ?></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3351,6 +3444,17 @@
             document.getElementById('loanHistoryModal').classList.remove('active');
         }
 
+        // Show Profile Modal
+        function showProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.add('active');
+        }
+
+        // Close Profile Modal
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+
         // Load Loan History
         function loadLoanHistory(status = 'all', search = '') {
             const historyList = document.getElementById('loanHistoryList');
@@ -3673,6 +3777,8 @@
         window.closeBorrowedBooksModal = closeBorrowedBooksModal;
         window.showLoanHistory = showLoanHistory;
         window.closeLoanHistoryModal = closeLoanHistoryModal;
+        window.showProfileModal = showProfileModal;
+        window.closeProfileModal = closeProfileModal;
         window.filterHistory = filterHistory;
         window.searchHistory = searchHistory;
         window.requestBookLoan = requestBookLoan;

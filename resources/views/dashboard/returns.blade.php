@@ -1561,6 +1561,12 @@
         });
 
         // Placeholder functions for sidebar navigation (if not defined elsewhere)
+        if (typeof showProfileModal === 'undefined') {
+            window.showProfileModal = function() {
+                alert('Fitur profil akan segera tersedia!');
+            };
+        }
+
         if (typeof showBorrowedBooks === 'undefined') {
             window.showBorrowedBooks = function() {
                 const modal = document.getElementById('borrowedBooksModal');

@@ -2014,6 +2014,25 @@
             }
         });
 
+        // Placeholder functions for sidebar navigation
+        if (typeof showProfileModal === 'undefined') {
+            window.showProfileModal = function() {
+                alert('Fitur profil akan segera tersedia!');
+            };
+        }
+
+        if (typeof showBorrowedBooks === 'undefined') {
+            window.showBorrowedBooks = function() {
+                alert('Fitur buku yang sedang dipinjam akan segera tersedia!');
+            };
+        }
+
+        if (typeof showLoanHistory === 'undefined') {
+            window.showLoanHistory = function() {
+                alert('Fitur riwayat peminjaman akan segera tersedia!');
+            };
+        }
+
         // Initialize QR reader on page load
         document.addEventListener('DOMContentLoaded', function() {
             initializeQRReader();

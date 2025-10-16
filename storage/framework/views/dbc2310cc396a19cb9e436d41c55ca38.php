@@ -345,6 +345,421 @@
             font-size: 1rem;
         }
 
+        /* ===== MODAL STYLES ===== */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 20px;
+            max-width: 90vw;
+            max-height: 90vh;
+            width: 800px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            transform: translateY(-50px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0) scale(1);
+        }
+
+        .modal-header {
+            padding: 2rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-content {
+            padding: 2rem;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .loading-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+
+        .loading-spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .empty-state-modal {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-state-modal i {
+            font-size: 4rem;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state-modal h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state-modal p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Borrowed Books Modal */
+        .borrowed-books-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .borrowed-book-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .borrowed-book-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .borrowed-book-cover {
+            width: 80px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .borrowed-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .borrowed-book-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .borrowed-book-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .borrowed-book-author {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .borrowed-book-dates {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+        }
+
+        .borrowed-book-date {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .borrowed-book-date i {
+            color: var(--primary);
+        }
+
+        .borrowed-book-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: auto;
+        }
+
+        .status-badge {
+            padding: 0.375rem 0.75rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-badge.active {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .status-badge.overdue {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .status-badge.warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .extend-btn {
+            padding: 0.5rem 1rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .extend-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        /* Loan History Modal */
+        .history-filters {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .history-filters select,
+        .history-filters input {
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .history-filters select:focus,
+        .history-filters input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .loan-history-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .history-item {
+            display: flex;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            background: var(--light);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
+        }
+
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .history-book-cover {
+            width: 70px;
+            height: 100px;
+            border-radius: 8px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .history-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .history-book-info {
+            flex: 1;
+        }
+
+        .history-book-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin: 0 0 0.25rem 0;
+        }
+
+        .history-book-author {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .history-dates {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .history-date {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .history-date i {
+            color: var(--primary);
+            width: 16px;
+        }
+
+        .history-status {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Profile Modal */
+        .profile-content {
+            text-align: center;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-info {
+            display: grid;
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .profile-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .profile-info-item label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-info-item label i {
+            color: var(--primary);
+        }
+
+        .profile-value {
+            font-size: 1.05rem;
+            color: var(--text-dark);
+            font-weight: 600;
+            padding: 0.75rem;
+            background: var(--light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
         .form-card {
             background: white;
             padding: 2.5rem;
@@ -889,6 +1304,87 @@
         </div>
     </div>
 
+    <!-- Modal for Borrowed Books -->
+    <div class="modal-overlay" id="borrowedBooksModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-book-reader"></i> Buku yang Sedang Dipinjam</h2>
+                <button class="modal-close" onclick="closeBorrowedBooksModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="borrowed-books-list" id="borrowedBooksList">
+                    <!-- Borrowed books will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Loan History -->
+    <div class="modal-overlay" id="loanHistoryModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-history"></i> Riwayat Peminjaman</h2>
+                <button class="modal-close" onclick="closeLoanHistoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="history-filters">
+                    <select id="historyFilter" onchange="filterHistory()">
+                        <option value="all">Semua Status</option>
+                        <option value="returned">Sudah Dikembalikan</option>
+                        <option value="borrowed">Sedang Dipinjam</option>
+                        <option value="overdue">Terlambat</option>
+                    </select>
+                    <input type="text" id="historySearch" placeholder="Cari judul buku..." onkeyup="searchHistory()">
+                </div>
+                <div class="loan-history-list" id="loanHistoryList">
+                    <!-- Loan history will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Profil Saya</h2>
+                <button class="modal-close" onclick="closeProfileModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="profile-content">
+                    <div class="profile-avatar-large">
+                        <?php echo e(strtoupper(substr(Auth::user()->name, 0, 2))); ?>
+
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-user"></i> Nama Lengkap</label>
+                            <div class="profile-value"><?php echo e(Auth::user()->name); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <div class="profile-value"><?php echo e(Auth::user()->email); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-shield-alt"></i> Role</label>
+                            <div class="profile-value"><?php echo e(ucfirst(Auth::user()->role)); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-calendar-alt"></i> Bergabung Sejak</label>
+                            <div class="profile-value"><?php echo e(\Carbon\Carbon::parse(Auth::user()->created_at)->format('d M Y')); ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Toggle sidebar
         document.getElementById('menuToggle')?.addEventListener('click', function() {
@@ -962,6 +1458,256 @@
                 return false;
             }
         });
+
+        // ===== MODAL FUNCTIONS =====
+        
+        // Show Borrowed Books Modal
+        function showBorrowedBooks() {
+            const modal = document.getElementById('borrowedBooksModal');
+            const booksList = document.getElementById('borrowedBooksList');
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Show loading
+            booksList.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Memuat buku yang sedang dipinjam...</p>
+                </div>
+            `;
+            
+            // Fetch borrowed books
+            fetch('/api/borrowed-books', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.borrowed_books.length === 0) {
+                        booksList.innerHTML = `
+                            <div class="empty-state-modal">
+                                <i class="fas fa-book-open"></i>
+                                <h3>Tidak Ada Buku yang Sedang Dipinjam</h3>
+                                <p>Mulai jelajahi koleksi kami dan pinjam buku favorit Anda!</p>
+                            </div>
+                        `;
+                    } else {
+                        booksList.innerHTML = data.borrowed_books.map(book => `
+                            <div class="borrowed-book-item">
+                                <div class="borrowed-book-cover">
+                                    ${book.book.cover_image ? 
+                                        `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/' + book.book.cover_image}" alt="${book.book.title}">` : 
+                                        '<i class="fas fa-book"></i>'
+                                    }
+                                </div>
+                                <div class="borrowed-book-info">
+                                    <h3 class="borrowed-book-title">${book.book.title}</h3>
+                                    <p class="borrowed-book-author">oleh ${book.book.author}</p>
+                                    <div class="borrowed-book-dates">
+                                        <div class="borrowed-book-date">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            Dipinjam: ${book.loan_date}
+                                        </div>
+                                        <div class="borrowed-book-date">
+                                            <i class="fas fa-calendar-check"></i>
+                                            Jatuh Tempo: ${book.due_date}
+                                        </div>
+                                    </div>
+                                    <div class="borrowed-book-status">
+                                        <span class="status-badge ${book.status}">${book.status_text}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    booksList.innerHTML = `
+                        <div class="empty-state-modal">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Gagal Memuat Data</h3>
+                            <p>${data.message || 'Terjadi kesalahan saat memuat data.'}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                booksList.innerHTML = `
+                    <div class="empty-state-modal">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Gagal Memuat Data</h3>
+                        <p>Terjadi kesalahan saat memuat data. Silakan coba lagi.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Close Borrowed Books Modal
+        function closeBorrowedBooksModal() {
+            document.getElementById('borrowedBooksModal').classList.remove('active');
+        }
+
+        // Show Loan History Modal
+        function showLoanHistory() {
+            const modal = document.getElementById('loanHistoryModal');
+            const historyList = document.getElementById('loanHistoryList');
+            
+            // Show modal
+            modal.classList.add('active');
+            
+            // Load history
+            loadLoanHistory();
+        }
+
+        // Close Loan History Modal
+        function closeLoanHistoryModal() {
+            document.getElementById('loanHistoryModal').classList.remove('active');
+        }
+
+        // Show Profile Modal
+        function showProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.add('active');
+        }
+
+        // Close Profile Modal
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
+        }
+
+        // Load Loan History
+        function loadLoanHistory(status = 'all', search = '') {
+            const historyList = document.getElementById('loanHistoryList');
+            
+            // Show loading
+            historyList.innerHTML = `
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Memuat riwayat peminjaman...</p>
+                </div>
+            `;
+            
+            // Build query parameters
+            const params = new URLSearchParams();
+            if (status !== 'all') params.append('status', status);
+            if (search) params.append('search', search);
+            
+            // Fetch loan history
+            fetch('/api/loan-history?' + params.toString(), {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.loan_history.length === 0) {
+                        historyList.innerHTML = `
+                            <div class="empty-state-modal">
+                                <i class="fas fa-history"></i>
+                                <h3>Tidak Ada Riwayat Peminjaman</h3>
+                                <p>Belum ada riwayat peminjaman yang sesuai dengan filter.</p>
+                            </div>
+                        `;
+                    } else {
+                        historyList.innerHTML = data.loan_history.map(history => `
+                            <div class="history-item">
+                                <div class="history-book-cover">
+                                    ${history.book.cover_image ? 
+                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/' + history.book.cover_image}" alt="${history.book.title}">` : 
+                                        '<i class="fas fa-book"></i>'
+                                    }
+                                </div>
+                                <div class="history-book-info">
+                                    <h3 class="history-book-title">${history.book.title}</h3>
+                                    <p class="history-book-author">oleh ${history.book.author}</p>
+                                    <div class="history-dates">
+                                        ${history.request_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-paper-plane"></i>
+                                                Diajukan: ${history.request_date}
+                                            </div>
+                                        ` : ''}
+                                        ${history.loan_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                Dipinjam: ${history.loan_date}
+                                            </div>
+                                        ` : ''}
+                                        ${history.return_date ? `
+                                            <div class="history-date">
+                                                <i class="fas fa-calendar-check"></i>
+                                                Dikembalikan: ${history.return_date}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    <div class="history-status">
+                                        <span class="status-badge ${history.status}">${history.status_text}</span>
+                                        <span style="font-size: 0.8rem; color: var(--text-light);">${history.duration}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                } else {
+                    historyList.innerHTML = `
+                        <div class="empty-state-modal">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>Gagal Memuat Data</h3>
+                            <p>${data.message || 'Terjadi kesalahan saat memuat data.'}</p>
+                        </div>
+                    `;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                historyList.innerHTML = `
+                    <div class="empty-state-modal">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <h3>Gagal Memuat Data</h3>
+                        <p>Terjadi kesalahan saat memuat data. Silakan coba lagi.</p>
+                    </div>
+                `;
+            });
+        }
+
+        // Filter History
+        function filterHistory() {
+            const status = document.getElementById('historyFilter').value;
+            const search = document.getElementById('historySearch').value;
+            loadLoanHistory(status, search);
+        }
+
+        // Search History
+        function searchHistory() {
+            const status = document.getElementById('historyFilter').value;
+            const search = document.getElementById('historySearch').value;
+            loadLoanHistory(status, search);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal-overlay')) {
+                e.target.classList.remove('active');
+            }
+        });
+
+        // Make functions globally available
+        window.showBorrowedBooks = showBorrowedBooks;
+        window.closeBorrowedBooksModal = closeBorrowedBooksModal;
+        window.showLoanHistory = showLoanHistory;
+        window.closeLoanHistoryModal = closeLoanHistoryModal;
+        window.showProfileModal = showProfileModal;
+        window.closeProfileModal = closeProfileModal;
+        window.filterHistory = filterHistory;
+        window.searchHistory = searchHistory;
     </script>
 </body>
 </html>

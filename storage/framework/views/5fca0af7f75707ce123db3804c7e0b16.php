@@ -46,7 +46,7 @@
                 <i class="fas fa-history"></i>
                 <span>Riwayat Peminjaman</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="<?php echo e(route('books.wishlist')); ?>" class="nav-item <?php echo e(request()->routeIs('books.wishlist') ? 'active' : ''); ?>">
                 <i class="fas fa-heart"></i>
                 <span>Favorit</span>
             </a>
@@ -54,7 +54,7 @@
         
         <div class="nav-section">
             <div class="nav-section-title">Akun</div>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" onclick="showProfileModal(); return false;">
                 <i class="fas fa-user-circle"></i>
                 <span>Profil Saya</span>
             </a>
