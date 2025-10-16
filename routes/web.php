@@ -10,8 +10,8 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
-    return redirect()->route('login');
-});
+    return view('landing');
+})->name('welcome');
 
 // Authentication Routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
