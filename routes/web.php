@@ -7,6 +7,7 @@ use App\Http\Controllers\ReturnController;
 use App\Http\Controllers\LoanController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -78,6 +79,14 @@ Route::middleware('auth')->group(function () {
         Route::get('/books/{id}/edit', [BookController::class, 'edit'])->name('admin.books.edit');
         Route::post('/books/{id}', [BookController::class, 'update'])->name('admin.books.update');
         Route::delete('/books/{id}', [BookController::class, 'destroy'])->name('admin.books.destroy');
+        
+        // Users Management Routes (Kelola Anggota)
+        Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+        Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
+        Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+        Route::post('/users/{id}', [UserController::class, 'update'])->name('admin.users.update');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+        Route::post('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('admin.users.toggle-status');
     });
 });
 

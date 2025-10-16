@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Akses Peminjaman - {{ config('app.name', 'Sistem Perpustakaan') }}</title>
+    <title>Akses Peminjaman - SisPerpus</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,41 +21,43 @@
     @vite(['resources/css/dashboard.css'])
     
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Keep page-specific styles only; sidebar styles come from dashboard.css */
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+            padding: 0;
+        }
+
         .loan-requests-container {
             padding: 2rem;
+            min-height: 100vh;
         }
         
         .page-header {
             margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-        
-        .btn-back {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.25rem;
             background: white;
-            color: #6366f1;
-            border: 2px solid #6366f1;
-            border-radius: 0.75rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
-        }
-        
-        .btn-back:hover {
-            background: #6366f1;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-        }
-        
-        .header-text {
-            flex: 1;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         
         .page-title {
@@ -711,9 +713,48 @@
             transform: scale(1.02);
             border-color: #6366f1;
         }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .alert.success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert.error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert i {
+            font-size: 20px;
+        }
         
         /* Responsive */
         @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
             .request-card {
                 grid-template-columns: 1fr;
                 gap: 1.25rem;
@@ -733,192 +774,39 @@
                 grid-template-columns: 1fr;
                 gap: 0.5rem;
             }
-            
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-        }
-
-        /* SweetAlert2 Custom Styles */
-        .swal-wide {
-            width: 600px !important;
-            max-width: 90% !important;
-        }
-        
-        .swal2-popup {
-            border-radius: 1rem !important;
-            padding: 2rem !important;
-        }
-        
-        .swal2-title {
-            font-size: 1.5rem !important;
-            font-weight: 700 !important;
-            color: #1e293b !important;
-            padding: 0 0 1rem 0 !important;
-        }
-        
-        .swal2-html-container {
-            font-size: 0.95rem !important;
-            color: #64748b !important;
-            margin: 0 !important;
-        }
-        
-        .swal2-actions {
-            gap: 1rem !important;
-            margin-top: 1.5rem !important;
-        }
-        
-        .swal-btn-confirm,
-        .swal2-confirm {
-            padding: 0.75rem 2rem !important;
-            border-radius: 0.75rem !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3) !important;
-        }
-        
-        .swal-btn-confirm:hover,
-        .swal2-confirm:hover {
-            transform: translateY(-2px) !important;
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
-        }
-        
-        .swal-btn-cancel,
-        .swal2-cancel {
-            padding: 0.75rem 2rem !important;
-            border-radius: 0.75rem !important;
-            font-weight: 600 !important;
-            transition: all 0.3s ease !important;
-        }
-        
-        .swal-btn-danger {
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
-        }
-        
-        .swal-btn-danger:hover {
-            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4) !important;
-        }
-        
-        .swal2-input,
-        .swal2-textarea {
-            font-size: 0.95rem !important;
-        }
-        
-        .swal2-textarea:focus {
-            border-color: #6366f1 !important;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
-        }
-        
-        /* Range input styling */
-        .swal2-range {
-            width: 100% !important;
-            margin: 1rem 0 !important;
-            -webkit-appearance: none;
-            appearance: none;
-            height: 8px !important;
-            border-radius: 5px !important;
-            background: linear-gradient(to right, #6366f1, #8b5cf6) !important;
-            outline: none !important;
-            opacity: 0.9 !important;
-            transition: opacity 0.2s !important;
-        }
-        
-        .swal2-range:hover {
-            opacity: 1 !important;
-        }
-        
-        .swal2-range::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: white;
-            border: 3px solid #6366f1;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .swal2-range::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6);
-        }
-        
-        .swal2-range::-moz-range-thumb {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: white;
-            border: 3px solid #6366f1;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
-            transition: all 0.3s ease;
-        }
-        
-        .swal2-range::-moz-range-thumb:hover {
-            transform: scale(1.2);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6);
         }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
-        @if(auth()->user()->role === 'admin')
-            <x-admin-sidebar />
-        @elseif(auth()->user()->role === 'pustakawan')
-            <x-pustakawan-sidebar />
-        @endif
+    <!-- Pustakawan Sidebar -->
+    <x-pustakawan-sidebar />
         
         <!-- Main Content -->
         <main class="main-content" id="mainContent">
-            <!-- Header -->
-            <header class="header">
-                <div class="header-content">
-                    <button class="menu-toggle" id="menuToggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                    
-                    <h1 class="header-title">Akses Peminjaman</h1>
-                    
-                    <div class="header-actions">
-                        <div class="user-info">
-                            <div class="user-avatar">
-                                {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                            </div>
-                            <div class="user-details">
-                                <div class="user-name">{{ auth()->user()->name }}</div>
-                                <div class="user-role">{{ ucfirst(auth()->user()->role) }}</div>
-                            </div>
-                        </div>
-                        
-                        <form method="POST" action="{{ route('logout') }}" style="display: inline;">
-                            @csrf
-                            <button type="submit" class="nav-item" style="background: none; border: none; color: #64748b; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: all 0.3s ease;">
-                                <i class="fas fa-sign-out-alt"></i>
-                                Logout
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </header>
-            
-            <!-- Content -->
             <div class="loan-requests-container">
-                <div class="page-header">
-                    <a href="{{ route('dashboard') }}" class="btn-back">
-                        <i class="fas fa-arrow-left"></i>
-                        Kembali ke Dashboard
-                    </a>
-                    <div class="header-text">
-                        <h2 class="page-title">
-                            <i class="fas fa-clipboard-list"></i>
-                            Manajemen Peminjaman Buku
-                        </h2>
-                        <p class="page-subtitle">Kelola permintaan peminjaman dari anggota perpustakaan</p>
+                <!-- Alerts -->
+                @if(session('success'))
+                    <div class="alert success">
+                        <i class="fas fa-check-circle"></i>
+                        <span>{{ session('success') }}</span>
                     </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <span>{{ session('error') }}</span>
+                    </div>
+                @endif
+
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h2 class="page-title">
+                        <i class="fas fa-clipboard-list"></i>
+                        Akses Peminjaman Buku
+                    </h2>
+                    <p class="page-subtitle">Kelola permintaan peminjaman dari anggota perpustakaan</p>
                 </div>
                 
                 <!-- Stats Summary -->
@@ -1072,7 +960,8 @@
                     <div class="request-photo-container">
                         <img src="${photoUrl}" 
                              alt="Borrower Photo" 
-                             class="request-photo">
+                             class="request-photo"
+                             onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Crect fill=%22%23e2e8f0%22 width=%22100%22 height=%22100%22/%3E%3Ctext x=%2250%22 y=%2250%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%236366f1%22 font-size=%2240%22 font-family=%22Arial%22%3E${loan.user.name.charAt(0).toUpperCase()}%3C/text%3E%3C/svg%3E'">
                         <div class="photo-badge">
                             <i class="fas fa-${loan.identification_method === 'qr_scan' ? 'qrcode' : 'keyboard'}"></i>
                         </div>
@@ -1153,104 +1042,29 @@
         async function approveLoan(loanId) {
             const loan = allLoans.find(l => l.id === loanId);
             
-            // Step 1: Ask for loan duration
-            const { value: loanDuration, isConfirmed: durationConfirmed } = await Swal.fire({
-                title: '<i class="fas fa-calendar-alt"></i> Tentukan Durasi Peminjaman',
-                html: `
-                    <div style="text-align: left; padding: 1rem;">
-                        <p style="margin-bottom: 1rem; color: #64748b;">Anda akan menyetujui peminjaman untuk:</p>
-                        <div style="background: #f1f5f9; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border-left: 4px solid #6366f1;">
-                            <p style="margin: 0.5rem 0;"><strong>Peminjam:</strong> ${loan.user.name}</p>
-                            <p style="margin: 0.5rem 0;"><strong>Buku:</strong> ${loan.book.title}</p>
-                            <p style="margin: 0.5rem 0;"><strong>Penulis:</strong> ${loan.book.author}</p>
-                        </div>
-                        <div style="background: #dbeafe; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #2563eb;">
-                            <p style="color: #1e40af; font-weight: 600; margin: 0 0 0.5rem 0;">
-                                <i class="fas fa-info-circle"></i> Tentukan Durasi Peminjaman:
-                            </p>
-                            <p style="color: #64748b; font-size: 0.875rem; margin: 0;">
-                                Pilih berapa hari buku akan dipinjamkan (1-30 hari)
-                            </p>
-                        </div>
-                    </div>
-                `,
-                input: 'range',
-                inputLabel: 'Durasi Peminjaman (Hari)',
-                inputAttributes: {
-                    min: '1',
-                    max: '30',
-                    step: '1'
-                },
-                inputValue: 7,
-                showCancelButton: true,
-                confirmButtonText: '<i class="fas fa-arrow-right"></i> Lanjutkan',
-                cancelButtonText: '<i class="fas fa-times"></i> Batal',
-                confirmButtonColor: '#6366f1',
-                cancelButtonColor: '#64748b',
-                customClass: {
-                    popup: 'swal-wide'
-                },
-                didOpen: () => {
-                    const input = Swal.getInput();
-                    const valueDisplay = document.createElement('div');
-                    valueDisplay.style.cssText = `
-                        text-align: center;
-                        font-size: 2rem;
-                        font-weight: 700;
-                        color: #6366f1;
-                        margin: 1rem 0;
-                        padding: 1rem;
-                        background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
-                        border-radius: 0.75rem;
-                        border: 2px solid #c7d2fe;
-                    `;
-                    valueDisplay.innerHTML = `<span id="durationValue">${input.value}</span> Hari`;
-                    input.parentElement.insertBefore(valueDisplay, input.nextSibling);
-                    
-                    input.addEventListener('input', (e) => {
-                        document.getElementById('durationValue').textContent = e.target.value;
-                    });
-                }
-            });
-            
-            if (!durationConfirmed) return;
-            
-            // Step 2: Final confirmation with chosen duration
             const result = await Swal.fire({
                 title: '<i class="fas fa-check-circle"></i> Konfirmasi Persetujuan',
                 html: `
                     <div style="text-align: left; padding: 1rem;">
+                        <p style="margin-bottom: 1rem; color: #64748b;">Anda akan menyetujui peminjaman untuk:</p>
                         <div style="background: #f1f5f9; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
                             <p style="margin: 0.5rem 0;"><strong>Peminjam:</strong> ${loan.user.name}</p>
                             <p style="margin: 0.5rem 0;"><strong>Buku:</strong> ${loan.book.title}</p>
                             <p style="margin: 0.5rem 0;"><strong>Penulis:</strong> ${loan.book.author}</p>
                         </div>
-                        <div style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem; border: 2px solid #10b981; text-align: center;">
-                            <p style="color: #065f46; font-weight: 700; font-size: 1.1rem; margin: 0;">
-                                <i class="fas fa-calendar-check"></i> Durasi Peminjaman
-                            </p>
-                            <p style="color: #059669; font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0;">
-                                ${loanDuration} Hari
-                            </p>
-                            <p style="color: #064e3b; font-size: 0.875rem; margin: 0;">
-                                <i class="fas fa-clock"></i> Jatuh tempo: ${calculateDueDate(loanDuration)}
-                            </p>
-                        </div>
-                        <p style="color: #059669; font-weight: 600; text-align: center;">
-                            <i class="fas fa-info-circle"></i> Apakah Anda yakin ingin menyetujui peminjaman ini?
+                        <p style="color: #059669; font-weight: 600;">
+                            <i class="fas fa-info-circle"></i> Buku akan diberikan kepada anggota dengan masa peminjaman 7 hari
                         </p>
                     </div>
                 `,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '<i class="fas fa-check"></i> Ya, Setujui Peminjaman',
-                cancelButtonText: '<i class="fas fa-arrow-left"></i> Kembali',
+                cancelButtonText: '<i class="fas fa-times"></i> Batal',
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#64748b',
                 customClass: {
-                    popup: 'swal-wide',
-                    confirmButton: 'swal-btn-confirm',
-                    cancelButton: 'swal-btn-cancel'
+                    popup: 'swal-wide'
                 },
                 showLoaderOnConfirm: true,
                 preConfirm: async () => {
@@ -1260,10 +1074,7 @@
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                            },
-                            body: JSON.stringify({
-                                loan_duration: parseInt(loanDuration)
-                            })
+                            }
                         });
                         
                         const data = await response.json();
@@ -1285,33 +1096,17 @@
                     title: '<i class="fas fa-check-circle" style="color: #10b981;"></i> Peminjaman Disetujui!',
                     html: `
                         <p style="color: #64748b; margin-top: 1rem;">
-                            Peminjaman telah berhasil disetujui dengan durasi <strong style="color: #10b981;">${loanDuration} hari</strong>.<br>
+                            Peminjaman telah berhasil disetujui.<br>
                             Anggota dapat mengambil buku sesuai jadwal yang ditentukan.
                         </p>
-                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; border: 2px solid #bbf7d0;">
-                            <p style="color: #065f46; margin: 0; font-size: 0.875rem;">
-                                <i class="fas fa-calendar-times"></i> Jatuh tempo: <strong>${calculateDueDate(loanDuration)}</strong>
-                            </p>
-                        </div>
                     `,
                     icon: 'success',
                     confirmButtonText: 'Tutup',
                     confirmButtonColor: '#10b981',
-                    timer: 4000
+                    timer: 3000
                 });
                 loadLoanRequests();
             }
-        }
-        
-        // Calculate due date from duration
-        function calculateDueDate(days) {
-            const date = new Date();
-            date.setDate(date.getDate() + parseInt(days));
-            return date.toLocaleDateString('id-ID', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
         }
         
         // Reject loan
@@ -1344,10 +1139,7 @@
                 confirmButtonText: '<i class="fas fa-arrow-right"></i> Lanjutkan',
                 cancelButtonText: '<i class="fas fa-times"></i> Batal',
                 confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#64748b',
-                customClass: {
-                    popup: 'swal-wide'
-                }
+                cancelButtonColor: '#64748b'
             });
             
             if (!firstConfirm) return;
@@ -1379,10 +1171,6 @@
                 cancelButtonText: '<i class="fas fa-arrow-left"></i> Kembali',
                 confirmButtonColor: '#ef4444',
                 cancelButtonColor: '#64748b',
-                customClass: {
-                    popup: 'swal-wide',
-                    confirmButton: 'swal-btn-danger'
-                },
                 showLoaderOnConfirm: true,
                 preConfirm: async () => {
                     try {
@@ -1584,6 +1372,16 @@
             
             // Refresh every 30 seconds
             setInterval(loadLoanRequests, 30000);
+
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateY(-20px)';
+                    setTimeout(() => alert.remove(), 300);
+                }, 5000);
+            });
         });
         
         // Close modal when clicking overlay

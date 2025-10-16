@@ -27,7 +27,7 @@
                 <i class="fas fa-tags"></i>
                 Kategori Buku
             </a>
-            <a href="#" class="nav-item" data-page="users">
+            <a href="<?php echo e(route('admin.users.index')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.users.*') ? 'active' : ''); ?>">
                 <i class="fas fa-users"></i>
                 Kelola Anggota
             </a>

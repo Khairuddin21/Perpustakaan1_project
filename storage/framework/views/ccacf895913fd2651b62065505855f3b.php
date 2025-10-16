@@ -809,6 +809,58 @@
             border-color: #6366f1 !important;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
         }
+        
+        /* Range input styling */
+        .swal2-range {
+            width: 100% !important;
+            margin: 1rem 0 !important;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px !important;
+            border-radius: 5px !important;
+            background: linear-gradient(to right, #6366f1, #8b5cf6) !important;
+            outline: none !important;
+            opacity: 0.9 !important;
+            transition: opacity 0.2s !important;
+        }
+        
+        .swal2-range:hover {
+            opacity: 1 !important;
+        }
+        
+        .swal2-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #6366f1;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .swal2-range::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6);
+        }
+        
+        .swal2-range::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #6366f1;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s ease;
+        }
+        
+        .swal2-range::-moz-range-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.6);
+        }
     </style>
 </head>
 <body>
@@ -1140,25 +1192,98 @@
         async function approveLoan(loanId) {
             const loan = allLoans.find(l => l.id === loanId);
             
+            // Step 1: Ask for loan duration
+            const { value: loanDuration, isConfirmed: durationConfirmed } = await Swal.fire({
+                title: '<i class="fas fa-calendar-alt"></i> Tentukan Durasi Peminjaman',
+                html: `
+                    <div style="text-align: left; padding: 1rem;">
+                        <p style="margin-bottom: 1rem; color: #64748b;">Anda akan menyetujui peminjaman untuk:</p>
+                        <div style="background: #f1f5f9; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1.5rem; border-left: 4px solid #6366f1;">
+                            <p style="margin: 0.5rem 0;"><strong>Peminjam:</strong> ${loan.user.name}</p>
+                            <p style="margin: 0.5rem 0;"><strong>Buku:</strong> ${loan.book.title}</p>
+                            <p style="margin: 0.5rem 0;"><strong>Penulis:</strong> ${loan.book.author}</p>
+                        </div>
+                        <div style="background: #dbeafe; padding: 1rem; border-radius: 0.5rem; border-left: 4px solid #2563eb;">
+                            <p style="color: #1e40af; font-weight: 600; margin: 0 0 0.5rem 0;">
+                                <i class="fas fa-info-circle"></i> Tentukan Durasi Peminjaman:
+                            </p>
+                            <p style="color: #64748b; font-size: 0.875rem; margin: 0;">
+                                Pilih berapa hari buku akan dipinjamkan (1-30 hari)
+                            </p>
+                        </div>
+                    </div>
+                `,
+                input: 'range',
+                inputLabel: 'Durasi Peminjaman (Hari)',
+                inputAttributes: {
+                    min: '1',
+                    max: '30',
+                    step: '1'
+                },
+                inputValue: 7,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-arrow-right"></i> Lanjutkan',
+                cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                confirmButtonColor: '#6366f1',
+                cancelButtonColor: '#64748b',
+                customClass: {
+                    popup: 'swal-wide'
+                },
+                didOpen: () => {
+                    const input = Swal.getInput();
+                    const valueDisplay = document.createElement('div');
+                    valueDisplay.style.cssText = `
+                        text-align: center;
+                        font-size: 2rem;
+                        font-weight: 700;
+                        color: #6366f1;
+                        margin: 1rem 0;
+                        padding: 1rem;
+                        background: linear-gradient(135deg, #f0f4ff, #e0e7ff);
+                        border-radius: 0.75rem;
+                        border: 2px solid #c7d2fe;
+                    `;
+                    valueDisplay.innerHTML = `<span id="durationValue">${input.value}</span> Hari`;
+                    input.parentElement.insertBefore(valueDisplay, input.nextSibling);
+                    
+                    input.addEventListener('input', (e) => {
+                        document.getElementById('durationValue').textContent = e.target.value;
+                    });
+                }
+            });
+            
+            if (!durationConfirmed) return;
+            
+            // Step 2: Final confirmation with chosen duration
             const result = await Swal.fire({
                 title: '<i class="fas fa-check-circle"></i> Konfirmasi Persetujuan',
                 html: `
                     <div style="text-align: left; padding: 1rem;">
-                        <p style="margin-bottom: 1rem; color: #64748b;">Anda akan menyetujui peminjaman untuk:</p>
                         <div style="background: #f1f5f9; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
                             <p style="margin: 0.5rem 0;"><strong>Peminjam:</strong> ${loan.user.name}</p>
                             <p style="margin: 0.5rem 0;"><strong>Buku:</strong> ${loan.book.title}</p>
                             <p style="margin: 0.5rem 0;"><strong>Penulis:</strong> ${loan.book.author}</p>
                         </div>
-                        <p style="color: #059669; font-weight: 600;">
-                            <i class="fas fa-info-circle"></i> Buku akan diberikan kepada anggota dengan masa peminjaman 7 hari
+                        <div style="background: linear-gradient(135deg, #dcfce7, #bbf7d0); padding: 1.25rem; border-radius: 0.75rem; margin-bottom: 1rem; border: 2px solid #10b981; text-align: center;">
+                            <p style="color: #065f46; font-weight: 700; font-size: 1.1rem; margin: 0;">
+                                <i class="fas fa-calendar-check"></i> Durasi Peminjaman
+                            </p>
+                            <p style="color: #059669; font-size: 2.5rem; font-weight: 800; margin: 0.5rem 0;">
+                                ${loanDuration} Hari
+                            </p>
+                            <p style="color: #064e3b; font-size: 0.875rem; margin: 0;">
+                                <i class="fas fa-clock"></i> Jatuh tempo: ${calculateDueDate(loanDuration)}
+                            </p>
+                        </div>
+                        <p style="color: #059669; font-weight: 600; text-align: center;">
+                            <i class="fas fa-info-circle"></i> Apakah Anda yakin ingin menyetujui peminjaman ini?
                         </p>
                     </div>
                 `,
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: '<i class="fas fa-check"></i> Ya, Setujui Peminjaman',
-                cancelButtonText: '<i class="fas fa-times"></i> Batal',
+                cancelButtonText: '<i class="fas fa-arrow-left"></i> Kembali',
                 confirmButtonColor: '#10b981',
                 cancelButtonColor: '#64748b',
                 customClass: {
@@ -1174,7 +1299,10 @@
                             headers: {
                                 'Content-Type': 'application/json',
                                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-                            }
+                            },
+                            body: JSON.stringify({
+                                loan_duration: parseInt(loanDuration)
+                            })
                         });
                         
                         const data = await response.json();
@@ -1196,17 +1324,33 @@
                     title: '<i class="fas fa-check-circle" style="color: #10b981;"></i> Peminjaman Disetujui!',
                     html: `
                         <p style="color: #64748b; margin-top: 1rem;">
-                            Peminjaman telah berhasil disetujui.<br>
+                            Peminjaman telah berhasil disetujui dengan durasi <strong style="color: #10b981;">${loanDuration} hari</strong>.<br>
                             Anggota dapat mengambil buku sesuai jadwal yang ditentukan.
                         </p>
+                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; margin-top: 1rem; border: 2px solid #bbf7d0;">
+                            <p style="color: #065f46; margin: 0; font-size: 0.875rem;">
+                                <i class="fas fa-calendar-times"></i> Jatuh tempo: <strong>${calculateDueDate(loanDuration)}</strong>
+                            </p>
+                        </div>
                     `,
                     icon: 'success',
                     confirmButtonText: 'Tutup',
                     confirmButtonColor: '#10b981',
-                    timer: 3000
+                    timer: 4000
                 });
                 loadLoanRequests();
             }
+        }
+        
+        // Calculate due date from duration
+        function calculateDueDate(days) {
+            const date = new Date();
+            date.setDate(date.getDate() + parseInt(days));
+            return date.toLocaleDateString('id-ID', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
         }
         
         // Reject loan
