@@ -12,28 +12,27 @@ use Illuminate\Support\Facades\Log;
 
 class ReturnController extends Controller
 {
+    /**
+     * Show return page for Pustakawan/Admin ONLY
+     * Uses returns.blade.php
+     */
     public function index()
     {
         $user = Auth::user();
         
-        // Jika admin atau pustakawan, tampilkan semua buku yang dipinjam
+        // Hanya untuk admin atau pustakawan
         if (in_array($user->role, ['admin', 'pustakawan'])) {
             $borrowedBooks = Loan::with(['book', 'user'])
                 ->whereIn('status', ['borrowed', 'overdue'])
                 ->where('return_hidden', false)
                 ->orderBy('due_date', 'asc')
                 ->get();
-        } else {
-            // Jika user biasa, tampilkan hanya buku miliknya
-            $borrowedBooks = Loan::with(['book'])
-                ->where('user_id', $user->id)
-                ->whereIn('status', ['borrowed', 'overdue'])
-                ->where('return_hidden', false)
-                ->orderBy('due_date', 'asc')
-                ->get();
+                
+            return view('dashboard.returns', compact('borrowedBooks'));
         }
-
-        return view('dashboard.returns', compact('borrowedBooks'));
+        
+        // Jika anggota biasa mengakses, redirect ke halaman mereka
+        return redirect()->route('user.returns');
     }
 
     public function search(Request $request)
@@ -165,7 +164,8 @@ class ReturnController extends Controller
     }
 
     /**
-     * Show return page for logged-in user
+     * Show return page for Anggota (logged-in user)
+     * Uses returns-anggota.blade.php
      */
     public function userReturns()
     {
@@ -176,7 +176,7 @@ class ReturnController extends Controller
             ->orderBy('due_date', 'asc')
             ->get();
 
-        return view('dashboard.returns', compact('borrowedBooks'));
+        return view('dashboard.returns-anggota', compact('borrowedBooks'));
     }
 
     /**

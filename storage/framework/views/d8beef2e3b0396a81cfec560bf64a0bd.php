@@ -31,7 +31,7 @@
         
         <div class="nav-section">
             <div class="nav-section-title">Laporan</div>
-            <a href="<?php echo e(route('admin.reports')); ?>" class="nav-item <?php echo e(request()->routeIs('admin.reports*') ? 'active' : ''); ?>">
+            <a href="<?php echo e(route('pustakawan.reports')); ?>" class="nav-item <?php echo e(request()->routeIs('pustakawan.reports*') ? 'active' : ''); ?>">
                 <i class="fas fa-chart-bar"></i>
                 Laporan & Statistik
             </a>

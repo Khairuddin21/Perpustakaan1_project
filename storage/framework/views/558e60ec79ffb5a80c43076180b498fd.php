@@ -21,8 +21,24 @@
     <?php echo app('Illuminate\Foundation\Vite')(['resources/css/dashboard.css', 'resources/js/dashboard.js']); ?>
     
     <style>
+        /* Prevent horizontal scroll */
+        body {
+            overflow-x: hidden;
+        }
+        
+        .dashboard-container {
+            overflow-x: hidden;
+        }
+        
+        .main-content {
+            overflow-x: hidden;
+        }
+        
         .users-management-container {
             padding: 2rem;
+            margin-right: 1rem;
+            max-width: 100%;
+            overflow-x: hidden;
         }
         
         .btn-logout {
@@ -150,12 +166,34 @@
             background: white;
             border-radius: 1rem;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: visible;
             border: 2px solid #e2e8f0;
+            position: relative;
+        }
+        
+        /* Custom Scrollbar for Table */
+        .users-table-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .users-table-container::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 0 0 1rem 1rem;
+        }
+        
+        .users-table-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 10px;
+        }
+        
+        .users-table-container::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #5558d3, #7c3aed);
         }
         
         .users-table {
             width: 100%;
+            min-width: 900px;
             border-collapse: collapse;
         }
         
@@ -467,34 +505,44 @@
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Admin Sidebar -->
+        <!-- Sidebar -->
         <?php echo $__env->make('components.admin-sidebar', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
         
         <!-- Main Content -->
-        <main class="main-content">
-            <!-- Top Navigation -->
-            <nav class="top-nav">
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                
-                <div class="nav-right">
-                    <div class="user-info">
-                        <span class="user-name"><?php echo e(auth()->user()->name); ?></span>
-                        <span class="user-role"><?php echo e(ucfirst(auth()->user()->role)); ?></span>
-                    </div>
+        <main class="main-content" id="mainContent">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <button class="menu-toggle" id="menuToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
                     
-                    <form action="<?php echo e(route('logout')); ?>" method="POST" style="display: inline;">
-                        <?php echo csrf_field(); ?>
-                        <button type="submit" class="btn-logout">
-                            <i class="fas fa-sign-out-alt"></i>
-                            Logout
-                        </button>
-                    </form>
+                    <h1 class="header-title">Kelola Anggota</h1>
+                    
+                    <div class="header-actions">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <?php echo e(strtoupper(substr(auth()->user()->name, 0, 2))); ?>
+
+                            </div>
+                            <div class="user-details">
+                                <div class="user-name"><?php echo e(auth()->user()->name); ?></div>
+                                <div class="user-role"><?php echo e(ucfirst(auth()->user()->role)); ?></div>
+                            </div>
+                        </div>
+                        
+                        <form method="POST" action="<?php echo e(route('logout')); ?>" style="display: inline;">
+                            <?php echo csrf_field(); ?>
+                            <button type="submit" class="btn-logout">
+                                <i class="fas fa-sign-out-alt"></i>
+                                Logout
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            </nav>
+            </header>
             
-            <!-- Content Area -->
+            <!-- Users Management Content -->
             <div class="users-management-container">
                 <!-- Page Header -->
                 <div class="page-header">

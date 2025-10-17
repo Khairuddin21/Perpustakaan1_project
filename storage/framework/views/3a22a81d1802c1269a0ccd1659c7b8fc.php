@@ -2297,6 +2297,61 @@
             }
         }
 
+        /* ===== PROFILE MODAL STYLES ===== */
+        .profile-content {
+            padding: 1rem;
+        }
+
+        .profile-avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 2rem;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .profile-info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .profile-info-item label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-info-item label i {
+            color: var(--primary);
+            width: 20px;
+        }
+
+        .profile-value {
+            padding: 0.75rem 1rem;
+            background: var(--light);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
     </style>
 </head>
 <body>
@@ -2423,7 +2478,7 @@
                                 <?php
                                     $cover = $book->cover_image ?? null;
                                     $isUrl = $cover && (\Illuminate\Support\Str::startsWith($cover, ['http://', 'https://']));
-                                    $src = $cover ? ($isUrl ? $cover : asset('storage/'.$cover)) : null;
+                                    $src = $cover ? ($isUrl ? $cover : asset($cover)) : null;
                                 ?>
                                 <?php if($src): ?>
                                     <img src="<?php echo e($src); ?>" alt="<?php echo e($book->title); ?> cover" onerror="this.style.display='none'">
@@ -2799,6 +2854,66 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h2><i class="fas fa-history"></i> Riwayat Peminjaman</h2>
+                <button class="modal-close" onclick="closeLoanHistoryModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="history-filters">
+                    <select id="historyFilter" onchange="filterHistory()">
+                        <option value="all">Semua Status</option>
+                        <option value="returned">Sudah Dikembalikan</option>
+                        <option value="borrowed">Sedang Dipinjam</option>
+                        <option value="overdue">Terlambat</option>
+                    </select>
+                    <input type="text" id="historySearch" placeholder="Cari judul buku..." onkeyup="searchHistory()">
+                </div>
+                <div class="loan-history-list" id="loanHistoryList">
+                    <!-- Loan history will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2><i class="fas fa-user-circle"></i> Profil Saya</h2>
+                <button class="modal-close" onclick="closeProfileModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-content">
+                <div class="profile-content">
+                    <div class="profile-avatar-large">
+                        <?php echo e(strtoupper(substr(Auth::user()->name, 0, 2))); ?>
+
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-user"></i> Nama Lengkap</label>
+                            <div class="profile-value"><?php echo e(Auth::user()->name); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-envelope"></i> Email</label>
+                            <div class="profile-value"><?php echo e(Auth::user()->email); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-shield-alt"></i> Role</label>
+                            <div class="profile-value"><?php echo e(ucfirst(Auth::user()->role)); ?></div>
+                        </div>
+                        <div class="profile-info-item">
+                            <label><i class="fas fa-calendar-alt"></i> Bergabung Sejak</label>
+                            <div class="profile-value"><?php echo e(\Carbon\Carbon::parse(Auth::user()->created_at)->format('d M Y')); ?></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
                 <button class="modal-close" onclick="closeLoanHistoryModal()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -3516,7 +3631,7 @@
                     bookPreview.innerHTML = `
                         <div class="preview-cover">
                             ${book.cover_image ? 
-                                `<img src="${book.cover_image.startsWith('http') ? book.cover_image : '/storage/' + book.cover_image}" alt="${book.title}">` : 
+                                `<img src="${book.cover_image.startsWith('http') ? book.cover_image : '/' + book.cover_image}" alt="${book.title}">` : 
                                 '<i class="fas fa-book"></i>'
                             }
                         </div>
@@ -3782,7 +3897,7 @@
                             <div class="borrowed-book-item">
                                 <div class="borrowed-book-cover">
                                     ${book.book.cover_image ? 
-                                        `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/storage/' + book.book.cover_image}" alt="${book.book.title}">` : 
+                                        `<img src="${book.book.cover_image.startsWith('http') ? book.book.cover_image : '/' + book.book.cover_image}" alt="${book.book.title}">` : 
                                         '<i class="fas fa-book"></i>'
                                     }
                                 </div>
@@ -3915,7 +4030,7 @@
                             <div class="history-item">
                                 <div class="history-book-cover">
                                     ${history.book.cover_image ? 
-                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/storage/' + history.book.cover_image}" alt="${history.book.title}">` : 
+                                        `<img src="${history.book.cover_image.startsWith('http') ? history.book.cover_image : '/' + history.book.cover_image}" alt="${history.book.title}">` : 
                                         '<i class="fas fa-book"></i>'
                                     }
                                 </div>
@@ -3984,6 +4099,17 @@
             const status = document.getElementById('historyFilter').value;
             const search = document.getElementById('historySearch').value;
             loadLoanHistory(status, search);
+        }
+
+        // Show Profile Modal
+        function showProfileModal() {
+            const modal = document.getElementById('profileModal');
+            modal.classList.add('active');
+        }
+
+        // Close Profile Modal
+        function closeProfileModal() {
+            document.getElementById('profileModal').classList.remove('active');
         }
 
         // Extend Loan
@@ -4060,6 +4186,8 @@
         window.closeBorrowedBooksModal = closeBorrowedBooksModal;
         window.showLoanHistory = showLoanHistory;
         window.closeLoanHistoryModal = closeLoanHistoryModal;
+        window.showProfileModal = showProfileModal;
+        window.closeProfileModal = closeProfileModal;
         window.filterHistory = filterHistory;
         window.searchHistory = searchHistory;
         window.extendLoan = extendLoan;

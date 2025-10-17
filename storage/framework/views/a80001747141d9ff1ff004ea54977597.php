@@ -23,13 +23,9 @@
                 <i class="fas fa-book"></i>
                 <span>Jelajahi Buku</span>
             </a>
-            <a href="#" class="nav-item" onclick="document.querySelector('.search-box input, .search-input').focus(); return false;">
-                <i class="fas fa-search"></i>
-                <span>Cari Buku</span>
-            </a>
-            <a href="<?php echo e(route('books.browse')); ?>" class="nav-item">
-                <i class="fas fa-tags"></i>
-                <span>Kategori</span>
+            <a href="<?php echo e(route('books.add-yours')); ?>" class="nav-item <?php echo e(request()->routeIs('books.add-yours') ? 'active' : ''); ?>">
+                <i class="fas fa-plus"></i>
+                <span>Add Yours</span>
             </a>
         </div>
         
@@ -50,7 +46,7 @@
                 <i class="fas fa-history"></i>
                 <span>Riwayat Peminjaman</span>
             </a>
-            <a href="#" class="nav-item">
+            <a href="<?php echo e(route('books.wishlist')); ?>" class="nav-item <?php echo e(request()->routeIs('books.wishlist') ? 'active' : ''); ?>">
                 <i class="fas fa-heart"></i>
                 <span>Favorit</span>
             </a>
@@ -58,7 +54,7 @@
         
         <div class="nav-section">
             <div class="nav-section-title">Akun</div>
-            <a href="#" class="nav-item">
+            <a href="#" class="nav-item" onclick="showProfileModal(); return false;">
                 <i class="fas fa-user-circle"></i>
                 <span>Profil Saya</span>
             </a>
@@ -69,7 +65,7 @@
                 <span class="notification-badge"><?php echo e($upcomingDueLoans->count()); ?></span>
                 <?php endif; ?>
             </a>
-            <a href="#" class="nav-item">
+            <a href="<?php echo e(route('settings')); ?>" class="nav-item <?php echo e(request()->routeIs('settings') ? 'active' : ''); ?>">
                 <i class="fas fa-cog"></i>
                 <span>Pengaturan</span>
             </a>
